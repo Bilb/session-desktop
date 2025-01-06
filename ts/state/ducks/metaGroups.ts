@@ -675,7 +675,7 @@ async function handleMemberAddedFromUI({
       await LibSessionUtil.saveDumpsToDb(groupPk);
 
       throw new Error(
-        'handleMemberAddedFromUIOrNot: pushChangesToGroupSwarmIfNeeded did not return success'
+        'handleMemberAddedFromUI: pushChangesToGroupSwarmIfNeeded did not return success'
       );
     }
   } catch (e) {
