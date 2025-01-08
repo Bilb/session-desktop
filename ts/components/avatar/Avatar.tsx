@@ -137,6 +137,7 @@ const AvatarInner = (props: Props) => {
   const hasImage = (base64Data || urlToLoad) && !imageBroken && !isClosedGroup;
 
   const isClickable = !!onAvatarClick;
+
   return (
     <div
       className={classNames(
