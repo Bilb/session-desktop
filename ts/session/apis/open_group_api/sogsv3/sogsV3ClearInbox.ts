@@ -4,10 +4,10 @@ import { getOpenGroupV2ConversationId } from '../utils/OpenGroupUtils';
 import {
   batchFirstSubIsSuccess,
   batchGlobalIsSuccess,
-  OpenGroupBatchRow,
+  type OpenGroupBatchRow,
   sogsBatchSend,
 } from './sogsV3BatchPoll';
-import { OpenGroupRequestCommonType } from '../../../../data/types';
+import type { OpenGroupRequestCommonType } from '../../../../data/types';
 import { DURATION } from '../../../constants';
 
 type OpenGroupClearInboxResponse = {
@@ -57,7 +57,7 @@ export const clearInbox = async (roomInfos: OpenGroupRequestCommonType): Promise
       success = true;
       window.log.info(`clearInbox ${rawMessage.deleted} messages deleted for ${conversationId} `);
     }
-  } catch (e) {
+  } catch (_e) {
     window?.log?.error(`clearInbox Can't decode JSON body for ${conversationId}`);
   }
 

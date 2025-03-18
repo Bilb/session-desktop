@@ -2,8 +2,8 @@ import styled from 'styled-components';
 
 import {
   areAllAttachmentsVisual,
-  AttachmentType,
-  AttachmentTypeWithPath,
+  type AttachmentType,
+  type AttachmentTypeWithPath,
   getAlt,
   getThumbnailUrl,
   isVideoAttachment,

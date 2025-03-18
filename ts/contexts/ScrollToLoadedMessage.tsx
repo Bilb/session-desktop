@@ -8,6 +8,7 @@ export type ScrollToLoadedReasons =
   | 'load-more-bottom';
 
 export const ScrollToLoadedMessageContext = createContext(
+  // biome-ignore lint/suspicious/noEmptyBlockStatements: <explanation>
   (_loadedMessageIdToScrollTo: string, _reason: ScrollToLoadedReasons) => {}
 );
 

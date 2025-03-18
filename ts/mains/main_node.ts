@@ -11,7 +11,7 @@ import {
   protocol as electronProtocol,
   ipcMain as ipc,
   ipcMain,
-  IpcMainEvent,
+  type IpcMainEvent,
   Menu,
   nativeTheme,
   screen,
@@ -27,8 +27,8 @@ import path, { join } from 'path';
 import { platform as osPlatform } from 'process';
 import url from 'url';
 
-import Logger from 'bunyan';
-import _, { isEmpty, isNumber, isFinite } from 'lodash';
+import type Logger from 'bunyan';
+import _, { isEmpty, isNumber, isFinite as isFiniteL } from 'lodash';
 
 import { setupGlobalErrorHandler } from '../node/global_errors';
 import { setup as setupSpellChecker } from '../node/spell_check';
@@ -56,7 +56,7 @@ function getMainWindow() {
   return mainWindow;
 }
 
-let readyForShutdown: boolean = false;
+let readyForShutdown = false;
 
 // Tray icon and related objects
 let tray: any = null;
@@ -127,13 +127,7 @@ function showWindow() {
 if (!process.mas) {
   console.log('making app single instance');
   const gotLock = app.requestSingleInstanceLock();
-  if (!gotLock) {
-    // Don't allow second instance if we are in prod
-    if (appInstance === 0) {
-      console.log('quitting; we are the second instance');
-      app.exit();
-    }
-  } else {
+  if (gotLock) {
     app.on('second-instance', () => {
       // Someone tried to run a second instance, we should focus our window
       if (mainWindow) {
@@ -145,6 +139,10 @@ if (!process.mas) {
       }
       return true;
     });
+  } else if (appInstance === 0) {
+    // Don't allow second instance if we are in prod
+    console.log('quitting; we are the second instance');
+    app.exit();
   }
 }
 
@@ -673,12 +671,12 @@ async function saveDebugLog(_event: any, additionalInfo?: string) {
     const outputPath = result.filePath;
     console.info(`[log] Trying to save logs to ${outputPath}`);
     if (result === undefined || outputPath === undefined || outputPath === '') {
-      throw Error("User clicked Save button but didn't create a file");
+      throw new Error("User clicked Save button but didn't create a file");
     }
 
     const loggerFilePath = getLoggerFilePath();
     if (!loggerFilePath) {
-      throw Error('No logger file path');
+      throw new Error('No logger file path');
     }
 
     await copyFile(loggerFilePath, outputPath);
@@ -966,7 +964,7 @@ ipc.on('password-window-login', async (event, passPhrase) => {
     const passwordAttempt = true;
     await showMainWindow(passPhrase, passwordAttempt);
     sendResponse(undefined);
-  } catch (e) {
+  } catch (_e) {
     sendResponse(i18n('passwordIncorrect'));
   }
 });
@@ -986,7 +984,7 @@ ipc.on('password-recovery-phrase', async (event, passPhrase) => {
     }
     // no issues. send back undefined, meaning OK
     sendResponse(undefined);
-  } catch (e) {
+  } catch (_e) {
     const localisedError = simpleDictionary.passwordIncorrect[getCrowdinLocale()];
     // send back the error
     sendResponse(localisedError);
@@ -1016,14 +1014,14 @@ ipc.on('get-start-in-tray', event => {
   try {
     const val = userConfig.get('startInTray');
     event.sender.send('get-start-in-tray-response', val);
-  } catch (e) {
+  } catch (_e) {
     event.sender.send('get-start-in-tray-response', false);
   }
 });
 
 ipcMain.on('update-badge-count', (_event, count) => {
   if (app.isReady()) {
-    app.setBadgeCount(isNumber(count) && isFinite(count) && count >= 0 ? count : 0);
+    app.setBadgeCount(isNumber(count) && isFiniteL(count) && count >= 0 ? count : 0);
   }
 });
 
@@ -1031,7 +1029,7 @@ ipc.on('get-opengroup-pruning', event => {
   try {
     const val = userConfig.get('opengroupPruning');
     event.sender.send('get-opengroup-pruning-response', val);
-  } catch (e) {
+  } catch (_e) {
     event.sender.send('get-opengroup-pruning-response', false);
   }
 });
@@ -1074,7 +1072,7 @@ ipc.on('set-password', async (event, passPhrase, oldPhrase) => {
       userConfig.set('dbHasPassword', true);
       sendResponse(updatedHash);
     }
-  } catch (e) {
+  } catch (_e) {
     sendResponse(i18n('passwordFailed'));
   }
 });
@@ -1089,7 +1087,7 @@ ipc.on('load-maxmind-data', async (event: IpcMainEvent) => {
     console.info(`loading maxmind data from file:"${fileToRead}"`);
     const buffer = await readFile(fileToRead);
     event.reply('load-maxmind-data-complete', new Uint8Array(buffer.buffer));
-  } catch (e) {
+  } catch (_e) {
     event.reply('load-maxmind-data-complete', null);
   }
 });

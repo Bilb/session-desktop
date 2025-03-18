@@ -4,14 +4,14 @@ import autoBind from 'auto-bind';
 import { blobToArrayBuffer } from 'blob-util';
 import loadImage from 'blueimp-load-image';
 import classNames from 'classnames';
-import { Component, RefObject, createRef } from 'react';
+import { Component, type RefObject, createRef } from 'react';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { format } from 'date-fns';
 import {
   CompositionBox,
-  SendMessageType,
-  StagedAttachmentType,
+  type SendMessageType,
+  type StagedAttachmentType,
 } from './composition/CompositionBox';
 
 import { perfEnd, perfStart } from '../../session/utils/Performance';
@@ -26,8 +26,8 @@ import { MAX_ATTACHMENT_FILESIZE_BYTES } from '../../session/constants';
 import { ConvoHub } from '../../session/conversations';
 import { ToastUtils } from '../../session/utils';
 import {
-  ReduxConversationType,
-  SortedMessageModelProps,
+  type ReduxConversationType,
+  type SortedMessageModelProps,
   openConversationToSpecificMessage,
   quoteMessage,
   resetSelectedMessageIds,
@@ -57,7 +57,7 @@ import { NoticeBanner } from '../NoticeBanner';
 import { SessionSpinner } from '../loading';
 import { ConversationMessageRequestButtons } from './MessageRequestButtons';
 import { RightPanel, StyledRightPanelContainer } from './right-panel/RightPanel';
-import { HTMLDirection } from '../../util/i18n/rtlSupport';
+import type { HTMLDirection } from '../../util/i18n/rtlSupport';
 import { showLinkVisitWarningDialog } from '../dialog/OpenUrlModal';
 import { InvitedToGroup, NoMessageInConversation } from './SubtleNotification';
 import { PubKey } from '../../session/types';

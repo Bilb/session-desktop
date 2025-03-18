@@ -1,4 +1,4 @@
-import { PubkeyType, WithGroupPubkey } from 'libsession_util_nodejs';
+import type { PubkeyType, WithGroupPubkey } from 'libsession_util_nodejs';
 
 export type FindAllMessageFromSendersInConversationTypeArgs = WithGroupPubkey & {
   toRemove: Array<PubkeyType>;

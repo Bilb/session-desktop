@@ -84,7 +84,25 @@ export const OverlayInvite = () => {
       alignItems={'center'}
       padding={'var(--margins-md)'}
     >
-      {!idCopied ? (
+      {idCopied ? (
+        <>
+          <SessionIcon
+            iconType={'checkCircle'}
+            iconSize={'huge2'}
+            iconColor={'var(--primary-color)'}
+          />
+          <SpacerMD />
+          <StyledHeadingContainer container={true} justifyContent="center" alignItems="center">
+            <StyledHeading>{window.i18n('accountIdCopied')}</StyledHeading>
+            <HelpDeskButton
+              iconColor={'var(--text-primary-color)'}
+              style={{ display: 'inline-flex' }}
+            />
+          </StyledHeadingContainer>
+          <SpacerSM />
+          <StyledDescription>{window.i18n('shareAccountIdDescriptionCopied')}</StyledDescription>
+        </>
+      ) : (
         <>
           <StyledInputContainer
             container={true}
@@ -113,24 +131,6 @@ export const OverlayInvite = () => {
               dataTestId="copy-button-account-id"
             />
           </StyledButtonerContainer>
-        </>
-      ) : (
-        <>
-          <SessionIcon
-            iconType={'checkCircle'}
-            iconSize={'huge2'}
-            iconColor={'var(--primary-color)'}
-          />
-          <SpacerMD />
-          <StyledHeadingContainer container={true} justifyContent="center" alignItems="center">
-            <StyledHeading>{window.i18n('accountIdCopied')}</StyledHeading>
-            <HelpDeskButton
-              iconColor={'var(--text-primary-color)'}
-              style={{ display: 'inline-flex' }}
-            />
-          </StyledHeadingContainer>
-          <SpacerSM />
-          <StyledDescription>{window.i18n('shareAccountIdDescriptionCopied')}</StyledDescription>
         </>
       )}
     </StyledLeftPaneOverlay>

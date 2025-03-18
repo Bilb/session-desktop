@@ -18,7 +18,7 @@ export const AvatarHeader = (props: { pubkey: string; onAvatarClick?: () => void
   const { pubkey, onAvatarClick } = props;
   const isDisabledLegacyGroupDeprecated = useDisableLegacyGroupDeprecatedActions(pubkey);
 
-  const optOnAvatarClick = !isDisabledLegacyGroupDeprecated ? onAvatarClick : undefined;
+  const optOnAvatarClick = isDisabledLegacyGroupDeprecated ? undefined : onAvatarClick;
 
   return (
     <span className="module-conversation-header__avatar">

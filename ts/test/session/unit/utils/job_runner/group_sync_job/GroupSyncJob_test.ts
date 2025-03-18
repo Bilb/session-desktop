@@ -1,26 +1,30 @@
 import { expect } from 'chai';
-import { GroupPubkeyType, UserGroupsGet } from 'libsession_util_nodejs';
+import type { GroupPubkeyType, UserGroupsGet } from 'libsession_util_nodejs';
 import { omit } from 'lodash';
 import Long from 'long';
 import Sinon from 'sinon';
 import { getSodiumNode } from '../../../../../../node/sodiumNode';
-import { NotEmptyArrayOfBatchResults } from '../../../../../../session/apis/snode_api/BatchResultEntry';
+import type { NotEmptyArrayOfBatchResults } from '../../../../../../session/apis/snode_api/BatchResultEntry';
 import { SnodeNamespaces } from '../../../../../../session/apis/snode_api/namespaces';
 import { ConvoHub } from '../../../../../../session/conversations';
-import { LibSodiumWrappers } from '../../../../../../session/crypto';
+import type { LibSodiumWrappers } from '../../../../../../session/crypto';
 import { MessageSender } from '../../../../../../session/sending';
 import { UserUtils } from '../../../../../../session/utils';
 import { RunJobResult } from '../../../../../../session/utils/job_runners/PersistedJob';
 import { GroupSync } from '../../../../../../session/utils/job_runners/jobs/GroupSyncJob';
 import {
-  GroupDestinationChanges,
-  GroupSuccessfulChange,
+  type GroupDestinationChanges,
+  type GroupSuccessfulChange,
   LibSessionUtil,
-  PendingChangesForGroup,
+  type PendingChangesForGroup,
 } from '../../../../../../session/utils/libsession/libsession_utils';
 import { MetaGroupWrapperActions } from '../../../../../../webworker/workers/browser/libsession_worker_interface';
 import { TestUtils } from '../../../../../test-utils';
-import { stubWindowFeatureFlags, stubWindowLog, TypedStub } from '../../../../../test-utils/utils';
+import {
+  stubWindowFeatureFlags,
+  stubWindowLog,
+  type TypedStub,
+} from '../../../../../test-utils/utils';
 import { NetworkTime } from '../../../../../../util/NetworkTime';
 
 function validInfo(sodium: LibSodiumWrappers) {

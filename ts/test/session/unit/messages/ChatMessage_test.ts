@@ -6,9 +6,9 @@ import { toNumber } from 'lodash';
 import { SignalService } from '../../../../protobuf';
 import { Constants } from '../../../../session';
 import {
-  AttachmentPointerWithUrl,
-  PreviewWithAttachmentUrl,
-  Quote,
+  type AttachmentPointerWithUrl,
+  type PreviewWithAttachmentUrl,
+  type Quote,
   VisibleMessage,
 } from '../../../../session/messages/outgoing/visibleMessage/VisibleMessage';
 

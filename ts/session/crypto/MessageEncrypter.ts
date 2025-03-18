@@ -1,4 +1,4 @@
-import { GroupPubkeyType } from 'libsession_util_nodejs';
+import type { GroupPubkeyType } from 'libsession_util_nodejs';
 import { isEmpty } from 'lodash';
 import { concatUInt8Array, getSodiumRenderer } from '.';
 import { Data } from '../../data/data';

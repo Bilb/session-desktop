@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import {
+import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type {
   GroupInfoGet,
   GroupMemberGet,
   GroupPubkeyType,
@@ -20,7 +20,7 @@ import { getSodiumRenderer } from '../../session/crypto';
 import { DisappearingMessages } from '../../session/disappearing_messages';
 import { ClosedGroup } from '../../session/group/closed-group';
 import { GroupUpdateInfoChangeMessage } from '../../session/messages/outgoing/controlMessage/group_v2/to_group/GroupUpdateInfoChangeMessage';
-import { GroupUpdateMemberChangeMessage } from '../../session/messages/outgoing/controlMessage/group_v2/to_group/GroupUpdateMemberChangeMessage';
+import type { GroupUpdateMemberChangeMessage } from '../../session/messages/outgoing/controlMessage/group_v2/to_group/GroupUpdateMemberChangeMessage';
 import { PubKey } from '../../session/types';
 import { ToastUtils, UserUtils } from '../../session/utils';
 import { PreConditionFailed } from '../../session/utils/errors';
@@ -40,13 +40,13 @@ import {
   MetaGroupWrapperActions,
   UserGroupsWrapperActions,
 } from '../../webworker/workers/browser/libsession_worker_interface';
-import { StateType } from '../reducer';
+import type { StateType } from '../reducer';
 import { openConversationWithMessages } from './conversations';
 import { resetLeftOverlayMode } from './section';
 import { ConversationTypeEnum } from '../../models/types';
 import { NetworkTime } from '../../util/NetworkTime';
 import { GroupUpdateMessageFactory } from '../../session/messages/message_factory/group/groupUpdateMessageFactory';
-import {
+import type {
   WithAddWithHistoryMembers,
   WithAddWithoutHistoryMembers,
   WithFromMemberLeftMessage,
@@ -259,9 +259,16 @@ const initNewGroupInWrapper = createAsyncThunk(
         inviteAsAdmin
       );
 
-      await openConversationWithMessages({ conversationKey: groupPk, messageId: null });
+      await openConversationWithMessages({
+        conversationKey: groupPk,
+        messageId: null,
+      });
 
-      return { groupPk: newGroup.pubkeyHex, infos, members: membersFromWrapper };
+      return {
+        groupPk: newGroup.pubkeyHex,
+        infos,
+        members: membersFromWrapper,
+      };
     } catch (e) {
       window.log.warn('group creation failed. Deleting already saved data: ', e.message);
       await UserGroupsWrapperActions.eraseGroup(groupPk);
@@ -324,7 +331,7 @@ const handleUserGroupUpdate = createAsyncThunk(
         groupEd25519Secretkey: userGroup.secretKey,
         groupEd25519Pubkey: toFixedUint8ArrayOfLength(groupEd2519Pk, 32).buffer,
       });
-    } catch (e) {
+    } catch (_e) {
       window.log.warn(`failed to init meta wrapper ${groupPk}`);
     }
 
@@ -622,7 +629,10 @@ async function handleMemberAddedFromUI({
 
   // then, handle the addition with history of messages by generating supplement keys.
   // this adds them to the members wrapper etc
-  const encryptedSupplementKeys = await handleWithHistoryMembers({ groupPk, withHistory });
+  const encryptedSupplementKeys = await handleWithHistoryMembers({
+    groupPk,
+    withHistory,
+  });
 
   const supplementalKeysSubRequest = StoreGroupRequestFactory.makeStoreGroupKeysSubRequest({
     group,

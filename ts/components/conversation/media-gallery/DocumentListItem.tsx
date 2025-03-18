@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 import { filesize } from 'filesize';
 import { useSelectedConversationKey } from '../../../state/selectors/selectedConversation';
 import { saveAttachmentToDisk } from '../../../util/attachmentsUtil';
-import { MediaItemType } from '../../lightbox/LightboxGallery';
+import type { MediaItemType } from '../../lightbox/LightboxGallery';
 import { formatDateWithLocale } from '../../../util/i18n/formatting/generics';
 
 type Props = {

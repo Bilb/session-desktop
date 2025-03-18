@@ -1,4 +1,4 @@
-import { AttachmentType, getExtensionForDisplay } from '../../types/Attachment';
+import { type AttachmentType, getExtensionForDisplay } from '../../types/Attachment';
 
 type Props = {
   attachment: AttachmentType;

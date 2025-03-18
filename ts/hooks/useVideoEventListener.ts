@@ -4,18 +4,17 @@ import { useSelector } from 'react-redux';
 import useMountedState from 'react-use/lib/useMountedState';
 import {
   addVideoEventsListener,
-  CallManagerOptionsType,
+  type CallManagerOptionsType,
   DEVICE_DISABLED_DEVICE_ID,
-  InputItem,
+  type InputItem,
   removeVideoEventsListener,
 } from '../session/utils/calling/CallManager';
-import { getCallIsInFullScreen, getHasOngoingCallWithPubkey } from '../state/selectors/call';
+import { getHasOngoingCallWithPubkey } from '../state/selectors/call';
 import { useSelectedConversationKey } from '../state/selectors/selectedConversation';
 
 export function useVideoCallEventsListener(uniqueId: string, onSame: boolean) {
   const selectedConversationKey = useSelectedConversationKey();
   const ongoingCallPubkey = useSelector(getHasOngoingCallWithPubkey);
-  const isFullScreen = useSelector(getCallIsInFullScreen);
 
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
@@ -71,7 +70,7 @@ export function useVideoCallEventsListener(uniqueId: string, onSame: boolean) {
     return () => {
       removeVideoEventsListener(uniqueId);
     };
-  }, [ongoingCallPubkey, selectedConversationKey, isFullScreen, mountedState, onSame, uniqueId]);
+  }, [ongoingCallPubkey, selectedConversationKey, mountedState, onSame, uniqueId]);
 
   return {
     currentConnectedAudioInputs,

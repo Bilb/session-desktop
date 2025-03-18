@@ -9,7 +9,7 @@ import {
   useIsTyping,
   useLastMessage,
 } from '../../../hooks/useParamSelector';
-import { LastMessageStatusType } from '../../../state/ducks/types';
+import type { LastMessageStatusType } from '../../../state/ducks/types';
 import { useIsSearching } from '../../../state/selectors/search';
 import { useIsMessageRequestOverlayShown } from '../../../state/selectors/section';
 import { assertUnreachable } from '../../../types/sqlSharedTypes';

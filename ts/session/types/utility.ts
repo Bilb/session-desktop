@@ -1,2 +1,2 @@
-// eslint-disable-next-line @typescript-eslint/array-type
+// biome-ignore lint/style/useConsistentArrayType: <explanation>
 export type NonEmptyArray<T> = [T, ...T[]];

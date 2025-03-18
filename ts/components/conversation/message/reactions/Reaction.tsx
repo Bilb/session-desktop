@@ -6,11 +6,11 @@ import { isUsAnySogsFromCache } from '../../../../session/apis/open_group_api/so
 import { UserUtils } from '../../../../session/utils';
 import { useIsMessageSelectionMode } from '../../../../state/selectors/selectedConversation';
 import { THEME_GLOBALS } from '../../../../themes/globals';
-import { SortedReactionList } from '../../../../types/Reaction';
+import type { SortedReactionList } from '../../../../types/Reaction';
 import { abbreviateNumber } from '../../../../util/abbreviateNumber';
 import { nativeEmojiData } from '../../../../util/emoji';
 import { popupXDefault, popupYDefault } from '../message-content/MessageReactions';
-import { POPUP_WIDTH, ReactionPopup, TipPosition } from './ReactionPopup';
+import { POPUP_WIDTH, ReactionPopup, type TipPosition } from './ReactionPopup';
 import { useSelectedDisableLegacyGroupDeprecatedActions } from '../../../../hooks/useRefreshReleasedFeaturesTimestamp';
 
 const StyledReaction = styled.button<{

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { SessionDataTestId } from 'react';
+import type { SessionDataTestId } from 'react';
 import { Flex } from '../../../basic/Flex';
-import { SessionIcon, SessionIconSize, SessionIconType } from '../../../icon';
+import { SessionIcon, type SessionIconSize, type SessionIconType } from '../../../icon';
 
 const StyledActionRow = styled.button`
   border: none;

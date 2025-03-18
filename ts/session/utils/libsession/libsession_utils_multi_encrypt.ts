@@ -27,7 +27,7 @@ async function multiDecryptAnyEncryptionDomain({
         domain,
       });
       return { decrypted, domain };
-    } catch (e) {
+    } catch (_e) {
       window.log.info(
         `multiDecryptAnyEncryptionDomain: failed to decrypt message with encryption domain: ${domain}`
       );

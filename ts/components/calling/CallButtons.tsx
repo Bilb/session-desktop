@@ -1,10 +1,10 @@
-import { MouseEvent, useEffect, useState } from 'react';
+import { type MouseEvent, useCallback, useEffect, useState } from 'react';
 import { contextMenu, Menu } from 'react-contexify';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 import { CallManager, ToastUtils } from '../../session/utils';
-import { InputItem } from '../../session/utils/calling/CallManager';
+import type { InputItem } from '../../session/utils/calling/CallManager';
 import { setFullScreenCall } from '../../state/ducks/call';
 import { getHasOngoingCallWithPubkey } from '../../state/selectors/call';
 import { SessionIconButton } from '../icon';
@@ -394,12 +394,12 @@ export const CallWindowControls = ({
 }) => {
   const [makeVisible, setMakeVisible] = useState(true);
 
-  const setMakeVisibleTrue = () => {
+  const setMakeVisibleTrue = useCallback(() => {
     setMakeVisible(true);
-  };
-  const setMakeVisibleFalse = () => {
+  }, []);
+  const setMakeVisibleFalse = useCallback(() => {
     setMakeVisible(false);
-  };
+  }, []);
 
   useEffect(() => {
     setMakeVisibleTrue();
@@ -410,7 +410,7 @@ export const CallWindowControls = ({
       document.removeEventListener('mouseenter', setMakeVisibleTrue);
       document.removeEventListener('mouseleave', setMakeVisibleFalse);
     };
-  }, [isFullScreen]);
+  }, [setMakeVisibleTrue, setMakeVisibleFalse]);
   return (
     <StyledCallWindowControls isFullScreen={isFullScreen} makeVisible={makeVisible}>
       {!remoteStreamVideoIsMuted && <ShowInFullScreenButton isFullScreen={isFullScreen} />}

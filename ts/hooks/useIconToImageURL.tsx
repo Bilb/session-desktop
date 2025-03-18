@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import useMount from 'react-use/lib/useMount';
-import { SessionIcon, SessionIconProps, SessionIconType } from '../components/icon';
+import { SessionIcon, type SessionIconProps, type SessionIconType } from '../components/icon';
 import { sleepFor } from '../session/utils/Promise';
 import { useIsDarkTheme } from '../state/selectors/theme';
-import { ThemeKeys, getThemeValue } from '../themes/globals';
+import { type ThemeKeys, getThemeValue } from '../themes/globals';
 
 const chooseIconColors = (
   defaultColor: ThemeKeys,

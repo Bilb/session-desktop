@@ -1,7 +1,8 @@
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { describe } from 'mocha';
-import Sinon, * as sinon from 'sinon';
+import Sinon from 'sinon';
+import type * as sinon from 'sinon';
 
 import { TestUtils } from '../../../test-utils';
 import { Onions } from '../../../../session/apis/snode_api';
@@ -14,7 +15,7 @@ import {
   generateFakeSnodeWithEdKey,
   stubData,
 } from '../../../test-utils/utils';
-import { Snode } from '../../../../data/types';
+import type { Snode } from '../../../../data/types';
 import { SnodePoolConstants } from '../../../../session/apis/snode_api/snodePoolConstants';
 
 chai.use(chaiAsPromised as any);

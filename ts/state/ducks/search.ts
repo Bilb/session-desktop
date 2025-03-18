@@ -1,13 +1,13 @@
 /* eslint-disable no-restricted-syntax */
-import _, { isNaN } from 'lodash';
+import _, { isNaN as isNaNL } from 'lodash';
 import { Data } from '../../data/data';
-import { AdvancedSearchOptions, SearchOptions } from '../../types/Search';
+import type { AdvancedSearchOptions, SearchOptions } from '../../types/Search';
 import { cleanSearchTerm } from '../../util/cleanSearchTerm';
 
 import { PubKey } from '../../session/types';
 import { UserUtils } from '../../session/utils';
-import { MessageResultProps } from '../../types/message';
-import { ReduxConversationType } from './conversations';
+import type { MessageResultProps } from '../../types/message';
+import type { ReduxConversationType } from './conversations';
 
 // State
 
@@ -142,8 +142,8 @@ export function updateSearchTerm(query: string): UpdateSearchTermActionType {
 // }
 
 function getUnixMillisecondsTimestamp(timestamp: string): number {
-  const timestampInt = parseInt(timestamp, 10);
-  if (!isNaN(timestampInt)) {
+  const timestampInt = Number.parseInt(timestamp, 10);
+  if (!isNaNL(timestampInt)) {
     try {
       if (timestampInt > 10000) {
         return new Date(timestampInt).getTime();

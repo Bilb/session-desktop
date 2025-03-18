@@ -3,7 +3,7 @@ import { TTL_DEFAULT } from '../../constants';
 import { Message } from './Message';
 
 type InstanceFields<T> = {
-  // eslint-disable-next-line @typescript-eslint/ban-types
+  // biome-ignore lint/complexity/noBannedTypes: <explanation>
   [K in keyof T as T[K] extends Function ? never : K]: T[K];
 };
 

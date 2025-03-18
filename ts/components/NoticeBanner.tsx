@@ -1,7 +1,7 @@
-import { SessionDataTestId } from 'react';
+import type { SessionDataTestId } from 'react';
 import styled from 'styled-components';
 import { Flex } from './basic/Flex';
-import { SessionIconButton, SessionIconType } from './icon';
+import { SessionIconButton, type SessionIconType } from './icon';
 import { StyledRootDialog } from './dialog/StyledRootDialog';
 
 const StyledNoticeBanner = styled(Flex)<{ isClickable: boolean }>`

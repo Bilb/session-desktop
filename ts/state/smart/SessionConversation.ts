@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { SessionConversation } from '../../components/conversation/SessionConversation';
 import { mapDispatchToProps } from '../actions';
-import { StateType } from '../reducer';
+import type { StateType } from '../reducer';
 import { getHasOngoingCallWithFocusedConvo } from '../selectors/call';
 import {
   getIsSelectedConvoInitialLoadingInProgress,
@@ -14,7 +14,7 @@ import { getSelectedConversationKey } from '../selectors/selectedConversation';
 import { getStagedAttachmentsForCurrentConversation } from '../selectors/stagedAttachments';
 import { getTheme } from '../selectors/theme';
 import { getOurDisplayNameInProfile, getOurNumber } from '../selectors/user';
-import { HTMLDirection } from '../../util/i18n/rtlSupport';
+import type { HTMLDirection } from '../../util/i18n/rtlSupport';
 
 type SmartSessionConversationOwnProps = {
   htmlDirection: HTMLDirection;

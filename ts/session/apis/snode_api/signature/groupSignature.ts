@@ -1,4 +1,4 @@
-import {
+import type {
   GroupPubkeyType,
   PubkeyType,
   Uint8ArrayLen100,
@@ -13,11 +13,11 @@ import { GroupUpdatePromoteMessage } from '../../../messages/outgoing/controlMes
 import { StringUtils, UserUtils } from '../../../utils';
 import { fromUInt8ArrayToBase64, stringToUint8Array } from '../../../utils/String';
 import { PreConditionFailed } from '../../../utils/errors';
-import { SnodeNamespacesGroup } from '../namespaces';
-import { SignedGroupHashesParams } from '../types';
-import { WithMessagesHashes, WithShortenOrExtend } from '../../../types/with';
+import type { SnodeNamespacesGroup } from '../namespaces';
+import type { SignedGroupHashesParams } from '../types';
+import type { WithMessagesHashes, WithShortenOrExtend } from '../../../types/with';
 import { SignatureShared } from './signatureShared';
-import { SnodeSignatureResult } from './snodeSignatures';
+import type { SnodeSignatureResult } from './snodeSignatures';
 import { getSodiumRenderer } from '../../../crypto';
 import { NetworkTime } from '../../../../util/NetworkTime';
 

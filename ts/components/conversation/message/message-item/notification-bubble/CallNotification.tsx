@@ -1,11 +1,11 @@
-import { CallNotificationType } from '../../../../../state/ducks/types';
+import type { CallNotificationType } from '../../../../../state/ducks/types';
 
 import { useSelectedNicknameOrProfileNameOrShortenedPubkey } from '../../../../../state/selectors/selectedConversation';
-import { SessionIconType } from '../../../../icon';
+import type { SessionIconType } from '../../../../icon';
 import { ExpirableReadableMessage } from '../ExpirableReadableMessage';
 import { NotificationBubble } from './NotificationBubble';
 import { Localizer } from '../../../../basic/Localizer';
-import { MergedLocalizerTokens } from '../../../../../localization/localeTools';
+import type { MergedLocalizerTokens } from '../../../../../localization/localeTools';
 import type { WithMessageId } from '../../../../../session/types/with';
 import { useMessageCallNotificationType } from '../../../../../state/selectors';
 

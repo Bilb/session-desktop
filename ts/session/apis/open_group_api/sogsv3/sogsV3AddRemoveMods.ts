@@ -1,9 +1,9 @@
 /** MODERATORS ADD/REMOVE */
 
 import AbortController from 'abort-controller';
-import { PubKey } from '../../../types';
+import type { PubKey } from '../../../types';
 import { batchFirstSubIsSuccess, sogsBatchSend } from './sogsV3BatchPoll';
-import { OpenGroupRequestCommonType } from '../../../../data/types';
+import type { OpenGroupRequestCommonType } from '../../../../data/types';
 import { DURATION } from '../../../constants';
 
 /**

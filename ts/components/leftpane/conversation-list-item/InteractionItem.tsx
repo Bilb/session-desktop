@@ -11,7 +11,7 @@ import {
   ConversationInteractionType,
   ConversationInteractionStatus,
 } from '../../../interactions/types';
-import { LastMessageType } from '../../../state/ducks/types';
+import type { LastMessageType } from '../../../state/ducks/types';
 
 const StyledInteractionItemText = styled.div<{ isError: boolean }>`
   ${props => props.isError && 'color: var(--danger-color) !important;'}

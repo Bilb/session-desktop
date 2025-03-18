@@ -1,9 +1,9 @@
-import { createRoot, Root } from 'react-dom/client';
-import { SessionQRCode, SessionQRCodeProps } from '../components/SessionQRCode';
+import { createRoot, type Root } from 'react-dom/client';
+import { SessionQRCode, type SessionQRCodeProps } from '../components/SessionQRCode';
 import { convertIconToImageURL } from '../hooks/useIconToImageURL';
 import { UserUtils } from '../session/utils';
 import { sleepFor } from '../session/utils/Promise';
-import { LightBoxOptions } from '../state/ducks/modalDialog';
+import type { LightBoxOptions } from '../state/ducks/modalDialog';
 
 export function prepareQRCodeForLightBox(fileName: string, url: string, onClose?: () => void) {
   const attachment = {
@@ -73,7 +73,7 @@ export async function renderQRCode(props: SessionQRCodeProps, filename: string):
     if (qrCanvas) {
       url = (qrCanvas as HTMLCanvasElement).toDataURL('image/jpeg');
     } else {
-      throw Error('QR Code canvas not found');
+      throw new Error('QR Code canvas not found');
     }
   } catch (err) {
     window.log.error(`[saveBWQRCode] failed for ${filename}`, err);

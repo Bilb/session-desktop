@@ -1,8 +1,8 @@
 import { createSelector } from '@reduxjs/toolkit';
 
 import { useSelector } from 'react-redux';
-import { LeftOverlayMode, SectionStateType, SectionType } from '../ducks/section';
-import { StateType } from '../reducer';
+import { type LeftOverlayMode, type SectionStateType, SectionType } from '../ducks/section';
+import type { StateType } from '../reducer';
 import type { SessionSettingCategory } from '../../types/ReduxTypes';
 
 export const getSection = (state: StateType): SectionStateType => state.section;

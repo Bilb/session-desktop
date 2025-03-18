@@ -6,7 +6,7 @@ import { SettingsKey } from '../../data/settings-key';
 import { isAudioNotificationSupported } from '../../types/Settings';
 import { Notifications } from '../../util/notifications';
 import { SessionButton } from '../basic/SessionButton';
-import { SessionRadioGroup, SessionRadioItems } from '../basic/SessionRadioGroup';
+import { SessionRadioGroup, type SessionRadioItems } from '../basic/SessionRadioGroup';
 import { SpacerLG } from '../basic/Text';
 import { SessionSettingsItemWrapper, SessionToggleWithDescription } from './SessionSettingListItem';
 

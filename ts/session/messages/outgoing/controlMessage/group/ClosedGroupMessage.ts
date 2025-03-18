@@ -1,7 +1,7 @@
 import { SignalService } from '../../../../../protobuf';
 import { PubKey } from '../../../../types';
 import { DataMessage } from '../../DataMessage';
-import { ExpirableMessageParams } from '../../ExpirableMessage';
+import type { ExpirableMessageParams } from '../../ExpirableMessage';
 
 export interface ClosedGroupMessageParams extends ExpirableMessageParams {
   groupId: string | PubKey;

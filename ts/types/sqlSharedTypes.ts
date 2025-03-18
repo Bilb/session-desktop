@@ -1,7 +1,7 @@
 /* eslint-disable import/extensions */
 /* eslint-disable import/no-unresolved */
 // eslint-disable-next-line camelcase
-import {
+import type {
   ContactInfoSet,
   GroupPubkeyType,
   LegacyGroupInfo,
@@ -10,10 +10,10 @@ import {
 } from 'libsession_util_nodejs';
 import { from_hex } from 'libsodium-wrappers-sumo';
 import { isArray, isEmpty, isEqual } from 'lodash';
-import { DisappearingMessageConversationModeType } from '../session/disappearing_messages/types';
+import type { DisappearingMessageConversationModeType } from '../session/disappearing_messages/types';
 import { fromHexToArray, toHex } from '../session/utils/String';
-import { ConfigWrapperObjectTypesMeta } from '../webworker/workers/browser/libsession_worker_functions';
-import { OpenGroupRequestCommonType, OpenGroupV2Room } from '../data/types';
+import type { ConfigWrapperObjectTypesMeta } from '../webworker/workers/browser/libsession_worker_functions';
+import type { OpenGroupRequestCommonType, OpenGroupV2Room } from '../data/types';
 
 /**
  * This wrapper can be used to make a function type not async, asynced.
@@ -209,7 +209,7 @@ export function maybeArrayJSONtoArray(arr: string | Array<string>): Array<string
       return parsed;
     }
     return [];
-  } catch (e) {
+  } catch (_e) {
     return [];
   }
 }
@@ -259,8 +259,8 @@ export function getLegacyGroupInfoFromDBValues({
       expirationMode && expirationMode !== 'off' && !!expireTimer && expireTimer > 0
         ? expireTimer
         : 0,
-    encPubkey: !isEmpty(encPubkeyHex) ? from_hex(encPubkeyHex) : new Uint8Array(),
-    encSeckey: !isEmpty(encSeckeyHex) ? from_hex(encSeckeyHex) : new Uint8Array(),
+    encPubkey: isEmpty(encPubkeyHex) ? new Uint8Array() : from_hex(encPubkeyHex),
+    encSeckey: isEmpty(encSeckeyHex) ? new Uint8Array() : from_hex(encSeckeyHex),
     joinedAtSeconds: Math.floor(lastJoinedTimestamp / 1000),
   };
 
@@ -272,8 +272,7 @@ export function getLegacyGroupInfoFromDBValues({
  */
 export function assertUnreachable(_x: never, message: string): never {
   const msg = `assertUnreachable: Didn't expect to get here with "${message}"`;
-  // eslint:disable: no-console
-  // eslint-disable-next-line no-console
+  // biome-ignore lint/suspicious/noConsole: <explanation>
   console.info(msg);
   throw new Error(msg);
 }
@@ -319,4 +318,8 @@ export function stringify(obj: unknown) {
   );
 }
 
-export type SaveSeenMessageHash = { expiresAt: number; hash: string; conversationId: string };
+export type SaveSeenMessageHash = {
+  expiresAt: number;
+  hash: string;
+  conversationId: string;
+};

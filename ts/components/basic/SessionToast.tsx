@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { Flex } from './Flex';
 
-import { SessionIcon, SessionIconType } from '../icon';
+import { SessionIcon, type SessionIconType } from '../icon';
 import { SessionHtmlRenderer } from './SessionHTMLRenderer';
 
 // NOTE We don't change the color strip on the left based on the type. 16/09/2022

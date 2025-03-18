@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable import/extensions */
 /* eslint-disable import/no-unresolved */
-import { GroupPubkeyType, PubkeyType } from 'libsession_util_nodejs';
+import type { GroupPubkeyType, PubkeyType } from 'libsession_util_nodejs';
 import { from_hex } from 'libsodium-wrappers-sumo';
 import { compact, difference, isString, omit } from 'lodash';
 import Long from 'long';
@@ -9,16 +9,16 @@ import { UserUtils } from '..';
 import { ConfigDumpData } from '../../../data/configDump/configDump';
 import { assertUnreachable } from '../../../types/sqlSharedTypes';
 import {
-  ConfigWrapperGroupDetailed,
-  ConfigWrapperUser,
+  type ConfigWrapperGroupDetailed,
+  type ConfigWrapperUser,
   isUserConfigWrapperType,
 } from '../../../webworker/workers/browser/libsession_worker_functions';
 import {
   UserGenericWrapperActions,
   MetaGroupWrapperActions,
 } from '../../../webworker/workers/browser/libsession_worker_interface';
-import { SnodeNamespaces, SnodeNamespacesUserConfig } from '../../apis/snode_api/namespaces';
-import {
+import { SnodeNamespaces, type SnodeNamespacesUserConfig } from '../../apis/snode_api/namespaces';
+import type {
   BatchResultEntry,
   NotEmptyArrayOfBatchResults,
 } from '../../apis/snode_api/BatchResultEntry';

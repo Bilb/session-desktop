@@ -1,5 +1,5 @@
-import { GroupPubkeyType } from 'libsession_util_nodejs';
-import { isEmpty, isFinite, isNumber } from 'lodash';
+import type { GroupPubkeyType } from 'libsession_util_nodejs';
+import { isEmpty, isNumber, isFinite as isFiniteL } from 'lodash';
 import { to_hex } from 'libsodium-wrappers-sumo';
 import { Data } from '../../../../data/data';
 import { messagesExpired } from '../../../../state/ducks/conversations';
@@ -12,7 +12,7 @@ import { ed25519Str, fromBase64ToArray } from '../../../utils/String';
 import { GroupPendingRemovals } from '../../../utils/job_runners/jobs/GroupPendingRemovalsJob';
 import { LibSessionUtil } from '../../../utils/libsession/libsession_utils';
 import { SnodeNamespaces } from '../namespaces';
-import { RetrieveMessageItemWithNamespace } from '../types';
+import type { RetrieveMessageItemWithNamespace } from '../types';
 import { ConvoHub } from '../../../conversations';
 import { ProfileManager } from '../../../profile_manager/ProfileManager';
 import { UserUtils } from '../../../utils';
@@ -53,7 +53,7 @@ async function handleMetaMergeResults(groupPk: GroupPubkeyType) {
   } else {
     if (
       isNumber(infos.deleteBeforeSeconds) &&
-      isFinite(infos.deleteBeforeSeconds) &&
+      isFiniteL(infos.deleteBeforeSeconds) &&
       infos.deleteBeforeSeconds > 0 &&
       (lastAppliedRemoveMsgSentBeforeSeconds.get(groupPk) || 0) < infos.deleteBeforeSeconds
     ) {
@@ -67,7 +67,12 @@ async function handleMetaMergeResults(groupPk: GroupPubkeyType) {
         deletedMsgIds
       );
       window.inboxStore?.dispatch(
-        messagesExpired(deletedMsgIds.map(messageId => ({ conversationId: groupPk, messageId })))
+        messagesExpired(
+          deletedMsgIds.map(messageId => ({
+            conversationId: groupPk,
+            messageId,
+          }))
+        )
       );
       ConvoHub.use().get(groupPk)?.updateLastMessage();
       lastAppliedRemoveMsgSentBeforeSeconds.set(groupPk, infos.deleteBeforeSeconds);
@@ -75,7 +80,7 @@ async function handleMetaMergeResults(groupPk: GroupPubkeyType) {
 
     if (
       isNumber(infos.deleteAttachBeforeSeconds) &&
-      isFinite(infos.deleteAttachBeforeSeconds) &&
+      isFiniteL(infos.deleteAttachBeforeSeconds) &&
       infos.deleteAttachBeforeSeconds > 0 &&
       (lastAppliedRemoveAttachmentSentBeforeSeconds.get(groupPk) || 0) <
         infos.deleteAttachBeforeSeconds
@@ -91,7 +96,10 @@ async function handleMetaMergeResults(groupPk: GroupPubkeyType) {
       );
 
       await destroyMessagesAndUpdateRedux(
-        impactedMsgModels.map(m => ({ conversationKey: groupPk, messageId: m.id }))
+        impactedMsgModels.map(m => ({
+          conversationKey: groupPk,
+          messageId: m.id,
+        }))
       );
       ConvoHub.use().get(groupPk)?.updateLastMessage();
 

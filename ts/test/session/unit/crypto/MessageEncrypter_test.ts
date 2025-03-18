@@ -10,7 +10,7 @@ import { TestUtils } from '../../../test-utils';
 
 import { StringUtils, UserUtils } from '../../../../session/utils';
 
-import { SessionKeyPair } from '../../../../receiver/keypairs';
+import type { SessionKeyPair } from '../../../../receiver/keypairs';
 import { addMessagePadding } from '../../../../session/crypto/BufferPadding';
 import { PubKey } from '../../../../session/types';
 import { fromHex, toHex } from '../../../../session/utils/String';

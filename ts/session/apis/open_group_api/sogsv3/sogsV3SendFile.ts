@@ -3,7 +3,7 @@ import { OpenGroupData } from '../../../../data/opengroups';
 import { roomHasBlindEnabled } from '../../../../types/sqlSharedTypes';
 import { OnionSending } from '../../../onions/onionSend';
 import { batchGlobalIsSuccess } from './sogsV3BatchPoll';
-import { OpenGroupRequestCommonType } from '../../../../data/types';
+import type { OpenGroupRequestCommonType } from '../../../../data/types';
 import { DURATION } from '../../../constants';
 
 /**

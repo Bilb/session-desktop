@@ -1,6 +1,5 @@
-/* eslint-disable func-names */
 import { expect } from 'chai';
-import { UserGroupsWrapperActionsCalls } from 'libsession_util_nodejs';
+import type { UserGroupsWrapperActionsCalls } from 'libsession_util_nodejs';
 import Sinon from 'sinon';
 import { ConfigDumpData } from '../../../data/configDump/configDump';
 import { Data } from '../../../data/data';
@@ -63,7 +62,8 @@ export function stubUserGroupWrapper<T extends keyof UserGroupsWrapperActionsCal
 }
 
 export function stubCreateObjectUrl() {
-  (global as any).URL = function () {};
+  // biome-ignore lint/suspicious/noEmptyBlockStatements: <explanation>
+  (global as any).URL = () => {};
   (global as any).URL.createObjectURL = () => {
     return `${Date.now()}:${Math.floor(Math.random() * 1000)}`;
   };
@@ -165,6 +165,9 @@ export function stubValidSnodeSwarm() {
 
 /** You must call stubWindowLog() before using */
 export const stubI18n = () => {
-  const { i18n } = loadLocalizedDictionary({ appLocale: 'en', logger: window.log });
+  const { i18n } = loadLocalizedDictionary({
+    appLocale: 'en',
+    logger: window.log,
+  });
   stubWindow('i18n', i18n);
 };

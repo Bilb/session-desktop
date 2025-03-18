@@ -1,6 +1,6 @@
 import {
-  FormatDistanceStrictOptions,
-  FormatDistanceToNowStrictOptions,
+  type FormatDistanceStrictOptions,
+  type FormatDistanceToNowStrictOptions,
   format,
   formatDistanceStrict,
   formatDistanceToNowStrict,

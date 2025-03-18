@@ -1,5 +1,5 @@
 import { SignalService } from '../../../../../protobuf';
-import { ClosedGroupMessage, ClosedGroupMessageParams } from './ClosedGroupMessage';
+import { ClosedGroupMessage, type ClosedGroupMessageParams } from './ClosedGroupMessage';
 
 export interface ClosedGroupEncryptionPairMessageParams extends ClosedGroupMessageParams {
   encryptedKeyPairs: Array<SignalService.DataMessage.ClosedGroupControlMessage.KeyPairWrapper>;

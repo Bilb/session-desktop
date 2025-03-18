@@ -38,7 +38,7 @@ import {
 } from '../../interactions/conversationInteractions';
 import {
   ConversationNotificationSetting,
-  ConversationNotificationSettingType,
+  type ConversationNotificationSettingType,
 } from '../../models/conversationAttributes';
 import { ConvoHub } from '../../session/conversations';
 import { PubKey } from '../../session/types';
@@ -57,11 +57,11 @@ import { SessionButtonColor } from '../basic/SessionButton';
 import { ItemWithDataTestId } from './items/MenuItemWithDataTestId';
 import { useLibGroupDestroyed } from '../../state/selectors/userGroups';
 import { NetworkTime } from '../../util/NetworkTime';
-import { MergedLocalizerTokens } from '../../localization/localeTools';
+import type { MergedLocalizerTokens } from '../../localization/localeTools';
 
 /** Menu items standardized */
 
-export const InviteContactMenuItem = (): JSX.Element | null => {
+export const InviteContactMenuItem = (): React.JSX.Element | null => {
   const convoId = useConvoIdFromContext();
   const isPublic = useIsPublic(convoId);
 
@@ -548,6 +548,4 @@ export const NotificationForConvoMenuItem = (): JSX.Element | null => {
       })}
     </Submenu>
   );
-
-  return null;
 };

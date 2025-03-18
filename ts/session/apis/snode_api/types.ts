@@ -1,8 +1,8 @@
-import { GroupPubkeyType, PubkeyType } from 'libsession_util_nodejs';
+import type { GroupPubkeyType, PubkeyType } from 'libsession_util_nodejs';
 
-import { SnodeNamespaces } from './namespaces';
-import { SubaccountRevokeSubRequest, SubaccountUnrevokeSubRequest } from './SnodeRequestTypes';
-import { WithSignature, WithTimestamp } from '../../types/with';
+import type { SnodeNamespaces } from './namespaces';
+import type { SubaccountRevokeSubRequest, SubaccountUnrevokeSubRequest } from './SnodeRequestTypes';
+import type { WithSignature, WithTimestamp } from '../../types/with';
 
 export type RetrieveMessageItem = {
   /**

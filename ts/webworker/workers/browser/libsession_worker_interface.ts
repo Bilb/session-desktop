@@ -1,6 +1,6 @@
 /* eslint-disable import/extensions */
 /* eslint-disable import/no-unresolved */
-import {
+import type {
   BlindingActionsCalls,
   ContactInfoSet,
   ContactsWrapperActionsCalls,
@@ -30,7 +30,7 @@ import { cloneDeep } from 'lodash';
 import { getAppRootPath } from '../../../node/getRootPath';
 import { userGroupsActions } from '../../../state/ducks/userGroups';
 import { WorkerInterface } from '../../worker_interface';
-import { ConfigWrapperUser, LibSessionWorkerFunctions } from './libsession_worker_functions';
+import type { ConfigWrapperUser, LibSessionWorkerFunctions } from './libsession_worker_functions';
 
 let libsessionWorkerInterface: WorkerInterface | undefined;
 

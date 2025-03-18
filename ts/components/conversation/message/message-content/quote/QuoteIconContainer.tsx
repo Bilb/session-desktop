@@ -3,9 +3,9 @@ import styled from 'styled-components';
 
 import { MIME } from '../../../../../types';
 import { GoogleChrome } from '../../../../../util';
-import { QuotedAttachmentThumbnailType, QuoteProps } from './Quote';
+import type { QuotedAttachmentThumbnailType, QuoteProps } from './Quote';
 
-import { icons, SessionIconType } from '../../../../icon';
+import { icons, type SessionIconType } from '../../../../icon';
 import { QuoteImage } from './QuoteImage';
 
 function getObjectUrl(thumbnail: QuotedAttachmentThumbnailType | undefined): string | undefined {

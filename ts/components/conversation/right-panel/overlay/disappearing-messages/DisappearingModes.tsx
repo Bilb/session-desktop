@@ -1,4 +1,4 @@
-import { DisappearingMessageConversationModeType } from '../../../../../session/disappearing_messages/types';
+import type { DisappearingMessageConversationModeType } from '../../../../../session/disappearing_messages/types';
 import { Localizer } from '../../../../basic/Localizer';
 import { PanelButtonGroup, PanelLabel } from '../../../../buttons/PanelButton';
 import { PanelRadioButton } from '../../../../buttons/PanelRadioButton';

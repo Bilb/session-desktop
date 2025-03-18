@@ -1,5 +1,5 @@
-import { ReactNode } from 'react';
-import styled, { CSSProperties } from 'styled-components';
+import type { ReactNode } from 'react';
+import styled, { type CSSProperties } from 'styled-components';
 
 export type HeadingProps = {
   children: ReactNode;

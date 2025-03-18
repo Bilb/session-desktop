@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable more/no-then */
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { GroupPubkeyType } from 'libsession_util_nodejs';
+import type { GroupPubkeyType } from 'libsession_util_nodejs';
 import { z } from 'zod';
 
 import {
@@ -24,9 +24,9 @@ import * as Receiver from '../../../receiver/receiver';
 import { PubKey } from '../../types';
 import { ERROR_CODE_NO_CONNECT } from './SNodeAPI';
 
-import { ConversationModel } from '../../../models/conversation';
+import type { ConversationModel } from '../../../models/conversation';
 import { LibsessionMessageHandler } from '../../../receiver/libsession/handleLibSessionMessage';
-import { EnvelopePlus } from '../../../receiver/types';
+import type { EnvelopePlus } from '../../../receiver/types';
 import { updateIsOnline } from '../../../state/ducks/onion';
 import { assertUnreachable } from '../../../types/sqlSharedTypes';
 import {
@@ -44,20 +44,20 @@ import { ed25519Str, fromBase64ToArray, fromHexToArray } from '../../utils/Strin
 import { NotFoundError, PreConditionFailed } from '../../utils/errors';
 import { LibSessionUtil } from '../../utils/libsession/libsession_utils';
 import { MultiEncryptUtils } from '../../utils/libsession/libsession_utils_multi_encrypt';
-import { SnodeNamespace, SnodeNamespaces, SnodeNamespacesUserConfig } from './namespaces';
-import { PollForGroup, PollForLegacy, PollForUs } from './pollingTypes';
+import { SnodeNamespace, SnodeNamespaces, type SnodeNamespacesUserConfig } from './namespaces';
+import type { PollForGroup, PollForLegacy, PollForUs } from './pollingTypes';
 import { SnodeAPIRetrieve } from './retrieveRequest';
 import { SnodePool } from './snodePool';
 import { SwarmPollingGroupConfig } from './swarm_polling_config/SwarmPollingGroupConfig';
 import { SwarmPollingUserConfig } from './swarm_polling_config/SwarmPollingUserConfig';
-import {
+import type {
   RetrieveMessageItem,
   RetrieveMessageItemWithNamespace,
   RetrieveMessagesResultsBatched,
-  type RetrieveMessagesResultsMergedBatched,
+  RetrieveMessagesResultsMergedBatched,
 } from './types';
 import { ConversationTypeEnum } from '../../../models/types';
-import { Snode } from '../../../data/types';
+import type { Snode } from '../../../data/types';
 import { areLegacyGroupsReadOnlyOutsideRedux } from '../../../state/selectors/releasedFeatures';
 
 const minMsgCountShouldRetry = 95;
@@ -629,7 +629,7 @@ export class SwarmPolling {
           if (toBump?.length) {
             configHashesToBump.push(...toBump);
           }
-        } catch (e) {
+        } catch (_e) {
           window.log.warn(`SwarmPolling: failed to get currentHashes for user variant ${variant}`);
         }
       }

@@ -1,11 +1,11 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-case-declarations */
 import {
-  BaseConfigWrapperNode,
+  type BaseConfigWrapperNode,
   BlindingWrapperNode,
   ContactsConfigWrapperNode,
   ConvoInfoVolatileWrapperNode,
-  GroupPubkeyType,
+  type GroupPubkeyType,
   MetaGroupWrapperNode,
   MultiEncryptWrapperNode,
   UserConfigWrapperNode,
@@ -14,12 +14,12 @@ import {
 import { isEmpty, isNull, isObject } from 'lodash';
 
 import {
-  BlindingConfig,
-  ConfigWrapperGroup,
-  ConfigWrapperObjectTypesMeta,
-  ConfigWrapperUser,
-  MetaGroupConfig,
-  MultiEncryptConfig,
+  type BlindingConfig,
+  type ConfigWrapperGroup,
+  type ConfigWrapperObjectTypesMeta,
+  type ConfigWrapperUser,
+  type MetaGroupConfig,
+  type MultiEncryptConfig,
   isBlindingWrapperType,
   isMetaGroupWrapperType,
   isMultiEncryptWrapperType,
@@ -83,12 +83,13 @@ function getCorrespondingUserWrapper(wrapperType: ConfigWrapperUser): BaseConfig
       case 'UserConfig':
       case 'ContactsConfig':
       case 'UserGroupsConfig':
-      case 'ConvoInfoVolatileConfig':
+      case 'ConvoInfoVolatileConfig': {
         const wrapper = getUserWrapper(wrapperType);
         if (!wrapper) {
           throw new Error(`UserWrapper: ${wrapperType} is not init yet`);
         }
         return wrapper;
+      }
       default:
         assertUnreachable(
           wrapperType,
@@ -274,7 +275,7 @@ function initGroupWrapper(options: Array<unknown>, wrapperType: ConfigWrapperGro
   }
   assertUnreachable(groupType, `initGroupWrapper: Missing case error "${groupType}"`);
 }
-
+// biome-ignore lint/suspicious/noGlobalAssign: <explanation>
 onmessage = async (e: {
   data: [number, ConfigWrapperObjectTypesMeta | 'Blinding', string, ...any];
 }) => {

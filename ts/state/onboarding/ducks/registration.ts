@@ -1,34 +1,34 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 export enum Onboarding {
   /** starting screen */
-  Start,
+  Start = 0,
   /** uses AccountCreation internally */
-  CreateAccount,
+  CreateAccount = 1,
   /** uses AccountRestoration internally */
-  RestoreAccount,
+  RestoreAccount = 2,
 }
 
 export enum AccountCreation {
   /** starting screen */
-  DisplayName,
+  DisplayName = 0,
   /** show conversation screen */
-  Done,
+  Done = 1,
 }
 
 export enum AccountRestoration {
   /** starting screen */
-  RecoveryPassword,
+  RecoveryPassword = 0,
   /** fetching account details, so we increment progress to 100% over 15s */
-  Loading,
+  Loading = 1,
   /** found account details, so we increment the remaining progress to 100% over 0.3s */
-  Finishing,
+  Finishing = 2,
   /** found the account details and the progress is now 100%, so we wait for 0.2s */
-  Finished,
+  Finished = 3,
   /** we failed to fetch account details in time, so we enter it manually */
-  DisplayName,
+  DisplayName = 4,
   /** we have restored successfully, show the conversation screen */
-  Complete,
+  Complete = 5,
 }
 
 export type OnboardDirection = 'backward' | 'forward';

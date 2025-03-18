@@ -2,7 +2,7 @@ import { assert } from 'chai';
 
 import Sinon from 'sinon';
 import { CONVERSATION_PRIORITIES, ConversationTypeEnum } from '../../../../models/types';
-import { ConversationLookupType } from '../../../../state/ducks/conversations';
+import type { ConversationLookupType } from '../../../../state/ducks/conversations';
 import {
   _getConversationComparator,
   _getSortedConversations,

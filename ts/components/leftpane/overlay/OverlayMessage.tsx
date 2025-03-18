@@ -192,7 +192,7 @@ export const OverlayMessage = () => {
         </>
       ) : null}
 
-      {!isEmpty(pubkeyOrOns) ? (
+      {isEmpty(pubkeyOrOns) ? null : (
         <SessionButton
           ariaLabel={window.i18n('next')}
           text={window.i18n('next')}
@@ -200,7 +200,7 @@ export const OverlayMessage = () => {
           onClick={handleMessageButtonClick}
           dataTestId="next-new-conversation-button"
         />
-      ) : null}
+      )}
     </StyledLeftPaneOverlay>
   );
 };

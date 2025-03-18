@@ -59,11 +59,11 @@ const StyledTypingDot = styled.div<{ index: number }>`
   }
 
   animation: ${props =>
-      props.index === 0
-        ? 'typing-animation-first'
-        : props.index === 1
-          ? 'typing-animation-second'
-          : 'typing-animation-third'}
+    props.index === 0
+      ? 'typing-animation-first'
+      : props.index === 1
+        ? 'typing-animation-second'
+        : 'typing-animation-third'}
     var(--duration-typing-animation) ease infinite;
 `;
 

@@ -1,5 +1,5 @@
 import { missingCaseError } from '../../../util/missingCaseError';
-import { MediaItemType } from '../../lightbox/LightboxGallery';
+import type { MediaItemType } from '../../lightbox/LightboxGallery';
 import { DocumentListItem } from './DocumentListItem';
 import { MediaGridItem } from './MediaGridItem';
 

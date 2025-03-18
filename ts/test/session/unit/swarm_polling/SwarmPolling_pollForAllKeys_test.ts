@@ -2,19 +2,19 @@ import chai from 'chai';
 import { describe } from 'mocha';
 import Sinon, * as sinon from 'sinon';
 
-import {
+import type {
   GroupPubkeyType,
   LegacyGroupInfo,
   PubkeyType,
   UserGroupsGet,
 } from 'libsession_util_nodejs';
-import { ConversationModel, Convo } from '../../../../models/conversation';
+import { type ConversationModel, Convo } from '../../../../models/conversation';
 import { ConversationTypeEnum } from '../../../../models/types';
 import { getSwarmPollingInstance } from '../../../../session/apis/snode_api';
 import { resetHardForkCachedValues } from '../../../../session/apis/snode_api/hfHandling';
 import { SnodeAPIRetrieve } from '../../../../session/apis/snode_api/retrieveRequest';
 import { SnodePool } from '../../../../session/apis/snode_api/snodePool';
-import { SwarmPolling } from '../../../../session/apis/snode_api/swarmPolling';
+import type { SwarmPolling } from '../../../../session/apis/snode_api/swarmPolling';
 import { ConvoHub } from '../../../../session/conversations';
 import { PubKey } from '../../../../session/types';
 import { UserUtils } from '../../../../session/utils';

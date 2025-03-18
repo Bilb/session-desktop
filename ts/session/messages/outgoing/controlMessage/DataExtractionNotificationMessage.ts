@@ -6,7 +6,7 @@ import { ConvoHub } from '../../../conversations';
 import { DisappearingMessages } from '../../../disappearing_messages';
 import { PubKey } from '../../../types';
 import { UserUtils } from '../../../utils';
-import { ExpirableMessage, ExpirableMessageParams } from '../ExpirableMessage';
+import { ExpirableMessage, type ExpirableMessageParams } from '../ExpirableMessage';
 import { NetworkTime } from '../../../../util/NetworkTime';
 import { MessageQueue } from '../../../sending';
 

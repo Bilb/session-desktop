@@ -1,6 +1,6 @@
-import { AbortSignal } from 'abort-controller';
+import type { AbortSignal } from 'abort-controller';
 import insecureNodeFetch from 'node-fetch';
-import { StagedLinkPreviewData } from './composition/CompositionBox';
+import type { StagedLinkPreviewData } from './composition/CompositionBox';
 
 import { arrayBufferFromFile } from '../../types/Attachment';
 import { getImageDimensions } from '../../types/attachments/VisualAttachment';

@@ -1,4 +1,4 @@
-import {
+import type {
   ConversationInteractionStatus,
   ConversationInteractionType,
 } from '../../interactions/types';
@@ -10,6 +10,7 @@ export type PropsForCallNotification = {
   notificationType: CallNotificationType;
 };
 
+// biome-ignore lint/complexity/noBannedTypes: <explanation>
 export type PropsForMessageRequestResponse = {
   // keeping this an object in case we need to add some details here
 };

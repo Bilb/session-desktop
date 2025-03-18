@@ -1,13 +1,13 @@
 import { isString } from 'lodash';
 import { useSelector } from 'react-redux';
 import { AutoSizer, List } from 'react-virtualized';
-import styled, { CSSProperties } from 'styled-components';
+import styled, { type CSSProperties } from 'styled-components';
 
 import { ConversationListItem } from '../leftpane/conversation-list-item/ConversationListItem';
 import { MessageSearchResult } from './MessageSearchResults';
 
 import {
-  SearchResultsMergedListItem,
+  type SearchResultsMergedListItem,
   getHasSearchResults,
   getSearchResultsList,
   getSearchTerm,
@@ -113,12 +113,12 @@ export const SearchResults = () => {
 
   return (
     <SearchResultsContainer>
-      {!hasSearchResults ? (
+      {hasSearchResults ? (
+        <VirtualizedList />
+      ) : (
         <NoResults>
           <Localizer token="searchMatchesNoneSpecific" args={{ query }} />
         </NoResults>
-      ) : (
-        <VirtualizedList />
       )}
     </SearchResultsContainer>
   );

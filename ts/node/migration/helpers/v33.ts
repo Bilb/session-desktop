@@ -1,5 +1,5 @@
-import * as BetterSqlite3 from '@signalapp/better-sqlite3';
-import { CONFIG_DUMP_TABLE, ConfigDumpRow } from '../../../types/sqlSharedTypes';
+import type * as BetterSqlite3 from '@signalapp/better-sqlite3';
+import { CONFIG_DUMP_TABLE, type ConfigDumpRow } from '../../../types/sqlSharedTypes';
 import { checkTargetMigration } from '../utils';
 
 const targetVersion = 33;

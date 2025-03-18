@@ -1,4 +1,4 @@
-import { Dispatch } from '@reduxjs/toolkit';
+import type { Dispatch } from '@reduxjs/toolkit';
 import { isEmpty } from 'lodash';
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
@@ -282,7 +282,7 @@ export const RestoreAccount = () => {
               onValueChanged={(seed: string) => {
                 dispatch(setRecoveryPassword(seed));
                 dispatch(
-                  setRecoveryPasswordError(!seed ? window.i18n('recoveryPasswordEnter') : undefined)
+                  setRecoveryPasswordError(seed ? undefined : window.i18n('recoveryPasswordEnter'))
                 );
               }}
               onEnterPressed={recoverAndFetchDisplayName}

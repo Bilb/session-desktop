@@ -1,4 +1,4 @@
-import { SessionDataTestId } from 'react';
+import type { SessionDataTestId } from 'react';
 import styled from 'styled-components';
 
 type Props = {

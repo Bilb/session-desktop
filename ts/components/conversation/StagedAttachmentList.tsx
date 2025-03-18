@@ -6,7 +6,7 @@ import {
 } from '../../state/ducks/stagedAttachments';
 import { useSelectedConversationKey } from '../../state/selectors/selectedConversation';
 import {
-  AttachmentType,
+  type AttachmentType,
   areAllAttachmentsVisual,
   getUrl,
   isVideoAttachment,

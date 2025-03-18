@@ -8,7 +8,7 @@ const linkifyIt = new LinkifyIt();
 function maybeParseHref(href: string) {
   try {
     return new URL(href);
-  } catch (err) {
+  } catch (_err) {
     return null;
   }
 }
@@ -79,7 +79,7 @@ const VALID_URI_CHARACTERS = new Set([
   '~',
 ]);
 // eslint-disable-next-line prefer-regex-literals
-const ASCII_PATTERN = new RegExp('[\\u0020-\\u007F]', 'g');
+const ASCII_PATTERN = /[\u0020-\u007F]/g;
 const MAX_HREF_LENGTH = 2 ** 12;
 
 function isLinkSneaky(href: string) {

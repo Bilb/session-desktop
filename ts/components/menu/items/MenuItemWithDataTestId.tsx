@@ -1,5 +1,5 @@
-import React from 'react';
-import { Item, ItemProps } from 'react-contexify';
+import type React from 'react';
+import { Item, type ItemProps } from 'react-contexify';
 
 export function ItemWithDataTestId({
   children,

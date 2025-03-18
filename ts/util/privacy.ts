@@ -52,7 +52,7 @@ const _pathToRegExp = (filePath: string) => {
       .map(escapeRegExp)
       .join('|');
     return new RegExp(patternString, 'g');
-  } catch (error) {
+  } catch (_error) {
     return null;
   }
 };
@@ -110,6 +110,6 @@ function shouldNotRedactLogs() {
 }
 
 //      redactAll :: String -> String
-export const redactAll = !shouldNotRedactLogs()
-  ? compose(redactSensitivePaths, redactGroupIds, redactSessionID, redactSnodeIP, redactServerUrl)
-  : (text: string) => text;
+export const redactAll = shouldNotRedactLogs()
+  ? (text: string) => text
+  : compose(redactSensitivePaths, redactGroupIds, redactSessionID, redactSnodeIP, redactServerUrl);

@@ -31,7 +31,7 @@ export const useEncryptedFileFetch = (
           isAvatar
         );
         setUrlToLoad(decryptedUrl);
-      } catch (error) {
+      } catch (_error) {
         setUrlToLoad('');
       } finally {
         setLoading(false);

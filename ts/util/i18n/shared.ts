@@ -1,5 +1,5 @@
-import { Locale } from 'date-fns';
-import { CrowdinLocale } from '../../localization/constants';
+import type { Locale } from 'date-fns';
+import type { CrowdinLocale } from '../../localization/constants';
 import { timeLocaleMap } from './timeLocaleMap';
 
 let mappedBrowserLocaleDisplayed = false;
@@ -12,10 +12,9 @@ let crowdinLocale: CrowdinLocale | undefined;
  */
 export function i18nLog(message: string) {
   if (typeof window !== 'undefined') {
-    // eslint-disable-next-line no-console
     (window?.log?.error ?? console.log)(`i18n: ${message}`);
   } else {
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: <explanation>
     console.log(`i18n: ${message}`);
   }
 }
@@ -49,7 +48,7 @@ export function getBrowserLocale() {
     let matchingLocales: Array<string> = [];
     try {
       matchingLocales = Intl.DateTimeFormat.supportedLocalesOf(userLocaleDashed);
-    } catch (innerError) {
+    } catch (_innerError) {
       // some users have a locale setup with a ':' in it.
       // see https://github.com/oxen-io/session-desktop/issues/3221
       const semiColonIndex = userLocaleDashed.indexOf(':');

@@ -4,19 +4,19 @@ import { Storage } from '../../../util/storage';
 import { timeout } from '../Promise';
 import { persistedJobFromData } from './JobDeserialization';
 import {
-  AvatarDownloadPersistedData,
-  FetchMsgExpirySwarmPersistedData,
-  GroupInvitePersistedData,
-  GroupPendingRemovalsPersistedData,
-  GroupPromotePersistedData,
-  GroupSyncPersistedData,
-  PersistedJob,
+  type AvatarDownloadPersistedData,
+  type FetchMsgExpirySwarmPersistedData,
+  type GroupInvitePersistedData,
+  type GroupPendingRemovalsPersistedData,
+  type GroupPromotePersistedData,
+  type GroupSyncPersistedData,
+  type PersistedJob,
   RunJobResult,
-  TypeOfPersistedData,
-  UpdateMsgExpirySwarmPersistedData,
-  UserSyncPersistedData,
+  type TypeOfPersistedData,
+  type UpdateMsgExpirySwarmPersistedData,
+  type UserSyncPersistedData,
 } from './PersistedJob';
-import { JobRunnerType } from './jobs/JobRunnerType';
+import type { JobRunnerType } from './jobs/JobRunnerType';
 import { DURATION } from '../../constants';
 
 function jobToLogId<T extends TypeOfPersistedData>(jobRunner: JobRunnerType, job: PersistedJob<T>) {
@@ -98,12 +98,12 @@ export class PersistedJobRunner<T extends TypeOfPersistedData> {
 
       try {
         const parsed = JSON.parse(asStr);
-        if (!isArray(parsed)) {
-          jobsArray = [];
-        } else {
+        if (isArray(parsed)) {
           jobsArray = parsed;
+        } else {
+          jobsArray = [];
         }
-      } catch (e) {
+      } catch (_e) {
         window.log.warn(`Failed to parse jobs of type ${this.jobRunnerType} from DB`);
         jobsArray = [];
       }

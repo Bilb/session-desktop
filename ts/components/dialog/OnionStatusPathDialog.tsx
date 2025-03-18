@@ -1,12 +1,12 @@
 import { ipcRenderer, shell } from 'electron';
-import { useState, SessionDataTestId } from 'react';
+import { useState, type SessionDataTestId } from 'react';
 
 import { useDispatch } from 'react-redux';
 import useHover from 'react-use/lib/useHover';
 import styled from 'styled-components';
 
 import { isEmpty, isTypedArray } from 'lodash';
-import { CityResponse, Reader } from 'maxmind';
+import { type CityResponse, Reader } from 'maxmind';
 import useMount from 'react-use/lib/useMount';
 import { onionPathModal } from '../../state/ducks/modalDialog';
 import {
@@ -17,7 +17,7 @@ import {
 } from '../../state/selectors/onions';
 import { Flex } from '../basic/Flex';
 
-import { Snode } from '../../data/types';
+import type { Snode } from '../../data/types';
 import { THEME_GLOBALS } from '../../themes/globals';
 import { SessionWrapperModal } from '../SessionWrapperModal';
 import { SessionIcon, SessionIconButton } from '../icon';
@@ -144,7 +144,7 @@ const OnionPathModalInner = () => {
                 snode.label || // to take care of the "Device" case
                 countryNamesAsAny?.[locale] || // try to find the country name based on the user local first
                 // eslint-disable-next-line dot-notation
-                countryNamesAsAny?.['en'] || // if not found, fallback to the country in english
+                countryNamesAsAny?.en || // if not found, fallback to the country in english
                 window.i18n('onionRoutingPathUnknownCountry');
 
               return (

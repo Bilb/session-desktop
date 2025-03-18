@@ -1,4 +1,4 @@
-import { type MessageModel } from '../models/message';
+import type { MessageModel } from '../models/message';
 
 import { Data } from '../data/data';
 import { ConvoHub } from '../session/conversations';

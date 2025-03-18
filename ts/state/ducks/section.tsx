@@ -11,12 +11,12 @@ export const RIGHT_OVERLAY_MODE = 'RIGHT_OVERLAY_MODE';
 export const RESET_RIGHT_OVERLAY_MODE = 'RESET_RIGHT_OVERLAY_MODE';
 
 export enum SectionType {
-  Profile,
-  Message,
-  Settings,
-  ColorMode,
-  PathIndicator,
-  DebugMenu,
+  Profile = 0,
+  Message = 1,
+  Settings = 2,
+  ColorMode = 3,
+  PathIndicator = 4,
+  DebugMenu = 5,
 }
 
 type FocusSectionActionType = {
@@ -159,7 +159,7 @@ export const reducer = (
   }
 ): SectionStateType => {
   switch (type) {
-    case FOCUS_SECTION:
+    case FOCUS_SECTION: {
       // if we change to something else than settings, reset the focused settings section
       // eslint-disable-next-line no-case-declarations
       const castedPayload = payload as unknown as SectionType;
@@ -178,6 +178,7 @@ export const reducer = (
         focusedSection: payload,
         focusedSettingsSection: 'privacy',
       };
+    }
     case FOCUS_SETTINGS_SECTION:
       return {
         ...state,

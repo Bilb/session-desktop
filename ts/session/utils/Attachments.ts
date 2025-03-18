@@ -1,12 +1,12 @@
 import * as crypto from 'crypto';
 import _ from 'lodash';
 
-import { Attachment } from '../../types/Attachment';
+import type { Attachment } from '../../types/Attachment';
 
 import { encryptAttachment } from '../../util/crypto/attachmentsEncrypter';
 import { uploadFileToFsWithOnionV4 } from '../apis/file_server_api/FileServerApi';
 import { addAttachmentPadding } from '../crypto/BufferPadding';
-import {
+import type {
   AttachmentPointer,
   AttachmentPointerWithUrl,
   PreviewWithAttachmentUrl,
@@ -69,7 +69,7 @@ async function uploadToFileServer(params: UploadParams): Promise<AttachmentPoint
     pointer.key = new Uint8Array(crypto.randomBytes(64));
     const iv = new Uint8Array(crypto.randomBytes(16));
 
-    const dataToEncrypt = !shouldPad ? attachment.data : addAttachmentPadding(attachment.data);
+    const dataToEncrypt = shouldPad ? addAttachmentPadding(attachment.data) : attachment.data;
     const data = await encryptAttachment(dataToEncrypt, pointer.key.buffer, iv.buffer);
     pointer.digest = new Uint8Array(data.digest);
     attachmentData = data.ciphertext;

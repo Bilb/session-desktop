@@ -3,12 +3,12 @@ import { messagesExpired } from '../../state/ducks/conversations';
 import { initWallClockListener } from '../../util/wallClockListener';
 
 import { Data } from '../../data/data';
-import { ConversationModel } from '../../models/conversation';
+import type { ConversationModel } from '../../models/conversation';
 import { READ_MESSAGE_STATE } from '../../models/conversationAttributes';
-import { MessageModel } from '../../models/message';
+import type { MessageModel } from '../../models/message';
 import { SignalService } from '../../protobuf';
 import { ReleasedFeatures } from '../../util/releaseFeature';
-import { ExpiringDetails, expireMessagesOnSnode } from '../apis/snode_api/expireRequest';
+import { type ExpiringDetails, expireMessagesOnSnode } from '../apis/snode_api/expireRequest';
 import { ConvoHub } from '../conversations';
 import { isValidUnixTimestamp } from '../utils/Timestamps';
 import { UpdateMsgExpirySwarm } from '../utils/job_runners/jobs/UpdateMsgExpirySwarmJob';
@@ -17,11 +17,11 @@ import {
   couldBeLegacyDisappearingMessageContent,
 } from './legacy';
 import {
-  DisappearingMessageConversationModeType,
+  type DisappearingMessageConversationModeType,
   DisappearingMessageMode,
-  DisappearingMessageType,
-  DisappearingMessageUpdate,
-  ReadyToDisappearMsgUpdate,
+  type DisappearingMessageType,
+  type DisappearingMessageUpdate,
+  type ReadyToDisappearMsgUpdate,
 } from './types';
 import { PubKey } from '../types';
 import { NetworkTime } from '../../util/NetworkTime';
@@ -58,7 +58,10 @@ export async function destroyMessagesAndUpdateRedux(
   // trigger a redux update if needed for all those messages
   window.inboxStore?.dispatch(
     messagesExpired(
-      messages.map(m => ({ conversationId: m.conversationKey, messageId: m.messageId }))
+      messages.map(m => ({
+        conversationId: m.conversationKey,
+        messageId: m.messageId,
+      }))
     )
   );
 
@@ -485,7 +488,7 @@ function getMessageReadyToDisappear(
   expireUpdate?: ReadyToDisappearMsgUpdate
 ) {
   if (conversationModel.isPublic()) {
-    throw Error(
+    throw new Error(
       `getMessageReadyToDisappear() Disappearing messages aren't supported in communities`
     );
   }
@@ -668,7 +671,9 @@ async function updateMessageExpiriesOnSwarm(messages: Array<MessageModel>) {
   }
   window.log.debug('updateMessageExpiriesOnSwarm: expiringDetails', expiringDetails);
 
-  const newTTLs = await expireMessagesOnSnode(expiringDetails, { shortenOrExtend: 'shorten' });
+  const newTTLs = await expireMessagesOnSnode(expiringDetails, {
+    shortenOrExtend: 'shorten',
+  });
   const updatedMsgModels: Array<MessageModel> = [];
   window.log.debug('updateMessageExpiriesOnSwarm newTTLs: ', newTTLs);
   newTTLs.forEach(m => {

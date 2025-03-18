@@ -1,6 +1,6 @@
 import { ipcRenderer } from 'electron';
 import { isArrayBuffer, isEmpty, isString, isUndefined, omit } from 'lodash';
-import { ConversationAttributes } from '../models/conversationAttributes';
+import type { ConversationAttributes } from '../models/conversationAttributes';
 import { createDeleter, getAttachmentsPath } from '../shared/attachments/shared_attachments';
 import {
   createAbsolutePathGetter,
@@ -36,10 +36,10 @@ export const deleteExternalMessageFiles = async ({
       results = results.filter(result => result.status === 'rejected');
 
       if (results.length) {
-        throw Error;
+        throw new Error();
       }
-    } catch (err) {
-      // eslint-disable-next-line no-console
+    } catch (_err) {
+      // biome-ignore lint/suspicious/noConsole: <explanation>
       console.warn('[deleteExternalMessageFiles]: Failed to delete attachments for', {
         attachments,
         preview,

@@ -1,7 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { ConfirmModalState } from '../../ducks/modalDialog';
-import { ModalsState, TermsOfServicePrivacyModalState } from '../ducks/modals';
-import { OnboardingStoreState } from '../store';
+import type { ConfirmModalState } from '../../ducks/modalDialog';
+import type { ModalsState, TermsOfServicePrivacyModalState } from '../ducks/modals';
+import type { OnboardingStoreState } from '../store';
 
 const getModals = (state: OnboardingStoreState): ModalsState => {
   return state.modals;

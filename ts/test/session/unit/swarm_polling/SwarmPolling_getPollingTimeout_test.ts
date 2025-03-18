@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import Sinon from 'sinon';
 import { ConversationTypeEnum } from '../../../../models/types';
 import {
-  SwarmPolling,
+  type SwarmPolling,
   getSwarmPollingInstance,
 } from '../../../../session/apis/snode_api/swarmPolling';
 import { SWARM_POLLING_TIMEOUT } from '../../../../session/constants';

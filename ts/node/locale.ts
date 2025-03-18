@@ -1,6 +1,6 @@
 import type { SetupI18nReturnType } from '../types/localizer';
 import { setupI18n } from '../util/i18n/i18n';
-import { CrowdinLocale, isCrowdinLocale } from '../localization/constants';
+import { type CrowdinLocale, isCrowdinLocale } from '../localization/constants';
 
 export function normalizeLocaleName(locale: string) {
   const dashedLocale = locale.replaceAll('_', '-');

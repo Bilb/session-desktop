@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { GroupPubkeyType, MemberStateGroupV2, PubkeyType } from 'libsession_util_nodejs';
+import type { GroupPubkeyType, MemberStateGroupV2, PubkeyType } from 'libsession_util_nodejs';
 import { isEmpty } from 'lodash';
 import {
   useNicknameOrProfileNameOrShortenedPubkey,
@@ -338,7 +338,6 @@ export const MemberListItem = <T extends string>({
   return (
     <StyledSessionMemberItem
       onClick={() => {
-        // eslint-disable-next-line no-unused-expressions
         isSelected ? onUnselect?.(pubkey) : onSelect?.(pubkey);
       }}
       data-testid={dataTestId}

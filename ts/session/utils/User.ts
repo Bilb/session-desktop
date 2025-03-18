@@ -1,13 +1,13 @@
-import { PubkeyType } from 'libsession_util_nodejs';
+import type { PubkeyType } from 'libsession_util_nodejs';
 import _ from 'lodash';
 import { UserUtils } from '.';
 import { Data } from '../../data/data';
-import { SessionKeyPair } from '../../receiver/keypairs';
+import type { SessionKeyPair } from '../../receiver/keypairs';
 import { ConvoHub } from '../conversations';
 import { getOurPubKeyStrFromStorage } from '../../util/storage';
 import { PubKey } from '../types';
 import { fromHexToArray, toHex } from './String';
-import { LokiProfile } from '../../types/message';
+import type { LokiProfile } from '../../types/message';
 
 export type HexKeyPair = {
   pubKey: string;

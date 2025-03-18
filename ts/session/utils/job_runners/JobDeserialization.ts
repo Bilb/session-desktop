@@ -5,7 +5,7 @@ import {
 } from '../../../test/session/unit/utils/job_runner/FakeSleepForJob';
 import { AvatarDownload } from './jobs/AvatarDownloadJob';
 import { UserSync } from './jobs/UserSyncJob';
-import { PersistedJob, TypeOfPersistedData } from './PersistedJob';
+import type { PersistedJob, TypeOfPersistedData } from './PersistedJob';
 
 export function persistedJobFromData<T extends TypeOfPersistedData>(
   data: T

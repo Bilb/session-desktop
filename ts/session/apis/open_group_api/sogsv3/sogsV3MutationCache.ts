@@ -6,7 +6,7 @@
 
 import { filter, findIndex, remove } from 'lodash';
 import { Reactions } from '../../../../util/reactions';
-import { OpenGroupReactionMessageV4 } from '../opengroupV2/OpenGroupServerPoller';
+import type { OpenGroupReactionMessageV4 } from '../opengroupV2/OpenGroupServerPoller';
 import { getOpenGroupV2ConversationId } from '../utils/OpenGroupUtils';
 
 export enum ChangeType {
@@ -51,18 +51,16 @@ function verifyEntry(entry: SogsV3Mutation): boolean {
 }
 
 export function addToMutationCache(entry: SogsV3Mutation) {
-  if (!verifyEntry(entry)) {
-    window.log.error('SOGS Mutation Cache: Entry verification on add failed!', entry);
-  } else {
+  if (verifyEntry(entry)) {
     sogsMutationCache.push(entry);
     window.log.debug('SOGS Mutation Cache: Entry added!', entry);
+  } else {
+    window.log.error('SOGS Mutation Cache: Entry verification on add failed!', entry);
   }
 }
 
 export function updateMutationCache(entry: SogsV3Mutation, seqno: number) {
-  if (!verifyEntry(entry)) {
-    window.log.error('SOGS Mutation Cache: Entry verification on update failed!', entry);
-  } else {
+  if (verifyEntry(entry)) {
     const entryIndex = findIndex(sogsMutationCache, entry);
     if (entryIndex >= 0) {
       sogsMutationCache[entryIndex].seqno = seqno;
@@ -70,6 +68,8 @@ export function updateMutationCache(entry: SogsV3Mutation, seqno: number) {
     } else {
       window.log.error('SOGS Mutation Cache: Updated failed! Cannot find entry', entry);
     }
+  } else {
+    window.log.error('SOGS Mutation Cache: Entry verification on update failed!', entry);
   }
 }
 

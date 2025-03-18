@@ -3,9 +3,9 @@ import { useState } from 'react';
 import { clipboard } from 'electron';
 import { useHotkey } from '../../hooks/useHotkey';
 import { ToastUtils } from '../../session/utils';
-import { SessionButton, SessionButtonProps } from '../basic/SessionButton';
+import { SessionButton, type SessionButtonProps } from '../basic/SessionButton';
 import { SessionIconButton } from '../icon';
-import { SessionIconButtonProps } from '../icon/SessionIconButton';
+import type { SessionIconButtonProps } from '../icon/SessionIconButton';
 
 type CopyProps = {
   copyContent?: string;
@@ -23,7 +23,7 @@ export const CopyToClipboardButton = (props: CopyToClipboardButtonProps) => {
     try {
       const toCopy = copyContent || text;
       if (!toCopy) {
-        throw Error('Nothing to copy!');
+        throw new Error('Nothing to copy!');
       }
 
       clipboard.writeText(toCopy);
@@ -44,7 +44,7 @@ export const CopyToClipboardButton = (props: CopyToClipboardButtonProps) => {
     <SessionButton
       aria-label={'copy to clipboard button'}
       {...props}
-      text={!isEmpty(text) ? text : copied ? window.i18n('copied') : window.i18n('copy')}
+      text={isEmpty(text) ? (copied ? window.i18n('copied') : window.i18n('copy')) : text}
       onClick={onClick}
     />
   );

@@ -1,8 +1,15 @@
 import classNames from 'classnames';
 import _ from 'lodash';
-import { KeyboardEvent, MouseEvent, SessionDataTestId, ReactNode, forwardRef, memo } from 'react';
+import {
+  type KeyboardEvent,
+  type MouseEvent,
+  type SessionDataTestId,
+  type ReactNode,
+  forwardRef,
+  memo,
+} from 'react';
 import styled from 'styled-components';
-import { SessionIcon, SessionIconProps } from './SessionIcon';
+import { SessionIcon, type SessionIconProps } from './SessionIcon';
 
 export type SessionIconButtonProps = SessionIconProps & {
   onClick?: (e?: MouseEvent<HTMLButtonElement>) => void;

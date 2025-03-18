@@ -2,8 +2,8 @@
 /* eslint-disable no-async-promise-executor */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 
-import AbortController from 'abort-controller';
-import { Snode } from '../../data/types';
+import type AbortController from 'abort-controller';
+import type { Snode } from '../../data/types';
 
 type SimpleFunction<T> = (arg: T) => void;
 type Return<T> = Promise<T> | T;
@@ -31,9 +31,9 @@ export async function allowOnlyOneAtATime<T>(
   // if currently not in progress
   if (oneAtaTimeRecord[name] === undefined) {
     // set lock
-    oneAtaTimeRecord[name] = new Promise(async (resolve, reject) => {
+    oneAtaTimeRecord[name] = new Promise((resolve, reject) => {
       // set up timeout feature
-      let timeoutTimer = null;
+      let timeoutTimer: ReturnType<typeof setTimeout> | null = null;
       if (timeoutMs) {
         timeoutTimer = setTimeout(() => {
           window?.log?.warn(`allowOnlyOneAtATime - TIMEDOUT after ${timeoutMs}ms`);
@@ -43,38 +43,37 @@ export async function allowOnlyOneAtATime<T>(
         }, timeoutMs);
       }
       // do actual work
-      let innerRetVal: T | undefined;
-      try {
-        innerRetVal = await process();
-      } catch (e) {
-        if (typeof e === 'string') {
-          window?.log?.error(`allowOnlyOneAtATime - error ${e}`);
-        } else {
-          window?.log?.error(`allowOnlyOneAtATime - error ${e.code} ${e.message}`);
-        }
-
-        // clear timeout timer
-        if (timeoutMs) {
-          if (timeoutTimer !== null) {
-            clearTimeout(timeoutTimer);
-            timeoutTimer = null;
+      process()
+        .then(ret => {
+          // clear timeout timer
+          if (timeoutMs) {
+            if (timeoutTimer !== null) {
+              clearTimeout(timeoutTimer);
+              timeoutTimer = null;
+            }
           }
-        }
 
-        delete oneAtaTimeRecord[name]; // clear lock
-        reject(e);
-      }
-      // clear timeout timer
-      if (timeoutMs) {
-        if (timeoutTimer !== null) {
-          clearTimeout(timeoutTimer);
-          timeoutTimer = null;
-        }
-      }
+          delete oneAtaTimeRecord[name]; // clear lock
+          resolve(ret);
+        })
+        .catch(e => {
+          if (typeof e === 'string') {
+            window?.log?.error(`allowOnlyOneAtATime - error ${e}`);
+          } else {
+            window?.log?.error(`allowOnlyOneAtATime - error ${e.code} ${e.message}`);
+          }
 
-      delete oneAtaTimeRecord[name]; // clear lock
-      // release the kraken
-      resolve(innerRetVal);
+          // clear timeout timer
+          if (timeoutMs) {
+            if (timeoutTimer !== null) {
+              clearTimeout(timeoutTimer);
+              timeoutTimer = null;
+            }
+          }
+
+          delete oneAtaTimeRecord[name]; // clear lock
+          reject(e);
+        });
     });
   }
   return oneAtaTimeRecord[name];
@@ -93,7 +92,7 @@ export function hasAlreadyOneAtaTimeMatching(text: string): boolean {
  */
 export async function waitForTask<T>(
   task: (done: SimpleFunction<T>) => Return<void>,
-  timeoutMs: number = 2000
+  timeoutMs = 2000
 ): Promise<T> {
   const timeoutPromise = new Promise<T>((_, rej) => {
     const wait = setTimeout(() => {
@@ -102,12 +101,8 @@ export async function waitForTask<T>(
     }, timeoutMs);
   });
 
-  const taskPromise = new Promise(async (res, rej) => {
-    try {
-      await toPromise(task(res));
-    } catch (e) {
-      rej(e);
-    }
+  const taskPromise = new Promise((res, rej) => {
+    return toPromise(task(res)).catch(e => rej(e));
   });
 
   return Promise.race([timeoutPromise, taskPromise]) as Promise<T>;
@@ -178,7 +173,7 @@ export async function poll(
  * @param check The boolean check.
  * @param timeout The time before an error is thrown.
  */
-export async function waitUntil(check: () => Return<boolean>, timeoutMs: number = 2000) {
+export async function waitUntil(check: () => Return<boolean>, timeoutMs = 2000) {
   // This is causing unhandled promise rejection somewhere in MessageQueue tests
   return poll(
     async done => {
@@ -227,7 +222,7 @@ export async function timeoutWithAbort<T>(
 
 export const sleepFor = async (ms: number, showLog = false) => {
   if (showLog) {
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: <explanation>
     console.info(`sleeping for ${ms}ms...`);
   }
   return new Promise(resolve => {

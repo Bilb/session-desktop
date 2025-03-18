@@ -35,7 +35,7 @@ function cleanArgsForIPC(args: any) {
     if (typeof item !== 'string') {
       try {
         return JSON.stringify(item);
-      } catch (error) {
+      } catch (_error) {
         return item;
       }
     }

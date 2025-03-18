@@ -1,4 +1,4 @@
-import * as BetterSqlite3 from '@signalapp/better-sqlite3';
+import type * as BetterSqlite3 from '@signalapp/better-sqlite3';
 import { app, clipboard, dialog, Notification } from 'electron';
 import fs from 'fs';
 import path from 'path';
@@ -26,9 +26,9 @@ import {
   uniq,
 } from 'lodash';
 
-import { GroupPubkeyType } from 'libsession_util_nodejs';
-import { ConversationAttributes } from '../models/conversationAttributes';
-import { PubKey } from '../session/types/PubKey';
+import type { GroupPubkeyType } from 'libsession_util_nodejs';
+import type { ConversationAttributes } from '../models/conversationAttributes';
+import type { PubKey } from '../session/types/PubKey';
 import { redactAll } from '../util/privacy';
 import {
   arrayStrToJson,
@@ -52,28 +52,28 @@ import {
   toSqliteBoolean,
 } from './database_utility';
 import type { SetupI18nReturnType } from '../types/localizer';
-import { StorageItem } from './storage_item';
+import type { StorageItem } from './storage_item';
 
 import {
   CONFIG_DUMP_TABLE,
-  MsgDuplicateSearchOpenGroup,
+  type MsgDuplicateSearchOpenGroup,
   roomHasBlindEnabled,
-  SaveConversationReturn,
-  SaveSeenMessageHash,
-  UnprocessedDataNode,
-  UnprocessedParameter,
-  UpdateLastHashType,
+  type SaveConversationReturn,
+  type SaveSeenMessageHash,
+  type UnprocessedDataNode,
+  type UnprocessedParameter,
+  type UpdateLastHashType,
 } from '../types/sqlSharedTypes';
 
 import { KNOWN_BLINDED_KEYS_ITEM, SettingsKey } from '../data/settings-key';
-import {
+import type {
   FindAllMessageFromSendersInConversationTypeArgs,
   FindAllMessageHashesInConversationMatchingAuthorTypeArgs,
   FindAllMessageHashesInConversationTypeArgs,
 } from '../data/sharedDataTypes';
-import { MessageAttributes } from '../models/messageType';
+import type { MessageAttributes } from '../models/messageType';
 import { SignalService } from '../protobuf';
-import { Quote } from '../receiver/types';
+import type { Quote } from '../receiver/types';
 import { DURATION } from '../session/constants';
 import { createDeleter, getAttachmentsPath } from '../shared/attachments/shared_attachments';
 import { ed25519Str } from '../session/utils/String';
@@ -90,7 +90,7 @@ import {
   initDbInstanceWith,
   isInstanceInitialized,
 } from './sqlInstance';
-import { OpenGroupV2Room } from '../data/types';
+import type { OpenGroupV2Room } from '../data/types';
 
 // eslint:disable: function-name non-literal-fs-path
 
@@ -435,7 +435,7 @@ function clearOutAllSnodesNotInPool(edKeysOfSnodePool: Array<string>) {
           );
         }
       }
-    } catch (e) {
+    } catch (_e) {
       console.warn(
         `Failed to parse swarm while iterating in clearOutAllSnodesNotInPool for pk: ${ed25519Str(swarm?.pubkey)}`
       );
@@ -621,7 +621,7 @@ export function getIdentityKeys(db: BetterSqlite3.Database) {
       publicKeyHex,
       privateEd25519,
     };
-  } catch (e) {
+  } catch (_e) {
     return null;
   }
 }
@@ -2572,7 +2572,10 @@ function cleanUpOldOpengroupsOnStart() {
 
   if (pruneSetting === undefined) {
     console.info('Prune settings is undefined (and not explicitly false), forcing it to true.');
-    createOrUpdateItem({ id: SettingsKey.settingsOpengroupPruning, value: true });
+    createOrUpdateItem({
+      id: SettingsKey.settingsOpengroupPruning,
+      value: true,
+    });
     pruneSetting = true;
   }
 

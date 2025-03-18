@@ -5,11 +5,14 @@ import useMount from 'react-use/lib/useMount';
 import styled from 'styled-components';
 import { useIsDetailMessageView } from '../../../../contexts/isDetailViewContext';
 import { useMessageExpirationPropsById } from '../../../../hooks/useParamSelector';
-import { MessageModelType } from '../../../../models/messageType';
-import { messagesExpired, PropsForExpiringMessage } from '../../../../state/ducks/conversations';
+import type { MessageModelType } from '../../../../models/messageType';
+import {
+  messagesExpired,
+  type PropsForExpiringMessage,
+} from '../../../../state/ducks/conversations';
 import { getIncrement } from '../../../../util/timer';
 import { ExpireTimer } from '../../ExpireTimer';
-import { ReadableMessage, ReadableMessageProps } from './ReadableMessage';
+import { ReadableMessage, type ReadableMessageProps } from './ReadableMessage';
 import { Data } from '../../../../data/data';
 import { ConvoHub } from '../../../../session/conversations';
 

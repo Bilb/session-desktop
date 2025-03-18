@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 
 import { useDispatch } from 'react-redux';
-import { MessageRenderingProps } from '../../../../models/messageType';
+import type { MessageRenderingProps } from '../../../../models/messageType';
 import {
   useMessageAttachments,
   useMessageDirection,

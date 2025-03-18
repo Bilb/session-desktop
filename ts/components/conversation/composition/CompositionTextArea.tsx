@@ -1,4 +1,4 @@
-import { RefObject, useState } from 'react';
+import { type RefObject, useState } from 'react';
 import { Mention, MentionsInput } from 'react-mentions';
 import { uniq } from 'lodash';
 import { useSelector } from 'react-redux';
@@ -14,7 +14,7 @@ import {
 import { updateDraftForConversation } from '../SessionConversationDrafts';
 import { renderEmojiQuickResultRow, searchEmojiForQuery } from './EmojiQuickResult';
 import { renderUserMentionRow, styleForCompositionBoxSuggestions } from './UserMentions';
-import { HTMLDirection, useHTMLDirection } from '../../../util/i18n/rtlSupport';
+import { type HTMLDirection, useHTMLDirection } from '../../../util/i18n/rtlSupport';
 import { ConvoHub } from '../../../session/conversations';
 import { Constants } from '../../../session';
 import type { SessionSuggestionDataItem } from './types';

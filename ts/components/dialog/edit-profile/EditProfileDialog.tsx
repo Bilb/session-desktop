@@ -1,9 +1,9 @@
 import { isEmpty } from 'lodash';
-import { RefObject, useRef, useState } from 'react';
+import { type RefObject, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
-import { Dispatch } from '@reduxjs/toolkit';
+import type { Dispatch } from '@reduxjs/toolkit';
 import { UserUtils } from '../../../session/utils';
 import { YourSessionIDPill, YourSessionIDSelectable } from '../../basic/YourSessionIDPill';
 
@@ -363,7 +363,7 @@ export const EditProfileDialog = () => {
           <SpacerLG />
           <YourSessionIDSelectable />
           <SessionSpinner loading={loading} height={'74px'} />
-          {!loading ? <Spacer2XL /> : null}
+          {loading ? null : <Spacer2XL />}
           {mode === 'default' || mode === 'qr' || mode === 'lightbox' ? (
             <Flex
               container={true}
@@ -399,7 +399,7 @@ export const EditProfileDialog = () => {
             )
           )}
 
-          {!loading ? <SpacerSM /> : null}
+          {loading ? null : <SpacerSM />}
         </StyledSessionIdSection>
       </SessionWrapperModal>
     </StyledEditProfileDialog>

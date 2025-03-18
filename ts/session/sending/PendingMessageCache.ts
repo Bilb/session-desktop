@@ -2,10 +2,10 @@ import { from_hex, to_hex } from 'libsodium-wrappers-sumo';
 import _, { compact, isNumber } from 'lodash';
 import { Data } from '../../data/data';
 import { Storage } from '../../util/storage';
-import { SnodeNamespaces } from '../apis/snode_api/namespaces';
-import { ContentMessage } from '../messages/outgoing';
+import type { SnodeNamespaces } from '../apis/snode_api/namespaces';
+import type { ContentMessage } from '../messages/outgoing';
 import { PubKey } from '../types';
-import { OutgoingRawMessage, StoredRawMessage } from '../types/RawMessage';
+import type { OutgoingRawMessage, StoredRawMessage } from '../types/RawMessage';
 import { MessageUtils } from '../utils';
 
 // This is an abstraction for storing pending messages.

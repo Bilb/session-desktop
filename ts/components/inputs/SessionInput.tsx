@@ -1,8 +1,8 @@
 import {
-  ChangeEvent,
-  ReactNode,
-  RefObject,
-  SessionDataTestId,
+  type ChangeEvent,
+  type ReactNode,
+  type RefObject,
+  type SessionDataTestId,
   useEffect,
   useRef,
   useState,
@@ -10,7 +10,7 @@ import {
 
 import { motion } from 'framer-motion';
 import { isEmpty, isEqual } from 'lodash';
-import styled, { CSSProperties } from 'styled-components';
+import styled, { type CSSProperties } from 'styled-components';
 import { THEME_GLOBALS } from '../../themes/globals';
 import { AnimatedFlex, Flex } from '../basic/Flex';
 import { SpacerMD } from '../basic/Text';
@@ -428,7 +428,7 @@ export const SessionInput = (props: Props) => {
             {isFocused ? (
               <textarea
                 {...inputProps}
-                placeholder={!autoFocus ? '' : editable ? placeholder : value}
+                placeholder={autoFocus ? (editable ? placeholder : value) : ''}
                 ref={inputRef || textAreaRef}
                 aria-label={ariaLabel || 'session input text area'}
               />

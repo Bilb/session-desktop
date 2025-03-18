@@ -1,5 +1,5 @@
 /* eslint-disable no-await-in-loop */
-import { PubkeyType } from 'libsession_util_nodejs';
+import type { PubkeyType } from 'libsession_util_nodejs';
 import { compact, isArray, isEmpty, isNumber, isString } from 'lodash';
 import { v4 } from 'uuid';
 import { to_hex } from 'libsodium-wrappers-sumo';
@@ -17,13 +17,13 @@ import { DURATION, TTL_DEFAULT } from '../../../constants';
 import { ConvoHub } from '../../../conversations';
 import { MessageSender } from '../../../sending/MessageSender';
 import { allowOnlyOneAtATime, timeoutWithAbort } from '../../Promise';
-import { LibSessionUtil, UserSuccessfulChange } from '../../libsession/libsession_utils';
+import { LibSessionUtil, type UserSuccessfulChange } from '../../libsession/libsession_utils';
 import { runners } from '../JobRunner';
 import {
-  AddJobCheckReturn,
+  type AddJobCheckReturn,
   PersistedJob,
   RunJobResult,
-  UserSyncPersistedData,
+  type UserSyncPersistedData,
 } from '../PersistedJob';
 import { NetworkTime } from '../../../../util/NetworkTime';
 
@@ -193,8 +193,8 @@ class UserSyncJob extends PersistedJob<UserSyncPersistedData> {
       }
 
       return await UserSync.pushChangesToUserSwarmIfNeeded();
-      // eslint-disable-next-line no-useless-catch
     } catch (e) {
+      // biome-ignore lint/complexity/noUselessCatch: I actually find this easier to read, even if the catch is useless
       throw e;
     } finally {
       window.log.debug(`UserSyncJob run() took ${Date.now() - start}ms`);
@@ -257,7 +257,9 @@ async function queueNewJobIfNeeded() {
     // - to allow a recently created device to process incoming config messages before pushing a new one
     // this call will make sure that there is only one configuration sync job at all times
     await runners.userSyncRunner.addJob(
-      new UserSyncJob({ nextAttemptTimestamp: Date.now() + 3 * DURATION.SECONDS })
+      new UserSyncJob({
+        nextAttemptTimestamp: Date.now() + 3 * DURATION.SECONDS,
+      })
     );
   } else {
     // if we did run at t=100, and it is currently t=110, the difference is 10
@@ -266,7 +268,9 @@ async function queueNewJobIfNeeded() {
     const leftBeforeNextTick = Math.max(defaultMsBetweenRetries - diff, 1 * DURATION.SECONDS);
 
     await runners.userSyncRunner.addJob(
-      new UserSyncJob({ nextAttemptTimestamp: Date.now() + leftBeforeNextTick })
+      new UserSyncJob({
+        nextAttemptTimestamp: Date.now() + leftBeforeNextTick,
+      })
     );
   }
 }

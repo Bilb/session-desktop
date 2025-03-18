@@ -1,4 +1,4 @@
-import { GroupPubkeyType } from 'libsession_util_nodejs';
+import type { GroupPubkeyType } from 'libsession_util_nodejs';
 import { GroupUpdateInviteResponseMessage } from '../../messages/outgoing/controlMessage/group_v2/to_group/GroupUpdateInviteResponseMessage';
 import { ed25519Str } from '../../utils/String';
 import { NetworkTime } from '../../../util/NetworkTime';

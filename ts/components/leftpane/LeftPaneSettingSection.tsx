@@ -1,4 +1,4 @@
-import { SessionDataTestId } from 'react';
+import type { SessionDataTestId } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 
@@ -14,7 +14,7 @@ import { getFocusedSettingsSection } from '../../state/selectors/section';
 import { useHideRecoveryPasswordEnabled } from '../../state/selectors/settings';
 import type { SessionSettingCategory } from '../../types/ReduxTypes';
 import { Flex } from '../basic/Flex';
-import { SessionIcon, SessionIconType } from '../icon';
+import { SessionIcon, type SessionIconType } from '../icon';
 import { LeftPaneSectionHeader } from './LeftPaneSectionHeader';
 
 const StyledSettingsSectionTitle = styled.span`

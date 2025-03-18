@@ -1,8 +1,8 @@
-import { AbortSignal } from 'abort-controller';
+import type { AbortSignal } from 'abort-controller';
 import { SearchIndex } from 'emoji-mart';
 import { Data } from '../../../../data/data';
-import { ConversationModel } from '../../../../models/conversation';
-import { Action, OpenGroupReactionResponse, Reaction } from '../../../../types/Reaction';
+import type { ConversationModel } from '../../../../models/conversation';
+import { Action, type OpenGroupReactionResponse, type Reaction } from '../../../../types/Reaction';
 import { Reactions } from '../../../../util/reactions';
 import { OnionSending } from '../../../onions/onionSend';
 import { ToastUtils, UserUtils } from '../../../utils';

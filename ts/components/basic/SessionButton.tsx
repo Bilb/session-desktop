@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { ReactNode, RefObject } from 'react';
+import type { ReactNode, RefObject } from 'react';
 import styled from 'styled-components';
 
 export enum SessionButtonType {

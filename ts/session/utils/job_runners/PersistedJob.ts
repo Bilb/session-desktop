@@ -1,4 +1,4 @@
-import { GroupPubkeyType, PubkeyType } from 'libsession_util_nodejs';
+import type { GroupPubkeyType, PubkeyType } from 'libsession_util_nodejs';
 import { cloneDeep, flatten, isEmpty, isNil, uniq } from 'lodash';
 
 export type PersistedJobType =

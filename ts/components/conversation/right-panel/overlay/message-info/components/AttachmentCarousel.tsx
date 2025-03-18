@@ -1,7 +1,7 @@
 import { isEmpty } from 'lodash';
-import { useCallback, useState } from 'react';
-import styled, { CSSProperties } from 'styled-components';
-import { PropsForAttachment } from '../../../../../../state/ducks/conversations';
+import { useState } from 'react';
+import styled, { type CSSProperties } from 'styled-components';
+import type { PropsForAttachment } from '../../../../../../state/ducks/conversations';
 import { getAlt, getThumbnailUrl, isVideoAttachment } from '../../../../../../types/Attachment';
 import { Flex } from '../../../../../basic/Flex';
 import { SessionIconButton } from '../../../../../icon';
@@ -76,9 +76,9 @@ export const AttachmentCarousel = (props: Props) => {
 
   const [imageBroken, setImageBroken] = useState(false);
 
-  const handleImageError = useCallback(() => {
+  const handleImageError = () => {
     setImageBroken(true);
-  }, [setImageBroken]);
+  };
 
   if (isEmpty(attachments)) {
     window.log.debug('No attachments to render in carousel');

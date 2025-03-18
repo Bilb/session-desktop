@@ -6,7 +6,6 @@ import {
   isArray,
   isEmpty,
   isEqual,
-  isFinite,
   isNil,
   isNumber,
   isString,
@@ -14,9 +13,10 @@ import {
   throttle,
   uniq,
   xor,
+  isFinite as isFiniteL,
 } from 'lodash';
 
-import { DisappearingMessageConversationModeType } from 'libsession_util_nodejs';
+import type { DisappearingMessageConversationModeType } from 'libsession_util_nodejs';
 import { v4 } from 'uuid';
 import { SignalService } from '../protobuf';
 import { ConvoHub } from '../session/conversations';
@@ -28,7 +28,7 @@ import { PubKey } from '../session/types';
 import { ToastUtils, UserUtils } from '../session/utils';
 import { BlockedNumberController } from '../util';
 import { MessageModel } from './message';
-import { MessageAttributesOptionals, type MessageAttributes } from './messageType';
+import type { MessageAttributesOptionals, MessageAttributes } from './messageType';
 
 import { Data } from '../data/data';
 import { OpenGroupUtils } from '../session/apis/open_group_api/utils';
@@ -39,7 +39,7 @@ import { CommunityInvitationMessage } from '../session/messages/outgoing/visible
 import { OpenGroupVisibleMessage } from '../session/messages/outgoing/visibleMessage/OpenGroupVisibleMessage';
 import {
   VisibleMessage,
-  VisibleMessageParams,
+  type VisibleMessageParams,
 } from '../session/messages/outgoing/visibleMessage/VisibleMessage';
 import { perfEnd, perfStart } from '../session/utils/Performance';
 import { ed25519Str, toHex } from '../session/utils/String';
@@ -49,10 +49,10 @@ import {
   conversationsChanged,
   markConversationFullyRead,
   messagesDeleted,
-  ReduxConversationType,
+  type ReduxConversationType,
 } from '../state/ducks/conversations';
 
-import {
+import type {
   ReplyingToMessageProps,
   SendMessageType,
 } from '../components/conversation/composition/CompositionBox';
@@ -71,7 +71,7 @@ import { addMessagePadding } from '../session/crypto/BufferPadding';
 import { DecryptedAttachmentsManager } from '../session/crypto/DecryptedAttachmentsManager';
 import {
   MessageRequestResponse,
-  MessageRequestResponseParams,
+  type MessageRequestResponseParams,
 } from '../session/messages/outgoing/controlMessage/MessageRequestResponse';
 import { SessionUtilContact } from '../session/utils/libsession/libsession_utils_contacts';
 import { SessionUtilConvoInfoVolatile } from '../session/utils/libsession/libsession_utils_convo_info_volatile';
@@ -83,18 +83,18 @@ import {
   loadAttachmentData,
 } from '../types/MessageAttachment';
 import { IMAGE_JPEG } from '../types/MIME';
-import { Reaction } from '../types/Reaction';
+import type { Reaction } from '../types/Reaction';
 import {
   assertUnreachable,
   roomHasBlindEnabled,
   roomHasReactionsEnabled,
-  SaveConversationReturn,
+  type SaveConversationReturn,
 } from '../types/sqlSharedTypes';
 import { Notifications } from '../util/notifications';
 import { Reactions } from '../util/reactions';
 import { Storage } from '../util/storage';
 import {
-  ConversationAttributes,
+  type ConversationAttributes,
   ConversationNotificationSetting,
   fillConvoAttributesWithDefaults,
   isDirectConversation,
@@ -132,7 +132,7 @@ import {
 } from '../webworker/workers/browser/libsession_worker_interface';
 import { markAttributesAsReadIfNeeded } from './messageFactory';
 import { StoreGroupRequestFactory } from '../session/apis/snode_api/factories/StoreGroupRequestFactory';
-import { OpenGroupRequestCommonType } from '../data/types';
+import type { OpenGroupRequestCommonType } from '../data/types';
 import { ConversationTypeEnum, CONVERSATION_PRIORITIES } from './types';
 import { NetworkTime } from '../util/NetworkTime';
 import { MessageQueue } from '../session/sending';
@@ -182,7 +182,10 @@ export class ConversationModel extends Model<ConversationAttributes> {
     });
 
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    this.throttledNotify = debounce(this.notify, 2000, { maxWait: 2000, trailing: true });
+    this.throttledNotify = debounce(this.notify, 2000, {
+      maxWait: 2000,
+      trailing: true,
+    });
     // start right away the function is called, and wait 1sec before calling it again
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this.markConversationRead = debounce(this.markConversationReadBouncy, 1000, {
@@ -332,7 +335,7 @@ export class ConversationModel extends Model<ConversationAttributes> {
       type: this.get('type'),
     };
 
-    if (isFinite(priorityFromDb) && priorityFromDb !== CONVERSATION_PRIORITIES.default) {
+    if (isFiniteL(priorityFromDb) && priorityFromDb !== CONVERSATION_PRIORITIES.default) {
       toRet.priority = priorityFromDb;
     }
 
@@ -356,7 +359,7 @@ export class ConversationModel extends Model<ConversationAttributes> {
 
       const foundContact = SessionUtilContact.getContactCached(this.id);
 
-      if (!toRet.activeAt && foundContact && isFinite(foundContact.createdAtSeconds)) {
+      if (!toRet.activeAt && foundContact && isFiniteL(foundContact.createdAtSeconds)) {
         toRet.activeAt = foundContact.createdAtSeconds * 1000; // active at is in ms
       }
     }
@@ -818,7 +821,10 @@ export class ConversationModel extends Model<ConversationAttributes> {
     const attachmentsWithVoiceMessage = attachments
       ? attachments.map(attachment => {
           if (attachment.isVoiceMessage) {
-            return { ...attachment, flags: SignalService.AttachmentPointer.Flags.VOICE_MESSAGE };
+            return {
+              ...attachment,
+              flags: SignalService.AttachmentPointer.Flags.VOICE_MESSAGE,
+            };
           }
           return attachment;
         })
@@ -1020,13 +1026,7 @@ export class ConversationModel extends Model<ConversationAttributes> {
     };
 
     if (!message) {
-      if (!sentAt) {
-        // outgoing message
-        message = await this.addSingleOutgoingMessage({
-          ...commonAttributes,
-          sent_at: createAtNetworkTimestamp,
-        });
-      } else {
+      if (sentAt) {
         message = await this.addSingleIncomingMessage({
           ...commonAttributes,
           // Even though this isn't reflected to the user, we want to place the last seen indicator above it. We set it to 'unread' to trigger that placement.
@@ -1034,6 +1034,12 @@ export class ConversationModel extends Model<ConversationAttributes> {
           source,
           sent_at: createAtNetworkTimestamp,
           received_at: createAtNetworkTimestamp,
+        });
+      } else {
+        // outgoing message
+        message = await this.addSingleOutgoingMessage({
+          ...commonAttributes,
+          sent_at: createAtNetworkTimestamp,
         });
       }
     }
@@ -1491,10 +1497,7 @@ export class ConversationModel extends Model<ConversationAttributes> {
    * This is done with this function.
    * There are other actions to change the priority from the UI (or from )
    */
-  public async setPriorityFromWrapper(
-    priority: number,
-    shouldCommit: boolean = true
-  ): Promise<boolean> {
+  public async setPriorityFromWrapper(priority: number, shouldCommit = true): Promise<boolean> {
     if (priority !== this.getPriority()) {
       this.set({
         priority,
@@ -1513,7 +1516,7 @@ export class ConversationModel extends Model<ConversationAttributes> {
    * Any conversation can be pinned and the higher the priority, the higher it will be in the list.
    * Note: Currently, we do not have an order in the list of pinned conversation, but the libsession util wrapper can handle the order.
    */
-  public async togglePinned(shouldCommit: boolean = true) {
+  public async togglePinned(shouldCommit = true) {
     this.set({ priority: this.isPinned() ? 0 : 1 });
     if (shouldCommit) {
       await this.commit();
@@ -1524,7 +1527,7 @@ export class ConversationModel extends Model<ConversationAttributes> {
   /**
    * Force the priority to be -1 (PRIORITY_DEFAULT_HIDDEN) so this conversation is hidden in the list. Currently only works for private chats.
    */
-  public async setHidden(shouldCommit: boolean = true) {
+  public async setHidden(shouldCommit = true) {
     if (!this.isPrivate()) {
       return;
     }
@@ -1542,9 +1545,9 @@ export class ConversationModel extends Model<ConversationAttributes> {
    * So if the conversation was pinned, we keep it pinned with its current priority.
    * A pinned cannot be hidden, as the it is all based on the same priority values.
    */
-  public async unhideIfNeeded(shouldCommit: boolean = true) {
+  public async unhideIfNeeded(shouldCommit = true) {
     const priority = this.getPriority();
-    if (isFinite(priority) && priority < CONVERSATION_PRIORITIES.default) {
+    if (isFiniteL(priority) && priority < CONVERSATION_PRIORITIES.default) {
       this.set({ priority: CONVERSATION_PRIORITIES.default });
       if (shouldCommit) {
         await this.commit();
@@ -1552,7 +1555,7 @@ export class ConversationModel extends Model<ConversationAttributes> {
     }
   }
 
-  public async markAsUnread(forcedValue: boolean, shouldCommit: boolean = true) {
+  public async markAsUnread(forcedValue: boolean, shouldCommit = true) {
     if (!!forcedValue !== this.isMarkedUnread()) {
       this.set({
         markedAsUnread: !!forcedValue,
@@ -1569,7 +1572,7 @@ export class ConversationModel extends Model<ConversationAttributes> {
 
   public async updateBlocksSogsMsgReqsTimestamp(
     blocksSogsMsgReqsTimestamp: number,
-    shouldCommit: boolean = true
+    shouldCommit = true
   ) {
     if (!PubKey.isBlinded(this.id)) {
       return; // this thing only applies to sogs blinded conversations
@@ -1600,7 +1603,7 @@ export class ConversationModel extends Model<ConversationAttributes> {
    * Mark a private conversation as approved to the specified value.
    * Does not do anything on non private chats.
    */
-  public async setIsApproved(value: boolean, shouldCommit: boolean = true) {
+  public async setIsApproved(value: boolean, shouldCommit = true) {
     const valueForced = Boolean(value);
 
     if (!this.isPrivate() && !this.isClosedGroupV2()) {
@@ -1623,7 +1626,7 @@ export class ConversationModel extends Model<ConversationAttributes> {
    * Mark a private conversation as approved_me to the specified value
    * Does not do anything on non private chats.
    */
-  public async setDidApproveMe(value: boolean, shouldCommit: boolean = true) {
+  public async setDidApproveMe(value: boolean, shouldCommit = true) {
     if (!this.isPrivate()) {
       return;
     }
@@ -1704,7 +1707,7 @@ export class ConversationModel extends Model<ConversationAttributes> {
     const { write, active_users, details } = infos;
 
     if (
-      isFinite(infos.active_users) &&
+      isFiniteL(infos.active_users) &&
       infos.active_users !== 0 &&
       getSubscriberCountOutsideRedux(this.id) !== active_users
     ) {
@@ -1737,7 +1740,10 @@ export class ConversationModel extends Model<ConversationAttributes> {
     if (this.isPublic() && details.image_id && isNumber(details.image_id)) {
       const roomInfos = OpenGroupData.getV2OpenGroupRoom(this.id);
       if (roomInfos) {
-        void sogsV3FetchPreviewAndSaveIt({ ...roomInfos, imageID: `${details.image_id}` });
+        void sogsV3FetchPreviewAndSaveIt({
+          ...roomInfos,
+          imageID: `${details.image_id}`,
+        });
       }
     }
 
@@ -1804,7 +1810,7 @@ export class ConversationModel extends Model<ConversationAttributes> {
   public isPinned() {
     const priority = this.getPriority();
 
-    return isFinite(priority) && priority > CONVERSATION_PRIORITIES.default;
+    return isFiniteL(priority) && priority > CONVERSATION_PRIORITIES.default;
   }
 
   public didApproveMe() {
@@ -1996,7 +2002,13 @@ export class ConversationModel extends Model<ConversationAttributes> {
     });
   }
 
-  public async notifyTypingNoCommit({ isTyping, sender }: { isTyping: boolean; sender: string }) {
+  public async notifyTypingNoCommit({
+    isTyping,
+    sender,
+  }: {
+    isTyping: boolean;
+    sender: string;
+  }) {
     // We don't do anything with typing messages from our other devices
     if (UserUtils.isUsFromCache(sender)) {
       return;
@@ -2023,7 +2035,10 @@ export class ConversationModel extends Model<ConversationAttributes> {
    * This call is not debounced and can be quite heavy, so only call it when handling config messages updates
    */
   public async markReadFromConfigMessage(newestUnreadDate: number) {
-    return this.markConversationReadBouncy({ newestUnreadDate, fromConfigMessage: true });
+    return this.markConversationReadBouncy({
+      newestUnreadDate,
+      fromConfigMessage: true,
+    });
   }
 
   public getGroupAdmins(): Array<string> {
@@ -2337,18 +2352,18 @@ export class ConversationModel extends Model<ConversationAttributes> {
     const lastMessageStatus = lastMessageModel.getMessagePropStatus() || undefined;
     const lastMessageNotificationText = lastMessageModel.getNotificationText() || undefined;
     // we just want to set the `status` to `undefined` if there are no `lastMessageNotificationText`
-    const lastMessageUpdate = !isEmpty(lastMessageNotificationText)
+    const lastMessageUpdate = isEmpty(lastMessageNotificationText)
       ? {
-          lastMessage: lastMessageNotificationText || '',
-          lastMessageStatus,
-          lastMessageInteractionType,
-          lastMessageInteractionStatus,
-        }
-      : {
           lastMessage: '',
           lastMessageStatus: undefined,
           lastMessageInteractionType: undefined,
           lastMessageInteractionStatus: undefined,
+        }
+      : {
+          lastMessage: lastMessageNotificationText || '',
+          lastMessageStatus,
+          lastMessageInteractionType,
+          lastMessageInteractionStatus,
         };
     const existingLastMessageInteractionType = this.get('lastMessageInteractionType');
     const existingLastMessageInteractionStatus = this.get('lastMessageInteractionStatus');
@@ -2409,7 +2424,7 @@ export class ConversationModel extends Model<ConversationAttributes> {
       }
 
       const sentAt = nowRead.get('sent_at') || nowRead.get('serverTimestamp');
-      if (nowRead.get('source') && sentAt && isFinite(sentAt)) {
+      if (nowRead.get('source') && sentAt && isFiniteL(sentAt)) {
         readDetails.push({
           sender: nowRead.get('source'),
           timestamp: sentAt,
@@ -2499,7 +2514,7 @@ export class ConversationModel extends Model<ConversationAttributes> {
 
     const { expireTimer } = json;
 
-    return isFinite(expireTimer) && expireTimer > 0;
+    return isFiniteL(expireTimer) && expireTimer > 0;
   }
 
   private shouldDoTyping() {
@@ -2817,7 +2832,7 @@ export function hasValidOutgoingRequestValues({
   isPrivate: boolean;
   activeAt: number;
 }): boolean {
-  const isActive = activeAt && isFinite(activeAt) && activeAt > 0;
+  const isActive = activeAt && isFiniteL(activeAt) && activeAt > 0;
 
   // Started a new message, but haven't sent a message yet
   const emptyConvo = !isMe && !isApproved && isPrivate && !isBlocked && !didApproveMe && !!isActive;
@@ -2855,7 +2870,7 @@ export function hasValidIncomingRequestValues({
   priority: number | undefined;
 }): boolean {
   // if a convo is not active, it means we didn't get any messages nor sent any.
-  const isActive = activeAt && isFinite(activeAt) && activeAt > 0;
+  const isActive = activeAt && isFiniteL(activeAt) && activeAt > 0;
   const priorityWithDefault = priority ?? CONVERSATION_PRIORITIES.default;
   const isHidden = priorityWithDefault < 0;
   return Boolean(

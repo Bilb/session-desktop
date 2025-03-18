@@ -72,7 +72,7 @@ export const QuoteImage = (props: {
   const disableDrag = useDisableDrag();
 
   const { loading, urlToLoad } = useEncryptedFileFetch(url, contentType, false);
-  const srcData = !loading ? urlToLoad : '';
+  const srcData = loading ? '' : urlToLoad;
 
   return !isEmpty(srcData) && !imageBroken ? (
     <StyledQuoteImage>

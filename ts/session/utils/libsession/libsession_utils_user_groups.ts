@@ -1,10 +1,10 @@
 /* eslint-disable no-case-declarations */
-import { CommunityInfo, LegacyGroupInfo, UserGroupsType } from 'libsession_util_nodejs';
+import type { CommunityInfo, LegacyGroupInfo, UserGroupsType } from 'libsession_util_nodejs';
 import { Data } from '../../../data/data';
 import { OpenGroupData } from '../../../data/opengroups';
-import { ConversationModel } from '../../../models/conversation';
+import type { ConversationModel } from '../../../models/conversation';
 import {
-  CommunityInfoFromDBValues,
+  type CommunityInfoFromDBValues,
   assertUnreachable,
   getCommunityInfoFromDBValues,
   getLegacyGroupInfoFromDBValues,
@@ -89,7 +89,7 @@ async function insertGroupsFromDBIntoWrapperAndRefresh(
       : 'LegacyGroup';
 
   switch (convoType) {
-    case 'Community':
+    case 'Community': {
       const asOpengroup = foundConvo.toOpenGroupV2();
 
       const roomDetails = OpenGroupData.getV2OpenGroupRoomByRoomId(asOpengroup);
@@ -127,8 +127,9 @@ async function insertGroupsFromDBIntoWrapperAndRefresh(
         // we still let this go through
       }
       break;
+    }
 
-    case 'LegacyGroup':
+    case 'LegacyGroup': {
       const encryptionKeyPair = await Data.getLatestClosedGroupEncryptionKeyPair(convoId);
       // Note: For any fields stored in both the DB and libsession,
       // we have to make direct calls to.get() and NOT the wrapped getPriority(), etc...
@@ -159,7 +160,8 @@ async function insertGroupsFromDBIntoWrapperAndRefresh(
         // we still let this go through
       }
       break;
-    case 'Group':
+    }
+    case 'Group': {
       // The 03-group is a bit different that the others as most fields are not to be updated.
       // Indeed, they are more up to date on the group's swarm than ours and we don't want to keep both in sync.
       if (!PubKey.is03Pubkey(convoId)) {
@@ -190,6 +192,7 @@ async function insertGroupsFromDBIntoWrapperAndRefresh(
         // we still let this go through
       }
       break;
+    }
 
     default:
       assertUnreachable(

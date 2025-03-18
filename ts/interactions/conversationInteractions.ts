@@ -1,8 +1,8 @@
 import { isEmpty, isNil, uniq } from 'lodash';
-import { PubkeyType, WithGroupPubkey } from 'libsession_util_nodejs';
+import type { PubkeyType, WithGroupPubkey } from 'libsession_util_nodejs';
 import AbortController from 'abort-controller';
 import {
-  ConversationNotificationSettingType,
+  type ConversationNotificationSettingType,
   READ_MESSAGE_STATE,
 } from '../models/conversationAttributes';
 import { CallManager, PromiseUtils, SyncUtils, ToastUtils, UserUtils } from '../session/utils';
@@ -18,7 +18,7 @@ import { getSwarmPollingInstance } from '../session/apis/snode_api';
 import { ConvoHub } from '../session/conversations';
 import { getSodiumRenderer } from '../session/crypto';
 import { DecryptedAttachmentsManager } from '../session/crypto/DecryptedAttachmentsManager';
-import { DisappearingMessageConversationModeType } from '../session/disappearing_messages/types';
+import type { DisappearingMessageConversationModeType } from '../session/disappearing_messages/types';
 import { PubKey } from '../session/types';
 import { perfEnd, perfStart } from '../session/utils/Performance';
 import { sleepFor, timeoutWithAbort } from '../session/utils/Promise';
@@ -769,7 +769,7 @@ export async function uploadOurAvatar(newAvatarDecrypted?: ArrayBuffer) {
 /**
  * This function can be used for clearing our avatar.
  */
-export async function clearOurAvatar(commit: boolean = true) {
+export async function clearOurAvatar(commit = true) {
   const ourConvo = ConvoHub.use().get(UserUtils.getOurPubKeyStrFromCache());
   if (!ourConvo) {
     window.log.warn('ourConvo not found... This is not a valid case');

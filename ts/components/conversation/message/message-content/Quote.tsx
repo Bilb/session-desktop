@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { noop } from 'lodash';
-import { MouseEvent, useState } from 'react';
+import { type MouseEvent, useState } from 'react';
 
 import * as MIME from '../../../../types/MIME';
 import * as GoogleChrome from '../../../../util/GoogleChrome';
@@ -118,7 +118,7 @@ export const QuoteImage = (props: {
   const disableDrag = useDisableDrag();
 
   const { loading, urlToLoad } = useEncryptedFileFetch(url, contentType, false);
-  const srcData = !loading ? urlToLoad : '';
+  const srcData = loading ? '' : urlToLoad;
 
   const iconElement = icon ? (
     <div className="module-quote__icon-container__inner">
@@ -360,7 +360,7 @@ export const Quote = (props: QuotePropsWithListener) => {
         className={classNames(
           'module-quote',
           isIncoming ? 'module-quote--incoming' : 'module-quote--outgoing',
-          !onClick ? 'module-quote--no-click' : null,
+          onClick ? null : 'module-quote--no-click',
           referencedMessageNotFound ? 'module-quote--with-reference-warning' : null
         )}
       >

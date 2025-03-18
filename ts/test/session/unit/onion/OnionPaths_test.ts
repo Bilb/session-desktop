@@ -7,7 +7,7 @@ import Sinon from 'sinon';
 import * as SNodeAPI from '../../../../session/apis/snode_api';
 import { TestUtils } from '../../../test-utils';
 
-import { GuardNode, Snode } from '../../../../data/types';
+import type { GuardNode, Snode } from '../../../../data/types';
 import * as OnionPaths from '../../../../session/onions/onionPath';
 import {
   generateFakeSnodeWithEdKey,

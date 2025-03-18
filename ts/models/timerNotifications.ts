@@ -1,6 +1,6 @@
-import { PubkeyType } from 'libsession_util_nodejs';
+import type { PubkeyType } from 'libsession_util_nodejs';
 import { ConvoHub } from '../session/conversations';
-import { PropsForExpirationTimer } from '../state/ducks/conversations';
+import type { PropsForExpirationTimer } from '../state/ducks/conversations';
 import { PubKey } from '../session/types';
 import { UserUtils } from '../session/utils';
 import { TimerOptions } from '../session/disappearing_messages/timerOptions';

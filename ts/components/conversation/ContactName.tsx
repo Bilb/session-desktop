@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { CSSProperties } from 'react';
+import type { CSSProperties } from 'react';
 
 import {
   useIsPrivate,

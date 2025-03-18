@@ -9,11 +9,11 @@ import pRetry from 'p-retry';
 import { SeedNodeAPI } from '.';
 import { Constants } from '../..';
 import { isLinux } from '../../../OS';
-import { Snode } from '../../../data/types';
+import type { Snode } from '../../../data/types';
 import { APPLICATION_JSON } from '../../../types/MIME';
 import { sha256 } from '../../crypto';
 import { allowOnlyOneAtATime } from '../../utils/Promise';
-import { GetServicesNodesFromSeedRequest } from '../snode_api/SnodeRequestTypes';
+import type { GetServicesNodesFromSeedRequest } from '../snode_api/SnodeRequestTypes';
 
 /**
  * Fetch all snodes from seed nodes.
@@ -111,10 +111,7 @@ const getSslAgentForSeedNode = async (seedNodeHost: string, isSsl = false) => {
       if (sha256(cert.pubkey) !== pubkey256) {
         window.log.error('checkServerIdentity: cert.pubkey issue');
 
-        const msg =
-          'Certificate verification error: ' +
-          `The public key of '${cert.subject.CN}' ` +
-          'does not match our pinned fingerprint';
+        const msg = `Certificate verification error: The public key of '${cert.subject.CN}' does not match our pinned fingerprint`;
         return new Error(msg);
       }
 
@@ -122,10 +119,7 @@ const getSslAgentForSeedNode = async (seedNodeHost: string, isSsl = false) => {
       if (cert.fingerprint256 !== cert256) {
         window.log.error('checkServerIdentity: fingerprint256 issue');
 
-        const msg =
-          'Certificate verification error: ' +
-          `The certificate of '${cert.subject.CN}' ` +
-          'does not match our pinned fingerprint';
+        const msg = `Certificate verification error: The certificate of '${cert.subject.CN}' does not match our pinned fingerprint`;
         return new Error(msg);
       }
 

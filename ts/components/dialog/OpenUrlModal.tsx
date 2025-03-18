@@ -1,10 +1,10 @@
 import { shell } from 'electron';
 import { isEmpty } from 'lodash';
-import { Dispatch } from 'react';
+import type { Dispatch } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { MessageInteraction } from '../../interactions';
-import { OpenUrlModalState, updateOpenUrlModal } from '../../state/ducks/modalDialog';
+import { type OpenUrlModalState, updateOpenUrlModal } from '../../state/ducks/modalDialog';
 import { SessionWrapperModal } from '../SessionWrapperModal';
 import { SessionButton, SessionButtonColor, SessionButtonType } from '../basic/SessionButton';
 import { SpacerMD } from '../basic/Text';

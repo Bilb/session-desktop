@@ -1,6 +1,6 @@
 import AbortController from 'abort-controller';
 import { BlindingActions } from '../../../webworker/workers/browser/libsession_worker_interface';
-import { OnionSending, OnionV4JSONSnodeResponse } from '../../onions/onionSend';
+import { OnionSending, type OnionV4JSONSnodeResponse } from '../../onions/onionSend';
 import {
   batchGlobalIsSuccess,
   parseBatchGlobalStatusCode,

@@ -3,11 +3,11 @@ import { contextMenu } from 'react-contexify';
 import { connect } from 'react-redux';
 
 import autoBind from 'auto-bind';
-import { Component, RefObject } from 'react';
+import { Component, type RefObject } from 'react';
 import styled from 'styled-components';
 import {
-  ReduxConversationType,
-  SortedMessageModelProps,
+  type ReduxConversationType,
+  type SortedMessageModelProps,
   quotedMessageToAnimate,
   resetOldBottomMessageId,
   resetOldTopMessageId,
@@ -16,9 +16,9 @@ import { SessionScrollButton } from '../SessionScrollButton';
 
 import {
   ScrollToLoadedMessageContext,
-  ScrollToLoadedReasons,
+  type ScrollToLoadedReasons,
 } from '../../contexts/ScrollToLoadedMessage';
-import { StateType } from '../../state/reducer';
+import type { StateType } from '../../state/reducer';
 import {
   getQuotedMessageToAnimate,
   getSelectedConversation,

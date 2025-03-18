@@ -4,7 +4,7 @@ import { PubKey } from '../../types';
 import { BatchRequests } from './batchRequest';
 import { GetNetworkTime } from './getNetworkTime';
 import { SnodePool } from './snodePool';
-import { Snode } from '../../../data/types';
+import type { Snode } from '../../../data/types';
 import { SwarmForSubRequest } from './SnodeRequestTypes';
 import { DURATION } from '../../constants';
 
@@ -58,7 +58,7 @@ async function requestSnodesForPubkeyWithTargetNodeRetryable(
     const snodes = body.snodes.filter((tSnode: any) => tSnode.ip !== '0.0.0.0');
     GetNetworkTime.handleTimestampOffsetFromNetwork('get_swarm', body.t);
     return snodes;
-  } catch (e) {
+  } catch (_e) {
     throw new Error('Invalid json');
   }
 }

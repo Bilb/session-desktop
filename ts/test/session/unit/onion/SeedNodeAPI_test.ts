@@ -8,9 +8,9 @@ import { TestUtils } from '../../../test-utils';
 
 import { SnodePool } from '../../../../session/apis/snode_api/snodePool';
 
-import { Snode } from '../../../../data/types';
+import type { Snode } from '../../../../data/types';
 import { SeedNodeAPI } from '../../../../session/apis/seed_node_api';
-import { SnodeFromSeed } from '../../../../session/apis/seed_node_api/SeedNodeAPI';
+import type { SnodeFromSeed } from '../../../../session/apis/seed_node_api/SeedNodeAPI';
 import * as OnionPaths from '../../../../session/onions/onionPath';
 import { generateFakeSnodes, generateFakeSnodeWithEdKey } from '../../../test-utils/utils';
 

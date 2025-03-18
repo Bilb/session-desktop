@@ -2,23 +2,23 @@ import _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Data } from '../../data/data';
-import { ConversationModel } from '../../models/conversation';
-import { ConversationAttributes } from '../../models/conversationAttributes';
-import { MessageModel } from '../../models/message';
-import { MessageAttributesOptionals, MessageGroupUpdate } from '../../models/messageType';
+import type { ConversationModel } from '../../models/conversation';
+import type { ConversationAttributes } from '../../models/conversationAttributes';
+import type { MessageModel } from '../../models/message';
+import type { MessageAttributesOptionals, MessageGroupUpdate } from '../../models/messageType';
 import { SignalService } from '../../protobuf';
 import {
   addKeyPairToCacheAndDBIfNeeded,
   distributingClosedGroupEncryptionKeyPairs,
 } from '../../receiver/closedGroups';
 import { ECKeyPair } from '../../receiver/keypairs';
-import { PropsForGroupUpdateType } from '../../state/ducks/conversations';
+import type { PropsForGroupUpdateType } from '../../state/ducks/conversations';
 import { SnodeNamespaces } from '../apis/snode_api/namespaces';
 import { ConvoHub } from '../conversations';
 import { generateCurve25519KeyPairWithoutPrefix } from '../crypto';
 import { MessageEncrypter } from '../crypto/MessageEncrypter';
 import { DisappearingMessages } from '../disappearing_messages';
-import {
+import type {
   DisappearAfterSendOnly,
   WithDisappearingMessageUpdate,
 } from '../disappearing_messages/types';

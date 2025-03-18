@@ -1,4 +1,4 @@
-import { Duration, formatDuration, intervalToDuration } from 'date-fns';
+import { type Duration, formatDuration, intervalToDuration } from 'date-fns';
 import { DURATION_SECONDS } from '../../../session/constants';
 import { getForcedEnglishTimeLocale } from '../timeLocaleMap';
 import { getTimeLocaleDictionary } from '../shared';

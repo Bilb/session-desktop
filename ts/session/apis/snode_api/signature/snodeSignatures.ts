@@ -1,4 +1,4 @@
-import {
+import type {
   GroupPubkeyType,
   PubkeyType,
   Uint8ArrayLen100,
@@ -11,8 +11,8 @@ import { PubKey } from '../../../types';
 import { StringUtils, UserUtils } from '../../../utils';
 import { fromHexToArray, fromUInt8ArrayToBase64 } from '../../../utils/String';
 import { PreConditionFailed } from '../../../utils/errors';
-import { SignedHashesParams } from '../types';
-import {
+import type { SignedHashesParams } from '../types';
+import type {
   WithShortenOrExtend,
   WithMessagesHashes,
   WithSignature,

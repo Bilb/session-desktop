@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { PubkeyType } from 'libsession_util_nodejs';
-import { compact, isEmpty, isFinite, isNumber, pick } from 'lodash';
+import type { PubkeyType } from 'libsession_util_nodejs';
+import { compact, isEmpty, isFinite as isFiniteL, isNumber, pick } from 'lodash';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import {
@@ -9,11 +9,14 @@ import {
 } from '../models/conversation';
 import { ConversationTypeEnum } from '../models/types';
 import { isUsAnySogsFromCache } from '../session/apis/open_group_api/sogsv3/knownBlindedkeys';
-import { TimerOptions, TimerOptionsArray } from '../session/disappearing_messages/timerOptions';
+import {
+  TimerOptions,
+  type TimerOptionsArray,
+} from '../session/disappearing_messages/timerOptions';
 import { PubKey } from '../session/types';
 import { UserUtils } from '../session/utils';
-import { PropsForExpiringMessage } from '../state/ducks/conversations';
-import { StateType } from '../state/reducer';
+import type { PropsForExpiringMessage } from '../state/ducks/conversations';
+import type { StateType } from '../state/reducer';
 import {
   getMessagePropsByMessageId,
   getMessageReactsProps,
@@ -245,7 +248,7 @@ export function useIsPinned(convoId?: string) {
   return Boolean(
     convoProps &&
       isNumber(convoProps.priority) &&
-      isFinite(convoProps.priority) &&
+      isFiniteL(convoProps.priority) &&
       convoProps.priority > 0
   );
 }
@@ -527,9 +530,13 @@ export function useDisappearingMessageSettingText({
   }
 
   return expirationMode === 'deleteAfterRead'
-    ? window.i18n('disappearingMessagesDisappearAfterReadState', { time: expireTimerText })
+    ? window.i18n('disappearingMessagesDisappearAfterReadState', {
+        time: expireTimerText,
+      })
     : expirationMode === 'deleteAfterSend'
-      ? window.i18n('disappearingMessagesDisappearAfterSendState', { time: expireTimerText })
+      ? window.i18n('disappearingMessagesDisappearAfterSendState', {
+          time: expireTimerText,
+        })
       : '';
 }
 

@@ -79,7 +79,7 @@ export function addAttachmentPadding(data: ArrayBuffer): ArrayBuffer {
   let paddedSize = Math.max(
     541,
     // eslint-disable-next-line prefer-exponentiation-operator, no-restricted-properties
-    Math.floor(Math.pow(1.05, Math.ceil(Math.log(originalUInt.length) / Math.log(1.05))))
+    Math.floor(1.05 ** Math.ceil(Math.log(originalUInt.length) / Math.log(1.05)))
   );
 
   if (

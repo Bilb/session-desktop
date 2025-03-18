@@ -1,7 +1,7 @@
-import { compact, flatten, isEmpty, isFinite, toNumber } from 'lodash';
+import { compact, flatten, isEmpty, toNumber, isFinite as isFiniteL } from 'lodash';
 
 import { handleSwarmDataMessage } from './dataMessage';
-import { EnvelopePlus } from './types';
+import type { EnvelopePlus } from './types';
 
 import { SignalService } from '../protobuf';
 import { KeyPrefixType, PubKey } from '../session/types';
@@ -18,7 +18,7 @@ import { ConvoHub } from '../session/conversations';
 import { concatUInt8Array, getSodiumRenderer } from '../session/crypto';
 import { removeMessagePadding } from '../session/crypto/BufferPadding';
 import { DisappearingMessages } from '../session/disappearing_messages';
-import { ReadyToDisappearMsgUpdate } from '../session/disappearing_messages/types';
+import type { ReadyToDisappearMsgUpdate } from '../session/disappearing_messages/types';
 import { ProfileManager } from '../session/profile_manager/ProfileManager';
 import { UserUtils } from '../session/utils';
 import { perfEnd, perfStart } from '../session/utils/Performance';
@@ -111,7 +111,7 @@ async function decryptForClosedGroup(
         decryptedContent = res.decryptedContent;
 
         keyIndex++;
-      } catch (e) {
+      } catch (_e) {
         window?.log?.info(
           `Failed to decrypt closed group with key index ${keyIndex}. We have ${encryptionKeyPairs.length} keys to try left.`
         );
@@ -184,7 +184,7 @@ export async function decryptWithSessionProtocol(
   if (plaintextWithMetadata.byteLength <= signatureSize + ed25519PublicKeySize) {
     perfEnd(`decryptWithSessionProtocol-${envelope.id}`, 'decryptWithSessionProtocol');
 
-    throw new Error('Decryption failed.'); // throw Error.decryptionFailed;
+    throw new Error('Decryption failed.'); // throw new Error.decryptionFailed;
   }
 
   // 2. ) Get the message parts
@@ -276,7 +276,7 @@ async function decrypt(envelope: EnvelopePlus): Promise<{ decryptedContent: Arra
     case SignalService.Envelope.Type.SESSION_MESSAGE:
       decryptedContent = await decryptEnvelopeWithOurKey(envelope);
       break;
-    case SignalService.Envelope.Type.CLOSED_GROUP_MESSAGE:
+    case SignalService.Envelope.Type.CLOSED_GROUP_MESSAGE: {
       if (PubKey.is03Pubkey(envelope.source)) {
         // groupv2 messages are decrypted way earlier than this via libsession, and what we get here is already decrypted
         return { decryptedContent: envelope.content };
@@ -286,6 +286,7 @@ async function decrypt(envelope: EnvelopePlus): Promise<{ decryptedContent: Arra
       decryptedContent = res.decryptedContent;
 
       break;
+    }
     default:
       assertUnreachable(envelope.type, `Unknown message type:${envelope.type}`);
   }
@@ -298,14 +299,15 @@ async function decrypt(envelope: EnvelopePlus): Promise<{ decryptedContent: Arra
 
   perfStart(`updateCacheWithDecryptedContent-${envelope.id}`);
 
-  await IncomingMessageCache.updateCacheWithDecryptedContent({ envelope, decryptedContent }).catch(
-    error => {
-      window?.log?.error(
-        'decrypt failed to save decrypted message contents to cache:',
-        error && error.stack ? error.stack : error
-      );
-    }
-  );
+  await IncomingMessageCache.updateCacheWithDecryptedContent({
+    envelope,
+    decryptedContent,
+  }).catch(error => {
+    window?.log?.error(
+      'decrypt failed to save decrypted message contents to cache:',
+      error && error.stack ? error.stack : error
+    );
+  });
   perfEnd(`updateCacheWithDecryptedContent-${envelope.id}`, 'updateCacheWithDecryptedContent');
 
   return { decryptedContent };
@@ -826,7 +828,7 @@ async function handleMessageRequestResponse(
     ConversationTypeEnum.PRIVATE
   );
   let mostRecentActiveAt = Math.max(...compact(convosToMerge.map(m => m.getActiveAt())));
-  if (!isFinite(mostRecentActiveAt) || mostRecentActiveAt <= 0) {
+  if (!isFiniteL(mostRecentActiveAt) || mostRecentActiveAt <= 0) {
     mostRecentActiveAt = toNumber(envelope.timestamp);
   }
 

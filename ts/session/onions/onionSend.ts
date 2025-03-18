@@ -1,9 +1,11 @@
-import { AbortSignal } from 'abort-controller';
+import type { AbortSignal } from 'abort-controller';
 import { toNumber } from 'lodash';
 import pRetry from 'p-retry';
 
+import { URL } from 'url';
+
 import { OnionPaths } from '.';
-import { Snode } from '../../data/types';
+import type { Snode } from '../../data/types';
 import { fileServerPubKey, fileServerURL } from '../apis/file_server_api/FileServerApi';
 import { OpenGroupPollingUtils } from '../apis/open_group_api/opengroupV2/OpenGroupPollingUtils';
 import { invalidAuthRequiresBlinding } from '../apis/open_group_api/opengroupV2/OpenGroupServerPoller';
@@ -13,15 +15,19 @@ import {
 } from '../apis/open_group_api/sogsv3/sogsV3SendMessage';
 import { pnServerPubkeyHex, pnServerUrl } from '../apis/push_notification_api/PnServer';
 import {
-  FinalDestNonSnodeOptions,
-  FinalRelayOptions,
+  type FinalDestNonSnodeOptions,
+  type FinalRelayOptions,
   Onions,
   STATUS_NO_STATUS,
   buildErrorMessageWithFailedCode,
 } from '../apis/snode_api/onions';
 import { PROTOCOLS } from '../constants';
 import { OnionV4 } from './onionv4';
-import { MergedAbortSignal, WithAbortSignal, WithTimeoutMs } from '../apis/snode_api/requestWith';
+import type {
+  MergedAbortSignal,
+  WithAbortSignal,
+  WithTimeoutMs,
+} from '../apis/snode_api/requestWith';
 
 export type OnionFetchOptions = {
   method: string;
@@ -417,7 +423,10 @@ async function sendBinaryViaOnionV4ToSogs(
   if (!headersWithSogsHeadersIfNeeded) {
     return null;
   }
-  headersWithSogsHeadersIfNeeded = { ...includedHeaders, ...headersWithSogsHeadersIfNeeded };
+  headersWithSogsHeadersIfNeeded = {
+    ...includedHeaders,
+    ...headersWithSogsHeadersIfNeeded,
+  };
   const res = await OnionSending.sendViaOnionV4ToNonSnodeWithRetries(
     serverPubkey,
     builtUrl,

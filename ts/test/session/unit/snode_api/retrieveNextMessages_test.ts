@@ -2,8 +2,8 @@ import chai from 'chai';
 import { beforeEach, describe } from 'mocha';
 import Sinon from 'sinon';
 
-import { GroupPubkeyType, PubkeyType, UserGroupsGet } from 'libsession_util_nodejs';
-import {
+import type { GroupPubkeyType, PubkeyType, UserGroupsGet } from 'libsession_util_nodejs';
+import type {
   RetrieveGroupSubRequest,
   RetrieveLegacyClosedGroupSubRequest,
   RetrieveUserSubRequest,
@@ -12,7 +12,7 @@ import {
 } from '../../../../session/apis/snode_api/SnodeRequestTypes';
 import { SnodeNamespaces } from '../../../../session/apis/snode_api/namespaces';
 import { SnodeAPIRetrieve } from '../../../../session/apis/snode_api/retrieveRequest';
-import { WithShortenOrExtend } from '../../../../session/types/with';
+import type { WithShortenOrExtend } from '../../../../session/types/with';
 import { TestUtils } from '../../../test-utils';
 import { expectAsyncToThrow, stubLibSessionWorker } from '../../../test-utils/utils';
 import { NetworkTime } from '../../../../util/NetworkTime';

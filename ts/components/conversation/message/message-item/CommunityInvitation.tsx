@@ -84,7 +84,7 @@ export const CommunityInvitation = ({ messageId }: WithMessageId) => {
     try {
       const url = new URL(fullUrl || '');
       return url.origin;
-    } catch (e) {
+    } catch (_e) {
       window?.log?.warn('failed to get hostname from open groupv2 invitation', fullUrl);
       return '';
     }

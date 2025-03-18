@@ -1,4 +1,4 @@
-import { UserGroupsGet } from 'libsession_util_nodejs';
+import type { UserGroupsGet } from 'libsession_util_nodejs';
 import { isEmpty } from 'lodash';
 import { ed25519Str } from '../../../utils/String';
 import { DeleteHashesFromGroupNodeSubRequest } from '../SnodeRequestTypes';

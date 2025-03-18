@@ -1,9 +1,9 @@
-import { ChangeEvent, useRef, useState } from 'react';
+import { type ChangeEvent, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { useFocusMount } from '../../hooks/useFocusMount';
 import { useConversationUsername } from '../../hooks/useParamSelector';
-import { ConversationModel } from '../../models/conversation';
+import type { ConversationModel } from '../../models/conversation';
 import {
   sogsV3BanUser,
   sogsV3UnbanUser,
@@ -11,7 +11,7 @@ import {
 import { ConvoHub } from '../../session/conversations/ConversationController';
 import { PubKey } from '../../session/types';
 import { ToastUtils } from '../../session/utils';
-import { BanType, updateBanOrUnbanUserModal } from '../../state/ducks/modalDialog';
+import { type BanType, updateBanOrUnbanUserModal } from '../../state/ducks/modalDialog';
 import { useIsDarkTheme } from '../../state/selectors/theme';
 import { SessionHeaderSearchInput } from '../SessionHeaderSearchInput';
 import { SessionWrapperModal } from '../SessionWrapperModal';
@@ -85,7 +85,7 @@ export const BanOrUnBanUserDialog = (props: {
    * Ban or Unban a user from an open group
    * @param deleteAll Delete all messages for that user in the group (only works with ban)
    */
-  const banOrUnBanUser = async (deleteAll: boolean = false) => {
+  const banOrUnBanUser = async (deleteAll = false) => {
     const castedPubkey = pubkey?.length ? pubkey : inputBoxValue;
 
     window?.log?.info(`asked to ${banType} user: ${castedPubkey}, banAndDeleteAll:${deleteAll}`);

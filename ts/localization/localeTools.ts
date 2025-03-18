@@ -1,4 +1,4 @@
-import { CrowdinLocale } from './constants';
+import type { CrowdinLocale } from './constants';
 import type { I18nMethods } from './I18nMethods';
 import { pluralsDictionary, simpleDictionary } from './locales';
 
@@ -31,7 +31,7 @@ function isEmptyObject(obj: unknown) {
 
 export function setLogger(cb: Logger) {
   if (logger) {
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: <explanation>
     console.log('logger already initialized. overwriding it');
   }
   logger = cb;
@@ -43,7 +43,7 @@ export function setLocaleInUse(crowdinLocale: CrowdinLocale) {
 
 function log(message: Parameters<Logger>[0]) {
   if (!logger) {
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: <explanation>
     console.log('logger is not set');
     return;
   }
@@ -307,7 +307,7 @@ function getStringForRule({
  * @param identifier The identifier to use for the args. Use this if you want to de-sanitize the args later.
  * @returns The sanitized string
  */
-function sanitizeHtmlTags(str: string, identifier: string = ''): string {
+function sanitizeHtmlTags(str: string, identifier = ''): string {
   if (identifier && /[a-zA-Z0-9></\\\-\s]+/g.test(identifier)) {
     throw new Error('Identifier is not valid');
   }
@@ -437,7 +437,7 @@ class LocalizedStringBuilder<T extends MergedLocalizerTokens> extends String {
       log(
         `Attempted to get plural count for argument '${pluralKey}' which is not a number for token '${this.token}'`
       );
-      num = parseInt(num, 10);
+      num = Number.parseInt(num, 10);
       if (Number.isNaN(num)) {
         log(
           `Attempted to get parsed plural count for argument '${pluralKey}' which is not a number for token '${this.token}'`

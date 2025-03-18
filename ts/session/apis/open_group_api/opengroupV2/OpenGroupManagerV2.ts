@@ -5,7 +5,7 @@ import autoBind from 'auto-bind';
 import { clone, groupBy, isEqual, uniqBy } from 'lodash';
 
 import { OpenGroupData } from '../../../../data/opengroups';
-import { ConversationModel } from '../../../../models/conversation';
+import type { ConversationModel } from '../../../../models/conversation';
 import { ConvoHub } from '../../../conversations';
 import { allowOnlyOneAtATime } from '../../../utils/Promise';
 import {
@@ -18,7 +18,7 @@ import { OpenGroupServerPoller } from './OpenGroupServerPoller';
 import { SessionUtilUserGroups } from '../../../utils/libsession/libsession_utils_user_groups';
 import { openGroupV2GetRoomInfoViaOnionV4 } from '../sogsv3/sogsV3RoomInfos';
 import { UserGroupsWrapperActions } from '../../../../webworker/workers/browser/libsession_worker_interface';
-import { OpenGroupRequestCommonType, OpenGroupV2Room } from '../../../../data/types';
+import type { OpenGroupRequestCommonType, OpenGroupV2Room } from '../../../../data/types';
 import { ConversationTypeEnum, CONVERSATION_PRIORITIES } from '../../../../models/types';
 
 let instance: OpenGroupManagerV2 | undefined;
@@ -97,13 +97,13 @@ export class OpenGroupManagerV2 {
     for (const groupedRooms of groupedArray) {
       const groupedRoomsServerUrl = groupedRooms[0].serverUrl;
       const poller = this.pollers.get(groupedRoomsServerUrl);
-      if (!poller) {
+      if (poller) {
+        // this won't do a thing if the room is already polled for
+        groupedRooms.forEach(poller.addRoomToPoll);
+      } else {
         const uniqGroupedRooms = uniqBy(groupedRooms, r => r.roomId);
 
         this.pollers.set(groupedRoomsServerUrl, new OpenGroupServerPoller(uniqGroupedRooms));
-      } else {
-        // this won't do a thing if the room is already polled for
-        groupedRooms.forEach(poller.addRoomToPoll);
       }
     }
   }
@@ -164,7 +164,7 @@ export class OpenGroupManagerV2 {
       await OpenGroupData.removeV2OpenGroupRoom(conversationId);
       try {
         await SessionUtilUserGroups.removeCommunityFromWrapper(conversationId, fullUrl);
-      } catch (e) {
+      } catch (_e) {
         window.log.warn('failed to removeCommunityFromWrapper', conversationId);
       }
 

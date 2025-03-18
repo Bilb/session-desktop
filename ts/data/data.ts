@@ -1,24 +1,24 @@
 // eslint:disable: no-require-imports no-var-requires one-variable-per-declaration no-void-expression function-name
 
-import { GroupPubkeyType } from 'libsession_util_nodejs';
+import type { GroupPubkeyType } from 'libsession_util_nodejs';
 import _, { isArray, isEmpty } from 'lodash';
 import { ConversationModel } from '../models/conversation';
-import { ConversationAttributes } from '../models/conversationAttributes';
+import type { ConversationAttributes } from '../models/conversationAttributes';
 import { MessageModel } from '../models/message';
-import {
+import type {
   MessageAttributes,
   MessageDirection,
-  type MessageAttributesOptionals,
+  MessageAttributesOptionals,
 } from '../models/messageType';
-import { StorageItem } from '../node/storage_item';
-import { HexKeyPair } from '../receiver/keypairs';
-import { Quote } from '../receiver/types';
+import type { StorageItem } from '../node/storage_item';
+import type { HexKeyPair } from '../receiver/keypairs';
+import type { Quote } from '../receiver/types';
 import { getSodiumRenderer } from '../session/crypto';
 import { DisappearingMessages } from '../session/disappearing_messages';
-import { PubKey } from '../session/types';
+import type { PubKey } from '../session/types';
 import { fromArrayBufferToBase64, fromBase64ToArrayBuffer } from '../session/utils/String';
-import { MessageResultProps } from '../types/message';
-import {
+import type { MessageResultProps } from '../types/message';
+import type {
   AsyncWrapper,
   MsgDuplicateSearchOpenGroup,
   SaveConversationReturn,
@@ -31,12 +31,12 @@ import { channels } from './channels';
 import * as dataInit from './dataInit';
 import { cleanData } from './dataUtils';
 import { SNODE_POOL_ITEM_ID } from './settings-key';
-import {
+import type {
   FindAllMessageFromSendersInConversationTypeArgs,
   FindAllMessageHashesInConversationMatchingAuthorTypeArgs,
   FindAllMessageHashesInConversationTypeArgs,
 } from './sharedDataTypes';
-import { GuardNode, Snode } from './types';
+import type { GuardNode, Snode } from './types';
 import { makeMessageModels } from '../models/models';
 
 const ERASE_SQL_KEY = 'erase-sql-key';
@@ -139,7 +139,7 @@ async function saveConversation(data: ConversationAttributes): Promise<SaveConve
    * Merging two conversations in `handleMessageRequestResponse` introduced a bug where we would mark conversation active_at to be -Infinity.
    * The root issue has been fixed, but just to make sure those INVALID DATE does not show up, update those -Infinity active_at conversations to be now(), once.,
    */
-  if (cleaned.active_at === -Infinity) {
+  if (cleaned.active_at === Number.NEGATIVE_INFINITY) {
     cleaned.active_at = Date.now();
   }
 
@@ -307,10 +307,7 @@ async function getMessageIdsFromServerIds(
   return channels.getMessageIdsFromServerIds(serverIds, conversationId);
 }
 
-async function getMessageById(
-  id: string,
-  skipTimerInit: boolean = false
-): Promise<MessageModel | null> {
+async function getMessageById(id: string, skipTimerInit = false): Promise<MessageModel | null> {
   const message = await channels.getMessageById(id);
   if (!message) {
     return null;
@@ -333,7 +330,7 @@ async function getMessagesById(ids: Array<string>): Promise<Array<MessageModel>>
 async function getMessageByServerId(
   conversationId: string,
   serverId: number,
-  skipTimerInit: boolean = false
+  skipTimerInit = false
 ): Promise<MessageModel | null> {
   const message = await channels.getMessageByServerId(conversationId, serverId);
   if (!message) {

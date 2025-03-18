@@ -1,6 +1,6 @@
 import { SignalService } from '../../../../protobuf';
 import { DataMessage } from '../DataMessage';
-import { ExpirableMessageParams } from '../ExpirableMessage';
+import type { ExpirableMessageParams } from '../ExpirableMessage';
 
 interface CommunityInvitationMessageParams extends ExpirableMessageParams {
   url: string;

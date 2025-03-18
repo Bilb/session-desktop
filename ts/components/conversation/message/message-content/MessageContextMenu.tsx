@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import { Dispatch, useCallback, useEffect, useRef, useState } from 'react';
+import { type Dispatch, useCallback, useEffect, useRef, useState } from 'react';
 
 import { isNumber } from 'lodash';
-import { ItemParams, Menu, useContextMenu } from 'react-contexify';
+import { type ItemParams, Menu, useContextMenu } from 'react-contexify';
 import { useDispatch } from 'react-redux';
 import useClickAway from 'react-use/lib/useClickAway';
 import useMouse from 'react-use/lib/useMouse';
@@ -15,7 +15,7 @@ import {
   addSenderAsModerator,
   removeSenderFromModerator,
 } from '../../../../interactions/messageInteractions';
-import { MessageRenderingProps } from '../../../../models/messageType';
+import type { MessageRenderingProps } from '../../../../models/messageType';
 import { pushUnblockToSend } from '../../../../session/utils/Toast';
 import {
   openRightPanel,
@@ -50,7 +50,7 @@ import { CopyAccountIdMenuItem } from '../../../menu/items/CopyAccountId/CopyAcc
 import { Localizer } from '../../../basic/Localizer';
 import { ItemWithDataTestId } from '../../../menu/items/MenuItemWithDataTestId';
 import { getMenuAnimation } from '../../../menu/MenuAnimation';
-import { WithMessageId } from '../../../../session/types/with';
+import type { WithMessageId } from '../../../../session/types/with';
 import { DeleteItem } from '../../../menu/items/DeleteMessage/DeleteMessageMenuItem';
 import { RetryItem } from '../../../menu/items/RetrySend/RetrySendMenuItem';
 import { showCopyAccountIdAction } from '../../../menu/items/CopyAccountId/guard';
@@ -310,7 +310,7 @@ export const MessageContextMenu = (props: Props) => {
         setMouseY(mouseY - y);
       }
     }
-  }, [emojiPanelWidth, emojiPanelHeight, mouseX, mouseY]);
+  }, [mouseX, mouseY]);
 
   if (!convoId) {
     return null;

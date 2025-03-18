@@ -54,7 +54,7 @@ export function isSessionRunOpenGroup(server: string): boolean {
     if (!serverHost) {
       throw new Error('Could not parse URL from serverURL');
     }
-  } catch (e) {
+  } catch (_e) {
     // plain ip are not recognized are url, but we want to allow them
     serverHost = lowerCased;
   }
@@ -82,7 +82,7 @@ export function hasExistingOpenGroup(server: string, roomId: string) {
     if (!serverUrl) {
       throw new Error('failed to parse url in hasExistingOpenGroup');
     }
-  } catch (e) {
+  } catch (_e) {
     try {
       serverUrl = new window.URL(`http://${serverLowerCase}`);
     } catch (err2) {

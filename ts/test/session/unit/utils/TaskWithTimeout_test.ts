@@ -50,7 +50,9 @@ describe('createTaskWithTimeout', () => {
     );
   });
   it('resolves if task returns something falsey', async () => {
-    const task = () => {};
+    const task = () => {
+      // empty on purpose
+    };
     const taskWithTimeout = createTaskWithTimeout(task, taskName);
     await taskWithTimeout();
   });

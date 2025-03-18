@@ -1,13 +1,13 @@
 import classNames from 'classnames';
-import { SessionDataTestId, MouseEvent, useCallback, useState } from 'react';
+import { type SessionDataTestId, type MouseEvent, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { useIsDetailMessageView } from '../../../../contexts/isDetailViewContext';
 import { replyToMessage } from '../../../../interactions/conversationInteractions';
-import { MessageRenderingProps } from '../../../../models/messageType';
+import type { MessageRenderingProps } from '../../../../models/messageType';
 import { toggleSelectedMessageId } from '../../../../state/ducks/conversations';
 import { updateReactListModal } from '../../../../state/ducks/modalDialog';
-import { StateType } from '../../../../state/reducer';
+import type { StateType } from '../../../../state/reducer';
 import { useHideAvatarInMsgList } from '../../../../state/selectors';
 import { getMessageContentWithStatusesSelectorProps } from '../../../../state/selectors/conversations';
 import { Reactions } from '../../../../util/reactions';

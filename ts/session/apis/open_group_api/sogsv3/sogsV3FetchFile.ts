@@ -1,6 +1,6 @@
-import AbortController, { AbortSignal } from 'abort-controller';
-import { isFinite, isUndefined, toNumber } from 'lodash';
-import { OpenGroupData, OpenGroupV2RoomWithImageID } from '../../../../data/opengroups';
+import AbortController, { type AbortSignal } from 'abort-controller';
+import { isUndefined, toNumber, isFinite as isFiniteL } from 'lodash';
+import { OpenGroupData, type OpenGroupV2RoomWithImageID } from '../../../../data/opengroups';
 import { MIME } from '../../../../types';
 import { processNewAttachment } from '../../../../types/MessageAttachment';
 import { roomHasBlindEnabled } from '../../../../types/sqlSharedTypes';
@@ -10,7 +10,7 @@ import { OnionSending } from '../../../onions/onionSend';
 import { allowOnlyOneAtATime } from '../../../utils/Promise';
 import { OpenGroupPollingUtils } from '../opengroupV2/OpenGroupPollingUtils';
 import { getOpenGroupV2ConversationId } from '../utils/OpenGroupUtils';
-import { OpenGroupV2Room } from '../../../../data/types';
+import type { OpenGroupV2Room } from '../../../../data/types';
 import { DURATION } from '../../../constants';
 
 export async function fetchBinaryFromSogsWithOnionV4(sendOptions: {
@@ -52,7 +52,10 @@ export async function fetchBinaryFromSogsWithOnionV4(sendOptions: {
   if (isUndefined(headersWithSogsHeadersIfNeeded)) {
     return null;
   }
-  headersWithSogsHeadersIfNeeded = { ...includedHeaders, ...headersWithSogsHeadersIfNeeded };
+  headersWithSogsHeadersIfNeeded = {
+    ...includedHeaders,
+    ...headersWithSogsHeadersIfNeeded,
+  };
   const res = await OnionSending.sendViaOnionV4ToNonSnodeWithRetries(
     serverPubkey,
     builtUrl,
@@ -117,7 +120,7 @@ export async function sogsV3FetchPreviewAndSaveIt(roomInfos: OpenGroupV2RoomWith
     return;
   }
   existingImageId = convo.getAvatarImageId();
-  if (existingImageId !== imageIdNumber && isFinite(imageIdNumber)) {
+  if (existingImageId !== imageIdNumber && isFiniteL(imageIdNumber)) {
     // we have to trigger an update
     // write the file to the disk (automatically encrypted),
 

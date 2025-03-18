@@ -14,8 +14,8 @@ function testPair({ offset, output }: TimePair) {
 
 function testPairFuzzy({ offset, output }: TimePair) {
   const result = TimedLog.formatDistanceToNow(Date.now() - offset);
-  const resultNumber = parseInt(result.replaceAll(/[a-zA-Z]/g, ''), 10);
-  const expectedNumber = parseInt(output.replaceAll(/[a-zA-Z]/g, ''), 10);
+  const resultNumber = Number.parseInt(result.replaceAll(/[a-zA-Z]/g, ''), 10);
+  const expectedNumber = Number.parseInt(output.replaceAll(/[a-zA-Z]/g, ''), 10);
   assert.approximately(resultNumber, expectedNumber, 1);
 }
 

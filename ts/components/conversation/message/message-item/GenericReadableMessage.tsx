@@ -1,13 +1,13 @@
 import classNames from 'classnames';
 import { isNil, isString, toNumber } from 'lodash';
-import { MouseEvent, useCallback, useEffect, useState } from 'react';
+import { type MouseEvent, useCallback, useEffect, useState } from 'react';
 import { contextMenu } from 'react-contexify';
 import { useSelector } from 'react-redux';
 import styled, { keyframes } from 'styled-components';
 import { useIsDetailMessageView } from '../../../../contexts/isDetailViewContext';
-import { MessageRenderingProps } from '../../../../models/messageType';
+import type { MessageRenderingProps } from '../../../../models/messageType';
 import { ConvoHub } from '../../../../session/conversations';
-import { StateType } from '../../../../state/reducer';
+import type { StateType } from '../../../../state/reducer';
 import { useMessageSelected } from '../../../../state/selectors';
 import { getGenericReadableMessageSelectorProps } from '../../../../state/selectors/conversations';
 import { MessageContentWithStatuses } from '../message-content/MessageContentWithStatus';

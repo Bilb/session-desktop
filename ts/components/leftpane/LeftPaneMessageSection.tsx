@@ -1,6 +1,6 @@
 import { isEmpty } from 'lodash';
 import { useSelector } from 'react-redux';
-import { AutoSizer, List, ListRowProps } from 'react-virtualized';
+import { AutoSizer, List, type ListRowProps } from 'react-virtualized';
 import styled from 'styled-components';
 import { SearchResults } from '../search/SearchResults';
 import { LeftPaneSectionHeader } from './LeftPaneSectionHeader';

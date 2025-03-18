@@ -1,6 +1,4 @@
-/* eslint-disable no-prototype-builtins */
-/* eslint-disable no-restricted-syntax */
-import { GroupPubkeyType, PubkeyType } from 'libsession_util_nodejs';
+import type { GroupPubkeyType, PubkeyType } from 'libsession_util_nodejs';
 import { compact, isEmpty } from 'lodash';
 import pRetry from 'p-retry';
 import AbortController from 'abort-controller';
@@ -106,6 +104,7 @@ const forceNetworkDeletion = async (): Promise<Array<string> | null> => {
               const hashes: Array<string> = [];
 
               for (const key in deletedObj) {
+                // biome-ignore lint/suspicious/noPrototypeBuiltins: <explanation>
                 if (deletedObj.hasOwnProperty(key)) {
                   hashes.push(...deletedObj[key]);
                 }
@@ -129,7 +128,7 @@ const forceNetworkDeletion = async (): Promise<Array<string> | null> => {
           );
 
           return results;
-        } catch (e) {
+        } catch (_e) {
           throw new Error(
             `Invalid JSON response got for ${request.method} on snode ${ed25519Str(
               targetNode.pubkey_ed25519
@@ -174,7 +173,9 @@ const networkDeleteMessageOurSwarm = async (
     return true;
   }
   const messageHashesArr = [...messagesHashes];
-  const request = DeleteUserHashesFactory.makeUserHashesToDeleteSubRequest({ messagesHashes });
+  const request = DeleteUserHashesFactory.makeUserHashesToDeleteSubRequest({
+    messagesHashes,
+  });
   if (!request) {
     throw new Error('makeUserHashesToDeleteSubRequest returned invalid sub request');
   }
@@ -273,7 +274,7 @@ const networkDeleteMessageOurSwarm = async (
           );
 
           return isEmpty(results);
-        } catch (e) {
+        } catch (_e) {
           throw new Error(
             `networkDeleteMessageOurSwarm: Invalid JSON response got for ${request.method} on snode ${ed25519Str(
               targetNode.pubkey_ed25519

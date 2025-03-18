@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import useKey from 'react-use/lib/useKey';
-import { CSSProperties } from 'styled-components';
+import type { CSSProperties } from 'styled-components';
 import { updateQuitModal } from '../../state/onboarding/ducks/modals';
 import { SessionWrapperModal } from '../SessionWrapperModal';
 import { Flex } from '../basic/Flex';
 import { SessionButton, SessionButtonColor, SessionButtonType } from '../basic/SessionButton';
 import { SpacerLG, SpacerSM } from '../basic/Text';
-import { SessionConfirmDialogProps } from './SessionConfirm';
+import type { SessionConfirmDialogProps } from './SessionConfirm';
 import { I18nSubText } from '../basic/I18nSubText';
 
 const modalStyle: CSSProperties = {
@@ -101,7 +101,7 @@ export const QuitModal = (props: SessionConfirmDialogProps) => {
         />
         <SessionButton
           text={cancelText}
-          buttonColor={!okTheme ? closeTheme : undefined}
+          buttonColor={okTheme ? undefined : closeTheme}
           buttonType={SessionButtonType.Ghost}
           onClick={onClickCancelHandler}
           disabled={isLoading}

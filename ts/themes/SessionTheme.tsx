@@ -1,6 +1,6 @@
 import { ipcRenderer } from 'electron';
 
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import useMount from 'react-use/lib/useMount';
 import { SettingsKey } from '../data/settings-key';
 import { getOppositeTheme, isThemeMismatched } from '../util/theme';

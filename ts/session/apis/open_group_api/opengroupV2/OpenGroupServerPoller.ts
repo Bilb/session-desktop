@@ -7,18 +7,18 @@ import autoBind from 'auto-bind';
 import { getOpenGroupV2ConversationId } from '../utils/OpenGroupUtils';
 
 import { OpenGroupData } from '../../../../data/opengroups';
-import { OpenGroupMessageV2 } from './OpenGroupMessageV2';
+import type { OpenGroupMessageV2 } from './OpenGroupMessageV2';
 import { DURATION } from '../../../constants';
 import {
   batchGlobalIsSuccess,
-  OpenGroupBatchRow,
+  type OpenGroupBatchRow,
   parseBatchGlobalStatusCode,
   sogsBatchSend,
-  SubRequestMessagesObjectType,
+  type SubRequestMessagesObjectType,
 } from '../sogsv3/sogsV3BatchPoll';
 import { handleBatchPollResults } from '../sogsv3/sogsApiV3';
 import { fetchCapabilitiesAndUpdateRelatedRoomsOfServerUrl } from '../sogsv3/sogsV3Capabilities';
-import { OpenGroupReaction } from '../../../../types/Reaction';
+import type { OpenGroupReaction } from '../../../../types/Reaction';
 import {
   markConversationInitialLoadingInProgress,
   openConversationWithMessages,
@@ -26,7 +26,7 @@ import {
 import { roomHasBlindEnabled } from '../../../../types/sqlSharedTypes';
 import { Storage } from '../../../../util/storage';
 import { SettingsKey } from '../../../../data/settings-key';
-import { OpenGroupRequestCommonType } from '../../../../data/types';
+import type { OpenGroupRequestCommonType } from '../../../../data/types';
 
 export type OpenGroupMessageV4 = {
   /** AFAIK: indicates the number of the message in the group. e.g. 2nd message will be 1 or 2 */

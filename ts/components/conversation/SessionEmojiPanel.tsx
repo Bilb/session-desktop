@@ -8,12 +8,12 @@ import { getPrimaryColor } from '../../state/selectors/primaryColor';
 import { useIsDarkTheme, useTheme } from '../../state/selectors/theme';
 import {
   COLORS,
-  ColorsType,
-  PrimaryColorStateType,
+  type ColorsType,
+  type PrimaryColorStateType,
   THEMES,
-  ThemeStateType,
+  type ThemeStateType,
 } from '../../themes/constants/colors';
-import { FixedBaseEmoji } from '../../types/Reaction';
+import type { FixedBaseEmoji } from '../../types/Reaction';
 import { i18nEmojiData } from '../../util/emoji';
 import { hexColorToRGB } from '../../util/hexColorToRGB';
 

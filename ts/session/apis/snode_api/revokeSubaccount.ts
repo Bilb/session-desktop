@@ -1,4 +1,4 @@
-import { GroupPubkeyType } from 'libsession_util_nodejs';
+import type { GroupPubkeyType } from 'libsession_util_nodejs';
 
 import { PubKey } from '../../types';
 import { SubaccountRevokeSubRequest, SubaccountUnrevokeSubRequest } from './SnodeRequestTypes';

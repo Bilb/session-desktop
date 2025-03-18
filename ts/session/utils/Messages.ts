@@ -1,8 +1,8 @@
-import { OutgoingRawMessage } from '../types/RawMessage';
+import type { OutgoingRawMessage } from '../types/RawMessage';
 
 import { SignalService } from '../../protobuf';
-import { SnodeNamespaces } from '../apis/snode_api/namespaces';
-import { ContentMessage } from '../messages/outgoing';
+import type { SnodeNamespaces } from '../apis/snode_api/namespaces';
+import type { ContentMessage } from '../messages/outgoing';
 import { ExpirationTimerUpdateMessage } from '../messages/outgoing/controlMessage/ExpirationTimerUpdateMessage';
 import { ClosedGroupEncryptionPairReplyMessage } from '../messages/outgoing/controlMessage/group/ClosedGroupEncryptionPairReplyMessage';
 import { ClosedGroupMessage } from '../messages/outgoing/controlMessage/group/ClosedGroupMessage';

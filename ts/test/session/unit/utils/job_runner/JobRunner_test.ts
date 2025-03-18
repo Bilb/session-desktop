@@ -4,7 +4,7 @@ import Sinon from 'sinon';
 import { v4 } from 'uuid';
 import { sleepFor } from '../../../../../session/utils/Promise';
 import { PersistedJobRunner } from '../../../../../session/utils/job_runners/JobRunner';
-import {
+import type {
   FakeSleepForMultiJobData,
   FakeSleepJobData,
 } from '../../../../../session/utils/job_runners/PersistedJob';

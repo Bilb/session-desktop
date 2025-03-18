@@ -1,7 +1,7 @@
-import { GroupPubkeyType } from 'libsession_util_nodejs';
-import { LibSodiumWrappers } from '../../../../crypto';
+import type { GroupPubkeyType } from 'libsession_util_nodejs';
+import type { LibSodiumWrappers } from '../../../../crypto';
 import { DataMessage } from '../../DataMessage';
-import { ExpirableMessageParams } from '../../ExpirableMessage';
+import type { ExpirableMessageParams } from '../../ExpirableMessage';
 
 export type AdminSigDetails = {
   secretKey: Uint8Array;

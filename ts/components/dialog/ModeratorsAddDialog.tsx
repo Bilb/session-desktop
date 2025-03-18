@@ -45,11 +45,7 @@ export const AddModeratorsDialog = (props: Props) => {
       const roomInfos = convo.toOpenGroupV2();
       const isAdded = await sogsV3AddAdmin([pubkey], roomInfos);
 
-      if (!isAdded) {
-        window?.log?.warn('failed to add moderators:', isAdded);
-
-        ToastUtils.pushFailedToAddAsModerator();
-      } else {
+      if (isAdded) {
         const userDisplayName =
           ConvoHub.use().get(pubkey.key)?.getNicknameOrRealUsernameOrPlaceholder() ||
           window.i18n('unknown');
@@ -58,6 +54,10 @@ export const AddModeratorsDialog = (props: Props) => {
 
         // clear input box
         setInputBoxValue('');
+      } else {
+        window?.log?.warn('failed to add moderators:', isAdded);
+
+        ToastUtils.pushFailedToAddAsModerator();
       }
     } catch (e) {
       window?.log?.error('Got error while adding moderator:', e);

@@ -1,6 +1,6 @@
 import { shell } from 'electron';
-import { SessionIconButton, SessionIconSize } from '../icon';
-import { SessionIconButtonProps } from '../icon/SessionIconButton';
+import { SessionIconButton, type SessionIconSize } from '../icon';
+import type { SessionIconButtonProps } from '../icon/SessionIconButton';
 
 export const HelpDeskButton = (
   props: Omit<SessionIconButtonProps, 'iconType' | 'iconSize'> & { iconSize?: SessionIconSize }

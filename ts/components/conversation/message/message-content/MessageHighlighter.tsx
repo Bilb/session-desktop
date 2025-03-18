@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { MouseEvent, ReactNode } from 'react';
+import type { MouseEvent, ReactNode } from 'react';
 import styled from 'styled-components';
 import { THEME_GLOBALS } from '../../../../themes/globals';
 

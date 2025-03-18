@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import { isNumber } from 'lodash';
 import { useDisableDrag } from '../../hooks/useDisableDrag';
-import { AttachmentType, AttachmentTypeWithPath } from '../../types/Attachment';
+import type { AttachmentType, AttachmentTypeWithPath } from '../../types/Attachment';
 import { Spinner } from '../loading';
 import { MessageGenericAttachment } from './message/message-content/MessageGenericAttachment';
 import { useEncryptedFileFetch } from '../../hooks/useEncryptedFileFetch';
@@ -147,21 +147,7 @@ export const Image = (props: Props) => {
       }}
       data-attachmentindex={attachmentIndex}
     >
-      {!mounted ? (
-        <div
-          className="module-image__loading-placeholder"
-          style={{
-            maxHeight: height,
-            maxWidth: width,
-            width,
-            height,
-            lineHeight: height,
-            textAlign: 'center',
-          }}
-        >
-          <Spinner size="normal" />
-        </div>
-      ) : (
+      {mounted ? (
         <img
           onError={onErrorUrlFilterering}
           className={classNames(
@@ -180,6 +166,20 @@ export const Image = (props: Props) => {
           src={urlToLoad}
           onDragStart={disableDrag}
         />
+      ) : (
+        <div
+          className="module-image__loading-placeholder"
+          style={{
+            maxHeight: height,
+            maxWidth: width,
+            width,
+            height,
+            lineHeight: height,
+            textAlign: 'center',
+          }}
+        >
+          <Spinner size="normal" />
+        </div>
       )}
       {caption ? (
         <img

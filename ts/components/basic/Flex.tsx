@@ -1,7 +1,7 @@
-import { SessionDataTestId } from 'react';
-import { HTMLMotionProps, motion } from 'framer-motion';
+import type { SessionDataTestId } from 'react';
+import { type HTMLMotionProps, motion } from 'framer-motion';
 import styled from 'styled-components';
-import { HTMLDirection } from '../../util/i18n/rtlSupport';
+import type { HTMLDirection } from '../../util/i18n/rtlSupport';
 
 export interface FlexProps {
   children?: any;

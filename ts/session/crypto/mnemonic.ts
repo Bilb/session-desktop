@@ -84,7 +84,7 @@ export function mnEncode(str: string, wordsetName: string = MN_DEFAULT_WORDSET):
       strCopy.slice(0, j) + mn_swap_endian_4byte(strCopy.slice(j, j + 8)) + strCopy.slice(j + 8);
   }
   for (let i = 0; i < strCopy.length; i += 8) {
-    const x = parseInt(strCopy.substr(i, 8), 16);
+    const x = Number.parseInt(strCopy.substr(i, 8), 16);
     const w1 = x % n;
     const w2 = (Math.floor(x / n) + w1) % n;
     const w3 = (Math.floor(Math.floor(x / n) / n) + w2) % n;
@@ -179,7 +179,6 @@ const mnWords = {} as Record<
 >;
 mnWords.english = {
   prefixLen: 3,
-  // eslint-disable-next-line global-require
   words: require('../../../mnemonic_languages/english.json'),
   truncWords: [],
 };
@@ -188,9 +187,8 @@ export function get_languages(): Array<string> {
   return Object.keys(mnWords);
 }
 
-// eslint-disable-next-line no-restricted-syntax
 for (const i in mnWords) {
-  // eslint-disable-next-line no-prototype-builtins
+  // biome-ignore lint/suspicious/noPrototypeBuiltins: <explanation>
   if (mnWords.hasOwnProperty(i)) {
     if (mnWords[i].prefixLen === 0) {
       continue;

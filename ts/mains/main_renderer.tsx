@@ -11,7 +11,7 @@ import { SessionRegistrationView } from '../components/registration/SessionRegis
 import { Data } from '../data/data';
 import { OpenGroupData } from '../data/opengroups';
 import { SettingsKey } from '../data/settings-key';
-import { MessageModel } from '../models/message';
+import type { MessageModel } from '../models/message';
 import { queueAllCached } from '../receiver/receiver';
 import { loadKnownBlindedKeys } from '../session/apis/open_group_api/sogsv3/knownBlindedkeys';
 import { ConvoHub } from '../session/conversations';
@@ -334,7 +334,7 @@ async function start() {
   // Set user's launch count.
   const prevLaunchCount = window.getSettingValue('launch-count');
 
-  const launchCount = !prevLaunchCount ? 1 : prevLaunchCount + 1;
+  const launchCount = prevLaunchCount ? prevLaunchCount + 1 : 1;
 
   window.setTheme = async newTheme => {
     await window.Events.setThemeSetting(newTheme);

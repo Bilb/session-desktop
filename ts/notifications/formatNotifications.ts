@@ -1,6 +1,6 @@
 import { ConversationInteractionStatus, ConversationInteractionType } from '../interactions/types';
 import { ConvoHub } from '../session/conversations';
-import { InteractionNotificationType } from '../state/ducks/types';
+import type { InteractionNotificationType } from '../state/ducks/types';
 import { assertUnreachable } from '../types/sqlSharedTypes';
 
 function formatInteractionNotification(

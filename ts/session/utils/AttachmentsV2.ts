@@ -1,17 +1,18 @@
-import { isFinite } from 'lodash';
-import { Attachment } from '../../types/Attachment';
+import type { Attachment } from '../../types/Attachment';
+
+import { isFinite as isFiniteL } from 'lodash';
 
 import { uploadFileToRoomSogs3 } from '../apis/open_group_api/sogsv3/sogsV3SendFile';
 import { addAttachmentPadding } from '../crypto/BufferPadding';
-import {
+import type {
   AttachmentPointer,
   AttachmentPointerWithUrl,
   PreviewWithAttachmentUrl,
   Quote,
   QuotedAttachment,
 } from '../messages/outgoing/visibleMessage/VisibleMessage';
-import { RawPreview, RawQuote } from './Attachments';
-import { OpenGroupRequestCommonType } from '../../data/types';
+import type { RawPreview, RawQuote } from './Attachments';
+import type { OpenGroupRequestCommonType } from '../../data/types';
 
 interface UploadParamsV2 {
   attachment: Attachment;
@@ -36,13 +37,13 @@ async function uploadV3(params: UploadParamsV2): Promise<AttachmentPointerWithUr
     fileName: attachment.fileName,
     flags: attachment.flags,
     caption: attachment.caption,
-    width: attachment.width && isFinite(attachment.width) ? attachment.width : undefined,
-    height: attachment.height && isFinite(attachment.height) ? attachment.height : undefined,
+    width: attachment.width && isFiniteL(attachment.width) ? attachment.width : undefined,
+    height: attachment.height && isFiniteL(attachment.height) ? attachment.height : undefined,
   };
 
-  const paddedAttachment: ArrayBuffer = !openGroup
-    ? addAttachmentPadding(attachment.data)
-    : attachment.data;
+  const paddedAttachment: ArrayBuffer = openGroup
+    ? attachment.data
+    : addAttachmentPadding(attachment.data);
 
   const fileDetails = await uploadFileToRoomSogs3(new Uint8Array(paddedAttachment), openGroup);
 

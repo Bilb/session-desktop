@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { GroupPubkeyType, PubkeyType } from 'libsession_util_nodejs';
+import type { GroupPubkeyType, PubkeyType } from 'libsession_util_nodejs';
 import { randombytes_buf } from 'libsodium-wrappers-sumo';
 import Long from 'long';
 import Sinon from 'sinon';
@@ -216,7 +216,9 @@ describe('LibSessionUtil pendingChangesForGroup', () => {
 });
 
 describe('LibSessionUtil pendingChangesForUs', () => {
-  beforeEach(async () => {});
+  beforeEach(async () => {
+    // empty on purpose
+  });
 
   afterEach(() => {
     Sinon.restore();

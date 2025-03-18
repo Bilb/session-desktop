@@ -4,8 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { parseOpenGroupV2 } from '../../../session/apis/open_group_api/opengroupV2/JoinOpenGroupV2';
 import { sogsV3FetchPreviewBase64 } from '../../../session/apis/open_group_api/sogsv3/sogsV3FetchFile';
-import { DefaultRoomsState, updateDefaultBase64RoomData } from '../../../state/ducks/defaultRooms';
-import { StateType } from '../../../state/reducer';
+import {
+  type DefaultRoomsState,
+  updateDefaultBase64RoomData,
+} from '../../../state/ducks/defaultRooms';
+import type { StateType } from '../../../state/reducer';
 import { Avatar, AvatarSize } from '../../avatar/Avatar';
 import { Flex } from '../../basic/Flex';
 import { H4 } from '../../basic/Heading';

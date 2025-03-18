@@ -64,7 +64,7 @@ export async function generateCurve25519KeyPairWithoutPrefix(): Promise<ECKeyPai
     const x25519SecretKey = sodium.crypto_sign_ed25519_sk_to_curve25519(ed25519KeyPair.privateKey);
 
     return new ECKeyPair(x25519PublicKey, x25519SecretKey);
-  } catch (err) {
+  } catch (_err) {
     return null;
   }
 }

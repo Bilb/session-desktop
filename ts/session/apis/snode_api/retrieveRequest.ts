@@ -1,8 +1,8 @@
-import { GroupPubkeyType } from 'libsession_util_nodejs';
+import type { GroupPubkeyType } from 'libsession_util_nodejs';
 import { isArray } from 'lodash';
-import { Snode } from '../../../data/types';
+import type { Snode } from '../../../data/types';
 import { GetNetworkTime } from './getNetworkTime';
-import { SnodeNamespace, SnodeNamespaces, SnodeNamespacesGroup } from './namespaces';
+import { SnodeNamespace, SnodeNamespaces, type SnodeNamespacesGroup } from './namespaces';
 
 import { UserGroupsWrapperActions } from '../../../webworker/workers/browser/libsession_worker_interface';
 import { PubKey } from '../../types';
@@ -16,7 +16,7 @@ import {
   UpdateExpiryOnNodeUserSubRequest,
 } from './SnodeRequestTypes';
 import { BatchRequests } from './batchRequest';
-import { RetrieveMessagesResultsBatched, RetrieveMessagesResultsContent } from './types';
+import type { RetrieveMessagesResultsBatched, RetrieveMessagesResultsContent } from './types';
 import { ed25519Str } from '../../utils/String';
 import { NetworkTime } from '../../../util/NetworkTime';
 

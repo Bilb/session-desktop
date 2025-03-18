@@ -3,9 +3,9 @@ import { useState } from 'react';
 
 import { useDisableDrag } from '../../../hooks/useDisableDrag';
 import { useEncryptedFileFetch } from '../../../hooks/useEncryptedFileFetch';
-import { LightBoxOptions, updateLightBoxOptions } from '../../../state/ducks/modalDialog';
+import { type LightBoxOptions, updateLightBoxOptions } from '../../../state/ducks/modalDialog';
 import { isImageTypeSupported, isVideoTypeSupported } from '../../../util/GoogleChrome';
-import { MediaItemType } from '../../lightbox/LightboxGallery';
+import type { MediaItemType } from '../../lightbox/LightboxGallery';
 import { AriaLabels } from '../../../util/hardcodedAriaLabels';
 
 type Props = {
@@ -23,7 +23,7 @@ const MediaGridItemContent = (props: Props) => {
   const { loading, urlToLoad } = useEncryptedFileFetch(urlToDecrypt, contentType, false);
 
   // data will be url if loading is finished and '' if not
-  const srcData = !loading ? urlToLoad : '';
+  const srcData = loading ? '' : urlToLoad;
   const disableDrag = useDisableDrag();
 
   const onImageError = () => {

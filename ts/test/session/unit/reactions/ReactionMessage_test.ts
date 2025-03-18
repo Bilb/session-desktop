@@ -11,7 +11,7 @@ import { Reactions } from '../../../../util/reactions';
 import * as Storage from '../../../../util/storage';
 import { generateFakeIncomingPrivateMessage, stubWindowLog } from '../../../test-utils/utils';
 
-import { SignalService } from '../../../../protobuf';
+import type { SignalService } from '../../../../protobuf';
 import { UserUtils } from '../../../../session/utils';
 import { TestUtils } from '../../../test-utils';
 import { makeMessageModels } from '../../../../models/models';

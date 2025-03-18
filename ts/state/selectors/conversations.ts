@@ -1,28 +1,28 @@
 /* eslint-disable no-restricted-syntax */
 
 import { createSelector } from '@reduxjs/toolkit';
-import { filter, isEmpty, isFinite, isNumber, pick, sortBy, toNumber } from 'lodash';
+import { filter, isEmpty, isNumber, pick, sortBy, toNumber, isFinite as isFiniteL } from 'lodash';
 
 import { useSelector } from 'react-redux';
 import {
-  ConversationLookupType,
-  ConversationsStateType,
+  type ConversationLookupType,
+  type ConversationsStateType,
   lookupQuote,
-  MessageModelPropsWithConvoProps,
-  MessageModelPropsWithoutConvoProps,
-  PropsForQuote,
-  QuoteLookupType,
-  ReduxConversationType,
-  SortedMessageModelProps,
+  type MessageModelPropsWithConvoProps,
+  type MessageModelPropsWithoutConvoProps,
+  type PropsForQuote,
+  type QuoteLookupType,
+  type ReduxConversationType,
+  type SortedMessageModelProps,
   type PropsForMessageWithoutConvoProps,
 } from '../ducks/conversations';
-import { StateType } from '../reducer';
+import type { StateType } from '../reducer';
 
-import { ReplyingToMessageProps } from '../../components/conversation/composition/CompositionBox';
-import { MessageAttachmentSelectorProps } from '../../components/conversation/message/message-content/MessageAttachment';
-import { MessageContentSelectorProps } from '../../components/conversation/message/message-content/MessageContent';
-import { MessageContentWithStatusSelectorProps } from '../../components/conversation/message/message-content/MessageContentWithStatus';
-import { GenericReadableMessageSelectorProps } from '../../components/conversation/message/message-item/GenericReadableMessage';
+import type { ReplyingToMessageProps } from '../../components/conversation/composition/CompositionBox';
+import type { MessageAttachmentSelectorProps } from '../../components/conversation/message/message-content/MessageAttachment';
+import type { MessageContentSelectorProps } from '../../components/conversation/message/message-content/MessageContent';
+import type { MessageContentWithStatusSelectorProps } from '../../components/conversation/message/message-content/MessageContentWithStatus';
+import type { GenericReadableMessageSelectorProps } from '../../components/conversation/message/message-item/GenericReadableMessage';
 import { hasValidIncomingRequestValues } from '../../models/conversation';
 import { isOpenOrClosedGroup } from '../../models/conversationAttributes';
 import { ConvoHub } from '../../session/conversations';
@@ -32,7 +32,7 @@ import { BlockedNumberController } from '../../util';
 import { Storage } from '../../util/storage';
 import { getIntl } from './user';
 
-import { MessageReactsSelectorProps } from '../../components/conversation/message/message-content/MessageReactions';
+import type { MessageReactsSelectorProps } from '../../components/conversation/message/message-content/MessageReactions';
 import { processQuoteAttachment } from '../../models/message';
 import { CONVERSATION_PRIORITIES } from '../../models/types';
 import { isUsAnySogsFromCache } from '../../session/apis/open_group_api/sogsv3/knownBlindedkeys';
@@ -287,7 +287,7 @@ const _getGlobalUnreadCount = (sortedConversations: Array<ReduxConversationType>
 
     if (
       isNumber(conversation.unreadCount) &&
-      isFinite(conversation.unreadCount) &&
+      isFiniteL(conversation.unreadCount) &&
       conversation.unreadCount > 0 &&
       conversation.currentNotificationSetting !== 'disabled'
     ) {

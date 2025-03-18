@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { isFinite, sortBy, uniq, xor } from 'lodash';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import { sortBy, uniq, xor, isFinite as isFiniteL } from 'lodash';
 
 type RoomInfo = {
   canWrite: boolean;
@@ -35,7 +35,7 @@ const sogsRoomInfosSlice = createSlice({
   reducers: {
     setSubscriberCount(state, action: PayloadAction<{ convoId: string; subscriberCount: number }>) {
       addEmptyEntryIfNeeded(state, action.payload.convoId);
-      if (isFinite(action.payload.subscriberCount)) {
+      if (isFiniteL(action.payload.subscriberCount)) {
         state.rooms[action.payload.convoId].subscriberCount = action.payload.subscriberCount;
       }
       return state;

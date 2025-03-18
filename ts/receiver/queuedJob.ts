@@ -2,10 +2,10 @@ import _, { isEmpty, isNumber, toNumber } from 'lodash';
 import { queueAttachmentDownloads } from './attachments';
 
 import { Data } from '../data/data';
-import { ConversationModel } from '../models/conversation';
-import { MessageModel } from '../models/message';
+import type { ConversationModel } from '../models/conversation';
+import type { MessageModel } from '../models/message';
 import { ConvoHub } from '../session/conversations';
-import { Quote } from './types';
+import type { Quote } from './types';
 
 import { MessageDirection } from '../models/messageType';
 import { ConversationTypeEnum } from '../models/types';
@@ -15,7 +15,7 @@ import { ProfileManager } from '../session/profile_manager/ProfileManager';
 import { PubKey } from '../session/types';
 import { UserUtils } from '../session/utils';
 import {
-  MessageModelPropsWithoutConvoProps,
+  type MessageModelPropsWithoutConvoProps,
   lookupQuote,
   pushQuotedMessageDetails,
 } from '../state/ducks/conversations';
@@ -321,9 +321,9 @@ async function handleRegularMessage(
     PubKey.isBlinded(sendingDeviceConversation.id) &&
     isNumber(serverTimestamp)
   ) {
-    const updateBlockTimestamp = !rawDataMessage.blocksCommunityMessageRequests
-      ? 0
-      : serverTimestamp;
+    const updateBlockTimestamp = rawDataMessage.blocksCommunityMessageRequests
+      ? serverTimestamp
+      : 0;
     await sendingDeviceConversation.updateBlocksSogsMsgReqsTimestamp(updateBlockTimestamp, false);
   }
 

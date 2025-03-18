@@ -1,7 +1,7 @@
-import { SessionDataTestId, useState } from 'react';
+import { type SessionDataTestId, useState } from 'react';
 
 import useMount from 'react-use/lib/useMount';
-import styled, { CSSProperties } from 'styled-components';
+import styled, { type CSSProperties } from 'styled-components';
 
 import { SessionRadio } from './SessionRadio';
 

@@ -1,9 +1,9 @@
 import classNames from 'classnames';
 import styled from 'styled-components';
-import { PropsForAttachment } from '../../../../state/ducks/conversations';
-import { AttachmentTypeWithPath, getExtensionForDisplay } from '../../../../types/Attachment';
+import type { PropsForAttachment } from '../../../../state/ducks/conversations';
+import { type AttachmentTypeWithPath, getExtensionForDisplay } from '../../../../types/Attachment';
 import { Spinner } from '../../../loading';
-import { MessageModelType } from '../../../../models/messageType';
+import type { MessageModelType } from '../../../../models/messageType';
 import { MessageHighlighter } from './MessageHighlighter';
 
 const StyledGenericAttachmentContainer = styled(MessageHighlighter)<{

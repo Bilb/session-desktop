@@ -1,15 +1,15 @@
 import { useSelector } from 'react-redux';
-import { MessageModelType } from '../../models/messageType';
-import {
+import type { MessageModelType } from '../../models/messageType';
+import type {
   MessageModelPropsWithConvoProps,
   PropsForAttachment,
   PropsForQuote,
   ReduxConversationType,
 } from '../ducks/conversations';
-import { StateType } from '../reducer';
+import type { StateType } from '../reducer';
 import { getIsMessageSelected, getMessagePropsByMessageId } from './conversations';
 import { useSelectedIsPrivate } from './selectedConversation';
-import { LastMessageStatusType } from '../ducks/types';
+import type { LastMessageStatusType } from '../ducks/types';
 import { PubKey } from '../../session/types';
 import { useIsMe } from '../../hooks/useParamSelector';
 import { UserUtils } from '../../session/utils';

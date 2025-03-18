@@ -1,9 +1,13 @@
 /* eslint-disable no-case-declarations */
-import { BaseConvoInfoVolatile, ConvoVolatileType, GroupPubkeyType } from 'libsession_util_nodejs';
-import { isEmpty, isFinite } from 'lodash';
+import type {
+  BaseConvoInfoVolatile,
+  ConvoVolatileType,
+  GroupPubkeyType,
+} from 'libsession_util_nodejs';
+import { isEmpty, isFinite as isFiniteL } from 'lodash';
 import { Data } from '../../../data/data';
 import { OpenGroupData } from '../../../data/opengroups';
-import { ConversationModel } from '../../../models/conversation';
+import type { ConversationModel } from '../../../models/conversation';
 import { assertUnreachable } from '../../../types/sqlSharedTypes';
 import {
   ConvoInfoVolatileWrapperActions,
@@ -82,7 +86,7 @@ async function insertConvoFromDBIntoWrapperAndRefresh(convoId: string): Promise<
   // Note: not having a last read timestamp fallsback to 0, which keeps the existing value in the wrapper if it is already set (as done in src/convo_info_volatile_config.cpp)
   // we actually do the max() of whatever is inside the wrapper and the value from the DB
   const lastReadMessageTimestamp =
-    !!timestampFromDbMs && isFinite(timestampFromDbMs) && timestampFromDbMs > 0
+    !!timestampFromDbMs && isFiniteL(timestampFromDbMs) && timestampFromDbMs > 0
       ? timestampFromDbMs
       : 0;
 
@@ -199,14 +203,15 @@ async function refreshConvoVolatileCached(
     }
 
     switch (convoType) {
-      case '1o1':
+      case '1o1': {
         const fromWrapper1o1 = await ConvoInfoVolatileWrapperActions.get1o1(convoId);
         if (fromWrapper1o1) {
           mapped1o1WrapperValues.set(convoId, fromWrapper1o1);
         }
         refreshed = true;
         break;
-      case 'LegacyGroup':
+      }
+      case 'LegacyGroup': {
         const fromWrapperLegacyGroup =
           await ConvoInfoVolatileWrapperActions.getLegacyGroup(convoId);
         if (fromWrapperLegacyGroup) {
@@ -214,7 +219,8 @@ async function refreshConvoVolatileCached(
         }
         refreshed = true;
         break;
-      case 'Group':
+      }
+      case 'Group': {
         if (!PubKey.is03Pubkey(convoId)) {
           throw new Error('expected a 03 group');
         }
@@ -224,13 +230,15 @@ async function refreshConvoVolatileCached(
         }
         refreshed = true;
         break;
-      case 'Community':
+      }
+      case 'Community': {
         const fromWrapperCommunity = await ConvoInfoVolatileWrapperActions.getCommunity(convoId);
         if (fromWrapperCommunity && fromWrapperCommunity.fullUrlWithPubkey) {
           mappedCommunityWrapperValues.set(convoId, fromWrapperCommunity);
         }
         refreshed = true;
         break;
+      }
 
       default:
         assertUnreachable(convoType, `refreshConvoVolatileCached unhandled case "${convoType}"`);

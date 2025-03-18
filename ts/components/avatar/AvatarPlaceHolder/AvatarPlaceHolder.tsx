@@ -58,7 +58,7 @@ function useHashBasedOnPubkey(pubkey: string) {
         setIsLoading(false);
         // Generate the seed simulate the .hashCode as Java
         if (sha) {
-          const hashed = parseInt(sha.substring(0, 12), 16) || 0;
+          const hashed = Number.parseInt(sha.substring(0, 12), 16) || 0;
           setHash(hashed);
           cachedHashes.set(pubkey, hashed);
 

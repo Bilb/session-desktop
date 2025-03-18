@@ -1,5 +1,5 @@
-import { GroupPubkeyType, PubkeyType, WithGroupPubkey } from 'libsession_util_nodejs';
-import { isEmpty, isFinite, isNumber } from 'lodash';
+import type { GroupPubkeyType, PubkeyType, WithGroupPubkey } from 'libsession_util_nodejs';
+import { isEmpty, isNumber, isFinite as isFiniteL } from 'lodash';
 import { Data } from '../../data/data';
 import { deleteAllMessagesByConvoIdNoConfirmation } from '../../interactions/conversationInteractions';
 import { deleteMessagesFromSwarmOnly } from '../../interactions/conversations/unsendingInteractions';
@@ -9,10 +9,10 @@ import { SignalService } from '../../protobuf';
 import { getSwarmPollingInstance } from '../../session/apis/snode_api';
 import { ConvoHub } from '../../session/conversations';
 import { getSodiumRenderer } from '../../session/crypto';
-import { WithDisappearingMessageUpdate } from '../../session/disappearing_messages/types';
+import type { WithDisappearingMessageUpdate } from '../../session/disappearing_messages/types';
 import { ClosedGroup } from '../../session/group/closed-group';
 import { PubKey } from '../../session/types';
-import { WithMessageHash, type WithMessageHashOrNull } from '../../session/types/with';
+import type { WithMessageHash, WithMessageHashOrNull } from '../../session/types/with';
 import { UserUtils } from '../../session/utils';
 import { sleepFor } from '../../session/utils/Promise';
 import { ed25519Str, stringToUint8Array } from '../../session/utils/String';
@@ -273,7 +273,7 @@ async function handleGroupInfoChangeMessage({
     }
     case SignalService.GroupUpdateInfoChangeMessage.Type.DISAPPEARING_MESSAGES: {
       const newTimerSeconds = change.updatedExpiration;
-      if (isNumber(newTimerSeconds) && isFinite(newTimerSeconds) && newTimerSeconds >= 0) {
+      if (isNumber(newTimerSeconds) && isFiniteL(newTimerSeconds) && newTimerSeconds >= 0) {
         await convo.updateExpireTimer({
           providedExpireTimer: newTimerSeconds,
           providedSource: author,
@@ -339,7 +339,11 @@ async function handleGroupMemberChangeMessage({
   switch (change.type) {
     case SignalService.GroupUpdateMemberChangeMessage.Type.ADDED: {
       await ClosedGroup.addUpdateMessage({
-        diff: { type: 'add', added: filteredMemberChange, withHistory: change.historyShared },
+        diff: {
+          type: 'add',
+          added: filteredMemberChange,
+          withHistory: change.historyShared,
+        },
         ...sharedDetails,
       });
 
@@ -613,7 +617,7 @@ async function handleGroupUpdatePromoteMessage({
     try {
       await MetaGroupWrapperActions.infoGet(groupPk);
       wrapperAlreadyInit = true;
-    } catch (e) {
+    } catch (_e) {
       // nothing to do
     }
     if (!wrapperAlreadyInit) {

@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable no-console */
 import { app, type BrowserWindow } from 'electron';
 import { autoUpdater, type UpdateInfo } from 'electron-updater';
 import * as fs from 'fs-extra';
@@ -212,7 +210,7 @@ async function canAutoUpdate(): Promise<boolean> {
     try {
       const exists = fs.existsSync(appUpdateConfigPath);
       resolve(exists);
-    } catch (e) {
+    } catch (_e) {
       resolve(false);
     }
   });

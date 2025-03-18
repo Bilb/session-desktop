@@ -1,22 +1,22 @@
-import { UserGroupsGet } from 'libsession_util_nodejs';
+import type { UserGroupsGet } from 'libsession_util_nodejs';
 import { compact, isEmpty, uniqBy } from 'lodash';
 import { SignalService } from '../../../../protobuf';
 import { MetaGroupWrapperActions } from '../../../../webworker/workers/browser/libsession_worker_interface';
-import { GroupUpdateInfoChangeMessage } from '../../../messages/outgoing/controlMessage/group_v2/to_group/GroupUpdateInfoChangeMessage';
-import { GroupUpdateMemberChangeMessage } from '../../../messages/outgoing/controlMessage/group_v2/to_group/GroupUpdateMemberChangeMessage';
+import type { GroupUpdateInfoChangeMessage } from '../../../messages/outgoing/controlMessage/group_v2/to_group/GroupUpdateInfoChangeMessage';
+import type { GroupUpdateMemberChangeMessage } from '../../../messages/outgoing/controlMessage/group_v2/to_group/GroupUpdateMemberChangeMessage';
 import { MessageWrapper } from '../../../sending/MessageWrapper';
 import { ed25519Str } from '../../../utils/String';
-import { PendingChangesForGroup } from '../../../utils/libsession/libsession_utils';
+import type { PendingChangesForGroup } from '../../../utils/libsession/libsession_utils';
 import {
-  StoreGroupExtraData,
+  type StoreGroupExtraData,
   StoreGroupInfoSubRequest,
   StoreGroupKeysSubRequest,
   StoreGroupMembersSubRequest,
   StoreGroupMessageSubRequest,
 } from '../SnodeRequestTypes';
 import { SnodeNamespaces } from '../namespaces';
-import { GroupUpdateDeleteMemberContentMessage } from '../../../messages/outgoing/controlMessage/group_v2/to_group/GroupUpdateDeleteMemberContentMessage';
-import { GroupUpdateMemberLeftNotificationMessage } from '../../../messages/outgoing/controlMessage/group_v2/to_group/GroupUpdateMemberLeftNotificationMessage';
+import type { GroupUpdateDeleteMemberContentMessage } from '../../../messages/outgoing/controlMessage/group_v2/to_group/GroupUpdateDeleteMemberContentMessage';
+import type { GroupUpdateMemberLeftNotificationMessage } from '../../../messages/outgoing/controlMessage/group_v2/to_group/GroupUpdateMemberLeftNotificationMessage';
 import { TTL_DEFAULT } from '../../../constants';
 import { NetworkTime } from '../../../../util/NetworkTime';
 

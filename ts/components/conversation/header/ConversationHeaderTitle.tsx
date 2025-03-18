@@ -124,15 +124,15 @@ export const ConversationHeaderTitle = (props: ConversationHeaderTitleProps) => 
 
   useEffect(() => {
     if (visibleSubtitle !== 'disappearingMessages') {
-      if (!isEmpty(disappearingMessageSubtitle)) {
-        setVisibleSubtitle('disappearingMessages');
-      } else {
+      if (isEmpty(disappearingMessageSubtitle)) {
         setVisibleSubtitle('notifications');
+      } else {
+        setVisibleSubtitle('disappearingMessages');
       }
     }
     // We only want this to change when a new conversation is selected or disappearing messages is toggled
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [convoId, disappearingMessageSubtitle]);
+  }, [disappearingMessageSubtitle, visibleSubtitle]);
 
   useEffect(() => {
     const newSubtitlesArray: any = [];

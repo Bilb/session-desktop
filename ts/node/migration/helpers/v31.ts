@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
-import * as BetterSqlite3 from '@signalapp/better-sqlite3';
-import {
+import type * as BetterSqlite3 from '@signalapp/better-sqlite3';
+import type {
   ContactInfoSet,
   ContactsConfigWrapperNode,
   ConvoInfoVolatileWrapperNode,
@@ -8,14 +8,14 @@ import {
   LegacyGroupMemberInfo,
   UserGroupsWrapperNode,
 } from 'libsession_util_nodejs';
-import { isEmpty, isEqual, isFinite, isNumber } from 'lodash';
+import { isEmpty, isEqual, isNumber, isFinite as isFiniteL } from 'lodash';
 import { from_hex } from 'libsodium-wrappers-sumo';
 import { MESSAGES_TABLE, toSqliteBoolean } from '../../database_utility';
-import { ConversationAttributes } from '../../../models/conversationAttributes';
+import type { ConversationAttributes } from '../../../models/conversationAttributes';
 import { maybeArrayJSONtoArray } from '../../../types/sqlSharedTypes';
 import { checkTargetMigration, hasDebugEnvVariable } from '../utils';
 import { sqlNode } from '../../sql';
-import { HexKeyPair } from '../../../receiver/keypairs';
+import type { HexKeyPair } from '../../../receiver/keypairs';
 import { fromHexToArray } from '../../../session/utils/String';
 import { CONVERSATION_PRIORITIES } from '../../../models/types';
 
@@ -150,7 +150,7 @@ function insertContactIntoContactWrapper(
       });
 
     const maxRead = rows?.max_sent_at;
-    const lastRead = isNumber(maxRead) && isFinite(maxRead) ? maxRead : 0;
+    const lastRead = isNumber(maxRead) && isFiniteL(maxRead) ? maxRead : 0;
     hasDebugEnvVariable &&
       console.info(`Inserting contact into volatile wrapper maxread: ${contact.id} :${lastRead}`);
     volatileConfigWrapper.set1o1(contact.id, lastRead, false);
@@ -242,7 +242,7 @@ function insertCommunityIntoWrapper(
       });
 
     const maxRead = rows?.max_sent_at;
-    const lastRead = isNumber(maxRead) && isFinite(maxRead) ? maxRead : 0;
+    const lastRead = isNumber(maxRead) && isFiniteL(maxRead) ? maxRead : 0;
     hasDebugEnvVariable &&
       console.info(
         `Inserting community into volatile wrapper: ${wrapperComm.fullUrl} :${lastRead}`
@@ -287,8 +287,8 @@ function getLegacyGroupInfoFromDBValues({
     name: displayNameInProfile || '',
     priority: priority || 0,
     members: wrappedMembers,
-    encPubkey: !isEmpty(encPubkeyHex) ? from_hex(encPubkeyHex) : new Uint8Array(),
-    encSeckey: !isEmpty(encSeckeyHex) ? from_hex(encSeckeyHex) : new Uint8Array(),
+    encPubkey: isEmpty(encPubkeyHex) ? new Uint8Array() : from_hex(encPubkeyHex),
+    encSeckey: isEmpty(encSeckeyHex) ? new Uint8Array() : from_hex(encSeckeyHex),
     joinedAtSeconds: Math.floor(lastJoinedTimestamp / 1000),
   };
 
@@ -346,7 +346,7 @@ function insertLegacyGroupIntoWrapper(
       });
 
     const maxRead = rows?.max_sent_at;
-    const lastRead = isNumber(maxRead) && isFinite(maxRead) ? maxRead : 0;
+    const lastRead = isNumber(maxRead) && isFiniteL(maxRead) ? maxRead : 0;
     hasDebugEnvVariable &&
       console.info(`Inserting legacy group into volatile wrapper maxread: ${id} :${lastRead}`);
     volatileInfoConfigWrapper.setLegacyGroup(id, lastRead, false);

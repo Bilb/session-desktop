@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { LabelWithInfo } from '.';
-import { PropsForAttachment } from '../../../../../../state/ducks/conversations';
+import type { PropsForAttachment } from '../../../../../../state/ducks/conversations';
 import { Flex } from '../../../../../basic/Flex';
 
 type Props = {

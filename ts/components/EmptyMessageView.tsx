@@ -109,7 +109,7 @@ export const EmptyMessageView = () => {
           <img src="images/session/session-text.svg" alt="full-brand-text" />
         </StyledSessionFullLogo>
       )}
-      {!conversationCount ? (
+      {conversationCount ? null : (
         <>
           <StyledHR />
           <StyledNoConversations data-testid="empty-conversation">
@@ -118,7 +118,7 @@ export const EmptyMessageView = () => {
           <SpacerXS />
           <StyledP style={{ width: '360px' }}>{window.i18n('onboardingHitThePlusButton')}</StyledP>
         </>
-      ) : null}
+      )}
     </StyledPlaceholder>
   );
 };

@@ -1,14 +1,14 @@
 import classNames from 'classnames';
 import { isEmpty } from 'lodash';
-import { useCallback, useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { InView } from 'react-intersection-observer';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { useScrollToLoadedMessage } from '../../../../contexts/ScrollToLoadedMessage';
 import { useIsDetailMessageView } from '../../../../contexts/isDetailViewContext';
 import { IsMessageVisibleContext } from '../../../../contexts/isMessageVisibleContext';
-import { MessageModelType, MessageRenderingProps } from '../../../../models/messageType';
-import { StateType } from '../../../../state/reducer';
+import type { MessageModelType, MessageRenderingProps } from '../../../../models/messageType';
+import type { StateType } from '../../../../state/reducer';
 import {
   useHideAvatarInMsgList,
   useMessageIsDeleted,
@@ -88,9 +88,9 @@ export const MessageContent = (props: Props) => {
     }
   };
 
-  const handleImageError = useCallback(() => {
+  const handleImageError = () => {
     setImageBroken(true);
-  }, [setImageBroken]);
+  };
 
   const quotedMessageToAnimate = useSelector(getQuotedMessageToAnimate);
   const shouldHighlightMessage = useSelector(getShouldHighlightMessage);
@@ -181,14 +181,14 @@ export const MessageContent = (props: Props) => {
               <MessageText messageId={props.messageId} />
             </StyledMessageOpaqueContent>
           )}
-          {!isDeleted ? (
+          {isDeleted ? null : (
             <MessageAttachment
               messageId={props.messageId}
               imageBroken={imageBroken}
               handleImageError={handleImageError}
               highlight={highlight}
             />
-          ) : null}
+          )}
         </IsMessageVisibleContext.Provider>
       </InView>
     </StyledMessageContent>

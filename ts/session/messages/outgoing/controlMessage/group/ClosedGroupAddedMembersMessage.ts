@@ -1,6 +1,6 @@
 import { SignalService } from '../../../../../protobuf';
 import { fromHexToArray } from '../../../../utils/String';
-import { ClosedGroupMessage, ClosedGroupMessageParams } from './ClosedGroupMessage';
+import { ClosedGroupMessage, type ClosedGroupMessageParams } from './ClosedGroupMessage';
 
 interface ClosedGroupAddedMembersMessageParams extends ClosedGroupMessageParams {
   addedMembers: Array<string>;

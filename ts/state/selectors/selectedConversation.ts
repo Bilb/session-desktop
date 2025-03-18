@@ -4,12 +4,12 @@ import { useUnreadCount } from '../../hooks/useParamSelector';
 import { isOpenOrClosedGroup } from '../../models/conversationAttributes';
 import { ConversationTypeEnum } from '../../models/types';
 import {
-  DisappearingMessageConversationModeType,
+  type DisappearingMessageConversationModeType,
   DisappearingMessageConversationModes,
 } from '../../session/disappearing_messages/types';
 import { PubKey } from '../../session/types';
 import { UserUtils } from '../../session/utils';
-import { StateType } from '../reducer';
+import type { StateType } from '../reducer';
 import {
   getIsMessageSelectionMode,
   getSelectedConversation,

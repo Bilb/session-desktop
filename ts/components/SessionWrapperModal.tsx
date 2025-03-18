@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { ReactNode, useRef } from 'react';
+import { type ReactNode, useRef } from 'react';
 import useKey from 'react-use/lib/useKey';
 
 import styled from 'styled-components';

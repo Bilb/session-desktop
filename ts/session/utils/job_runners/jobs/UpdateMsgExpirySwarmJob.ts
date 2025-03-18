@@ -6,10 +6,10 @@ import { isSignInByLinking } from '../../../../util/storage';
 import { DisappearingMessages } from '../../../disappearing_messages';
 import { runners } from '../JobRunner';
 import {
-  AddJobCheckReturn,
+  type AddJobCheckReturn,
   PersistedJob,
   RunJobResult,
-  UpdateMsgExpirySwarmPersistedData,
+  type UpdateMsgExpirySwarmPersistedData,
 } from '../PersistedJob';
 
 class UpdateMsgExpirySwarmJob extends PersistedJob<UpdateMsgExpirySwarmPersistedData> {

@@ -1,10 +1,10 @@
 import { debounce, noop } from 'lodash';
 import {
-  SessionDataTestId,
-  AriaRole,
-  MouseEvent,
-  MouseEventHandler,
-  ReactNode,
+  type SessionDataTestId,
+  type AriaRole,
+  type MouseEvent,
+  type MouseEventHandler,
+  type ReactNode,
   useCallback,
   useLayoutEffect,
   useState,

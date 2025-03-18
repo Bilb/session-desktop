@@ -1,11 +1,16 @@
 import { isEmpty } from 'lodash';
 import { Data } from '../data/data';
-import { MessageModel } from '../models/message';
-import { SignalService } from '../protobuf';
+import type { MessageModel } from '../models/message';
+import type { SignalService } from '../protobuf';
 import { isUsAnySogsFromCache } from '../session/apis/open_group_api/sogsv3/knownBlindedkeys';
 import { ToastUtils, UserUtils } from '../session/utils';
 
-import { Action, OpenGroupReactionList, ReactionList, RecentReactions } from '../types/Reaction';
+import {
+  Action,
+  type OpenGroupReactionList,
+  type ReactionList,
+  RecentReactions,
+} from '../types/Reaction';
 import { getRecentReactions, saveRecentReactions } from './storage';
 
 const SOGSReactorsFetchCount = 5;
@@ -210,7 +215,7 @@ const handleMessageReaction = async ({
   }
 
   originalMessage.set({
-    reacts: !isEmpty(reacts) ? reacts : undefined,
+    reacts: isEmpty(reacts) ? undefined : reacts,
   });
 
   await originalMessage.commit();
@@ -244,7 +249,7 @@ const handleClearReaction = async (conversationId: string, serverId: number, emo
   }
 
   originalMessage.set({
-    reacts: !isEmpty(reacts) ? reacts : undefined,
+    reacts: isEmpty(reacts) ? undefined : reacts,
   });
 
   await originalMessage.commit();

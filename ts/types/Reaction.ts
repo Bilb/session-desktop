@@ -1,4 +1,4 @@
-import { Emoji, EmojiMartData } from '@emoji-mart/data';
+import type { Emoji, EmojiMartData } from '@emoji-mart/data';
 
 export const reactionLimit: number = 6;
 

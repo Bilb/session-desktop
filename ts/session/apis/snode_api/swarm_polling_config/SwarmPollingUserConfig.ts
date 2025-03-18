@@ -1,5 +1,5 @@
 import { ConfigMessageHandler } from '../../../../receiver/configMessage';
-import { RetrieveMessageItemWithNamespace } from '../types';
+import type { RetrieveMessageItemWithNamespace } from '../types';
 
 async function handleUserSharedConfigMessages(
   userConfigMessagesMerged: Array<RetrieveMessageItemWithNamespace>

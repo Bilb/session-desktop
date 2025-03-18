@@ -1,5 +1,5 @@
-import { ContactInfo, ContactInfoSet } from 'libsession_util_nodejs';
-import { ConversationModel } from '../../../models/conversation';
+import type { ContactInfo, ContactInfoSet } from 'libsession_util_nodejs';
+import type { ConversationModel } from '../../../models/conversation';
 import { getContactInfoFromDBValues } from '../../../types/sqlSharedTypes';
 import { ContactsWrapperActions } from '../../../webworker/workers/browser/libsession_worker_interface';
 import { ConvoHub } from '../../conversations';
@@ -32,7 +32,7 @@ const mappedContactWrapperValues = new Map<string, ContactInfo>();
 function isContactToStoreInWrapper(convo: ConversationModel): boolean {
   try {
     PubKey.cast(convo.id as string);
-  } catch (e) {
+  } catch (_e) {
     return false;
   }
   return !convo.isMe() && convo.isPrivate() && convo.isActive() && !PubKey.isBlinded(convo.id);

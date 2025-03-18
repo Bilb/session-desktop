@@ -3,7 +3,7 @@ import { expect } from 'chai';
 import Sinon from 'sinon';
 
 import { ConversationModel } from '../../../../models/conversation';
-import { ConversationAttributes } from '../../../../models/conversationAttributes';
+import type { ConversationAttributes } from '../../../../models/conversationAttributes';
 import { ConvoHub } from '../../../../session/conversations';
 import { UserUtils } from '../../../../session/utils';
 import { SessionUtilUserProfile } from '../../../../session/utils/libsession/libsession_utils_user_profile';
@@ -70,7 +70,7 @@ describe('libsession_user_profile', () => {
 
       expect(wrapperUserProfile, 'something should be returned from the wrapper').to.not.be.null;
       if (!wrapperUserProfile) {
-        throw Error('something should be returned from the wrapper');
+        throw new Error('something should be returned from the wrapper');
       }
 
       expect(
@@ -125,7 +125,7 @@ describe('libsession_user_profile', () => {
 
       expect(wrapperUserProfile, 'something should be returned from the wrapper').to.not.be.null;
       if (!wrapperUserProfile) {
-        throw Error('something should be returned from the wrapper');
+        throw new Error('something should be returned from the wrapper');
       }
 
       expect(

@@ -3,11 +3,11 @@ import { filter, isNumber, omit } from 'lodash';
 import { v4 as uuidV4 } from 'uuid';
 
 import { Data } from '../../data/data';
-import { MessageModel } from '../../models/message';
+import type { MessageModel } from '../../models/message';
 import { downloadAttachment, downloadAttachmentSogsV3 } from '../../receiver/attachments';
 import { initializeAttachmentLogic, processNewAttachment } from '../../types/MessageAttachment';
 import { getAttachmentMetadata } from '../../types/message/initializeAttachmentMetadata';
-import { AttachmentDownloadMessageDetails } from '../../types/sqlSharedTypes';
+import type { AttachmentDownloadMessageDetails } from '../../types/sqlSharedTypes';
 import { was404Error } from '../apis/snode_api/onions';
 import * as Constants from '../constants';
 
@@ -195,7 +195,10 @@ async function _runJob(job: any) {
         // This is to avoid race condition where multiple attachments in a single message get downloaded at the same time,
         // and tries to update the same message.
         found = await Data.getMessageById(messageId);
-        _addAttachmentToMessage(found, _markAttachmentAsError(attachment), { type, index });
+        _addAttachmentToMessage(found, _markAttachmentAsError(attachment), {
+          type,
+          index,
+        });
         await _finishJob(found, id);
 
         return;
@@ -219,7 +222,11 @@ async function _runJob(job: any) {
     if (found) {
       const { hasAttachments, hasVisualMediaAttachments, hasFileAttachments } =
         getAttachmentMetadata(found);
-      found.set({ hasAttachments, hasVisualMediaAttachments, hasFileAttachments });
+      found.set({
+        hasAttachments,
+        hasVisualMediaAttachments,
+        hasFileAttachments,
+      });
     }
 
     _addAttachmentToMessage(found, upgradedAttachment, { type, index });
@@ -241,8 +248,11 @@ async function _runJob(job: any) {
       // and tries to update the same message.
       found = await Data.getMessageById(messageId);
       try {
-        _addAttachmentToMessage(found, _markAttachmentAsError(attachment), { type, index });
-      } catch (e) {
+        _addAttachmentToMessage(found, _markAttachmentAsError(attachment), {
+          type,
+          index,
+        });
+      } catch (_e) {
         // just swallow this exception. We don't want to throw it from the catch block here as this will end up being a Uncaught global promise
       }
       await _finishJob(found || null, id);

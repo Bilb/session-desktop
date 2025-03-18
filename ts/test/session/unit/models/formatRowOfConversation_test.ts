@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { describe } from 'mocha';
 import {
-  ConversationAttributes,
+  type ConversationAttributes,
   fillConvoAttributesWithDefaults,
 } from '../../../../models/conversationAttributes';
 import { formatRowOfConversation } from '../../../../node/database_utility';

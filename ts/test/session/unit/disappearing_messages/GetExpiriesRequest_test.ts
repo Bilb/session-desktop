@@ -1,17 +1,17 @@
 import chai, { expect } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import { PubkeyType } from 'libsession_util_nodejs';
+import type { PubkeyType } from 'libsession_util_nodejs';
 import Sinon from 'sinon';
 import { GetExpiriesFromNodeSubRequest } from '../../../../session/apis/snode_api/SnodeRequestTypes';
 import {
-  GetExpiriesRequestResponseResults,
+  type GetExpiriesRequestResponseResults,
   processGetExpiriesRequestResponse,
 } from '../../../../session/apis/snode_api/getExpiriesRequest';
 import { SnodeSignature } from '../../../../session/apis/snode_api/signature/snodeSignatures';
-import { WithMessagesHashes } from '../../../../session/types/with';
+import type { WithMessagesHashes } from '../../../../session/types/with';
 import { UserUtils } from '../../../../session/utils';
 import { isValidUnixTimestamp } from '../../../../session/utils/Timestamps';
-import { TypedStub, generateFakeSnode, stubWindowLog } from '../../../test-utils/utils';
+import { type TypedStub, generateFakeSnode, stubWindowLog } from '../../../test-utils/utils';
 import { NetworkTime } from '../../../../util/NetworkTime';
 
 chai.use(chaiAsPromised as any);
@@ -48,13 +48,16 @@ describe('GetExpiriesRequest', () => {
     };
 
     it('builds a valid request given the messageHashes and valid timestamp for now', async () => {
-      const unsigned = new GetExpiriesFromNodeSubRequest({ ...props, getNow: NetworkTime.now });
+      const unsigned = new GetExpiriesFromNodeSubRequest({
+        ...props,
+        getNow: NetworkTime.now,
+      });
       const request = await unsigned.build();
 
       expect(request, 'should not return null').to.not.be.null;
       expect(request, 'should not return undefined').to.not.be.undefined;
       if (!request) {
-        throw Error('nothing was returned when getting the expiries');
+        throw new Error('nothing was returned when getting the expiries');
       }
 
       expect(request, "method should be 'get_expiries'").to.have.property('method', 'get_expiries');
@@ -73,7 +76,10 @@ describe('GetExpiriesRequest', () => {
       (getOurPubKeyStrFromCacheStub as any).returns(undefined);
       let errorStr = 'fakeerror';
       try {
-        const unsigned = new GetExpiriesFromNodeSubRequest({ ...props, getNow: NetworkTime.now });
+        const unsigned = new GetExpiriesFromNodeSubRequest({
+          ...props,
+          getNow: NetworkTime.now,
+        });
         const request = await unsigned.build();
         if (request) {
           throw new Error('we should not have been able to build a request');
@@ -88,7 +94,10 @@ describe('GetExpiriesRequest', () => {
       // Modify the stub behavior for this test only we need to return an unsupported type to simulate a missing pubkey
       Sinon.stub(SnodeSignature, 'generateGetExpiriesOurSignature').resolves(null);
 
-      const unsigned = new GetExpiriesFromNodeSubRequest({ ...props, getNow: NetworkTime.now });
+      const unsigned = new GetExpiriesFromNodeSubRequest({
+        ...props,
+        getNow: NetworkTime.now,
+      });
       try {
         const request = await unsigned.build();
         if (request) {
@@ -106,7 +115,9 @@ describe('GetExpiriesRequest', () => {
   describe('processGetExpiriesRequestResponse', () => {
     const props = {
       targetNode: generateFakeSnode(),
-      expiries: { 'FLTUh/C/6E+sWRgNtrqWPXhQqKlIrpHVKJJtZsBMWKw': 1696983251624 },
+      expiries: {
+        'FLTUh/C/6E+sWRgNtrqWPXhQqKlIrpHVKJJtZsBMWKw': 1696983251624,
+      },
       messageHashes: ['FLTUh/C/6E+sWRgNtrqWPXhQqKlIrpHVKJJtZsBMWKw'],
     };
 

@@ -3,7 +3,7 @@
 import type { SetupI18nReturnType } from '../../types/localizer';
 import { getMessage } from './functions/getMessage';
 import { i18nLog, setInitialLocale } from './shared';
-import { CrowdinLocale } from '../../localization/constants';
+import type { CrowdinLocale } from '../../localization/constants';
 import { setLocaleInUse, setLogger } from '../../localization/localeTools';
 
 /**

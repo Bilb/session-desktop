@@ -30,6 +30,7 @@ const functions = {
   bytesFromString,
 };
 
+// biome-ignore lint/suspicious/noGlobalAssign: <explanation>
 onmessage = async (e: any) => {
   const [jobId, fnName, ...args] = e.data;
 
@@ -104,7 +105,6 @@ async function verifyAllSignatures(
   for (let index = 0; index < uncheckedSignatureMessages.length; index++) {
     const unchecked = uncheckedSignatureMessages[index];
     try {
-      // eslint-disable-next-line no-await-in-loop
       const valid = await verifySignature(
         unchecked.sender,
         unchecked.base64EncodedData,
@@ -114,7 +114,6 @@ async function verifyAllSignatures(
         checked.push(unchecked.base64EncodedData);
         continue;
       }
-      // eslint:disable: no-console
       console.info('got an opengroup message with an invalid signature');
     } catch (e) {
       console.error(e);

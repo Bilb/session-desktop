@@ -1,7 +1,7 @@
 import DOMPurify from 'dompurify';
 import { createElement } from 'react';
 import { supportedFormattingTags } from './Localizer';
-import { LocalizerHtmlTag } from '../../localization/localeTools';
+import type { LocalizerHtmlTag } from '../../localization/localeTools';
 
 type ReceivedProps = {
   html: string;

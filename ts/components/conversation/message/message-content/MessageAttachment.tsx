@@ -3,21 +3,24 @@ import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { Data } from '../../../../data/data';
-import { MessageModelType, MessageRenderingProps } from '../../../../models/messageType';
-import { PropsForAttachment, toggleSelectedMessageId } from '../../../../state/ducks/conversations';
-import { LightBoxOptions, updateLightBoxOptions } from '../../../../state/ducks/modalDialog';
-import { StateType } from '../../../../state/reducer';
+import type { MessageModelType, MessageRenderingProps } from '../../../../models/messageType';
+import {
+  type PropsForAttachment,
+  toggleSelectedMessageId,
+} from '../../../../state/ducks/conversations';
+import { type LightBoxOptions, updateLightBoxOptions } from '../../../../state/ducks/modalDialog';
+import type { StateType } from '../../../../state/reducer';
 import { useMessageSelected } from '../../../../state/selectors';
 import { getMessageAttachmentProps } from '../../../../state/selectors/conversations';
 import {
-  AttachmentType,
-  AttachmentTypeWithPath,
+  type AttachmentType,
+  type AttachmentTypeWithPath,
   isAudio,
   isImage,
   isVideo,
 } from '../../../../types/Attachment';
 import { saveAttachmentToDisk } from '../../../../util/attachmentsUtil';
-import { MediaItemType } from '../../../lightbox/LightboxGallery';
+import type { MediaItemType } from '../../../lightbox/LightboxGallery';
 import { AudioPlayerWithEncryptedFile } from '../../H5AudioPlayer';
 import { ImageGrid } from '../../ImageGrid';
 import { ClickToTrustSender } from './ClickToTrustSender';

@@ -1,7 +1,7 @@
 import { SignalService } from '../../../../../../protobuf';
 import { SnodeNamespaces } from '../../../../../apis/snode_api/namespaces';
 import { getOurProfile } from '../../../../../utils/User';
-import { GroupUpdateMessage, GroupUpdateMessageParams } from '../GroupUpdateMessage';
+import { GroupUpdateMessage, type GroupUpdateMessageParams } from '../GroupUpdateMessage';
 
 type Params = GroupUpdateMessageParams & {
   isApproved: boolean;

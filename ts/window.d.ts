@@ -1,10 +1,10 @@
 // eslint-disable-next-line import/no-unresolved
 import {} from 'styled-components/cssprop';
 
-import { Store } from '@reduxjs/toolkit';
-import { Persistor } from 'redux-persist/es/types';
+import type { Store } from '@reduxjs/toolkit';
+import type { Persistor } from 'redux-persist/es/types';
 
-import { PrimaryColorStateType, ThemeStateType } from './themes/constants/colors';
+import type { PrimaryColorStateType, ThemeStateType } from './themes/constants/colors';
 import type { GetMessageArgs } from './types/localizer';
 import type { I18nMethods } from './types/I18nMethods';
 import type { MergedLocalizerTokens } from './localization/localeTools';

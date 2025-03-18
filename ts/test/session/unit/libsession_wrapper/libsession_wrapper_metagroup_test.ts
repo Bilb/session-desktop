@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import {
-  GroupMemberGet,
+  type GroupMemberGet,
   MetaGroupWrapperNode,
-  PubkeyType,
+  type PubkeyType,
   UserGroupsWrapperNode,
 } from 'libsession_util_nodejs';
 import { range } from 'lodash';
@@ -10,7 +10,7 @@ import Sinon from 'sinon';
 import { HexString } from '../../../../node/hexStrings';
 import { toFixedUint8ArrayOfLength } from '../../../../types/sqlSharedTypes';
 import { TestUtils } from '../../../test-utils';
-import { TestUserKeyPairs } from '../../../test-utils/utils';
+import type { TestUserKeyPairs } from '../../../test-utils/utils';
 
 function profilePicture() {
   return { key: new Uint8Array(range(0, 32)), url: `${Math.random()}` };

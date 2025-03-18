@@ -3,7 +3,7 @@ import { useState } from 'react';
 import useKey from 'react-use/lib/useKey';
 import { ConvoHub } from '../../session/conversations';
 import { openConversationWithMessages } from '../../state/ducks/conversations';
-import { updateUserDetailsModal, UserDetailsModalState } from '../../state/ducks/modalDialog';
+import { updateUserDetailsModal, type UserDetailsModalState } from '../../state/ducks/modalDialog';
 import { Avatar, AvatarSize } from '../avatar/Avatar';
 import { SessionButton, SessionButtonType } from '../basic/SessionButton';
 import { SpacerLG } from '../basic/Text';

@@ -1,4 +1,4 @@
-import {
+import type {
   GroupMemberGet,
   GroupPubkeyType,
   MemberStateGroupV2,
@@ -8,8 +8,8 @@ import { useSelector } from 'react-redux';
 import { sortBy } from 'lodash';
 import { useMemo } from 'react';
 import { PubKey } from '../../session/types';
-import { GroupState } from '../ducks/metaGroups';
-import { StateType } from '../reducer';
+import type { GroupState } from '../ducks/metaGroups';
+import type { StateType } from '../reducer';
 import { assertUnreachable } from '../../types/sqlSharedTypes';
 import { UserUtils } from '../../session/utils';
 import { useConversationsNicknameRealNameOrShortenPubkey } from '../../hooks/useParamSelector';

@@ -1,5 +1,5 @@
-import { ReactNode, SessionDataTestId } from 'react';
-import styled, { CSSProperties } from 'styled-components';
+import type { ReactNode, SessionDataTestId } from 'react';
+import styled, { type CSSProperties } from 'styled-components';
 import { Flex } from '../basic/Flex';
 
 // NOTE Used for descendant components

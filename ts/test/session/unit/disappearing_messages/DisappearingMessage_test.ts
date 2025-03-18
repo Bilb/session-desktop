@@ -2,9 +2,9 @@ import chai, { expect } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import Sinon from 'sinon';
 import { Conversation, ConversationModel } from '../../../../models/conversation';
-import { ConversationAttributes } from '../../../../models/conversationAttributes';
+import type { ConversationAttributes } from '../../../../models/conversationAttributes';
 import { DisappearingMessages } from '../../../../session/disappearing_messages';
-import {
+import type {
   DisappearingMessageConversationModeType,
   DisappearingMessageType,
 } from '../../../../session/disappearing_messages/types';

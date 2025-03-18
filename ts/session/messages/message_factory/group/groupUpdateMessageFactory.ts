@@ -1,10 +1,10 @@
-import { Uint8ArrayLen64, WithGroupPubkey } from 'libsession_util_nodejs';
+import type { Uint8ArrayLen64, WithGroupPubkey } from 'libsession_util_nodejs';
 import { getSodiumRenderer } from '../../../crypto';
 import { DisappearingMessages } from '../../../disappearing_messages';
 
 import { GroupUpdateMemberChangeMessage } from '../../outgoing/controlMessage/group_v2/to_group/GroupUpdateMemberChangeMessage';
-import { ConversationModel } from '../../../../models/conversation';
-import {
+import type { ConversationModel } from '../../../../models/conversation';
+import type {
   WithAddWithHistoryMembers,
   WithAddWithoutHistoryMembers,
   WithFromMemberLeftMessage,

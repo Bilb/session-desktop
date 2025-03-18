@@ -1,5 +1,5 @@
 import { toNumber } from 'lodash';
-import { EnvelopePlus } from './types';
+import type { EnvelopePlus } from './types';
 import type { SignalService } from '../protobuf';
 import { DURATION } from '../session/constants';
 

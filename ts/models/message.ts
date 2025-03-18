@@ -1,6 +1,6 @@
 import autoBind from 'auto-bind';
 import { filesize } from 'filesize';
-import { GroupPubkeyType, PubkeyType } from 'libsession_util_nodejs';
+import type { GroupPubkeyType, PubkeyType } from 'libsession_util_nodejs';
 import { debounce, isEmpty, size as lodashSize, uniq } from 'lodash';
 import { SignalService } from '../protobuf';
 import { ConvoHub } from '../session/conversations';
@@ -17,9 +17,9 @@ import {
   uploadQuoteThumbnailsToFileServer,
 } from '../session/utils';
 import {
-  MessageAttributes,
-  MessageAttributesOptionals,
-  MessageGroupUpdate,
+  type MessageAttributes,
+  type MessageAttributesOptionals,
+  type MessageGroupUpdate,
   fillMessageAttributesWithDefaults,
   type DataExtractionNotificationMsg,
 } from './messageType';
@@ -34,11 +34,11 @@ import { DisappearingMessages } from '../session/disappearing_messages';
 import { TimerOptions } from '../session/disappearing_messages/timerOptions';
 import {
   OpenGroupVisibleMessage,
-  OpenGroupVisibleMessageParams,
+  type OpenGroupVisibleMessageParams,
 } from '../session/messages/outgoing/visibleMessage/OpenGroupVisibleMessage';
 import {
   VisibleMessage,
-  VisibleMessageParams,
+  type VisibleMessageParams,
 } from '../session/messages/outgoing/visibleMessage/VisibleMessage';
 import {
   uploadAttachmentsV3,
@@ -48,23 +48,23 @@ import {
 import { isUsFromCache } from '../session/utils/User';
 import { buildSyncMessage } from '../session/utils/sync/syncUtils';
 import {
-  FindAndFormatContactType,
-  MessageModelPropsWithoutConvoProps,
-  PropsForAttachment,
-  PropsForExpirationTimer,
-  PropsForCommunityInvitation,
-  PropsForGroupUpdate,
-  PropsForGroupUpdateAdd,
-  PropsForGroupUpdateAvatarChange,
-  PropsForGroupUpdateKicked,
-  PropsForGroupUpdateLeft,
-  PropsForGroupUpdateName,
-  PropsForGroupUpdatePromoted,
-  PropsForMessageWithoutConvoProps,
-  PropsForQuote,
+  type FindAndFormatContactType,
+  type MessageModelPropsWithoutConvoProps,
+  type PropsForAttachment,
+  type PropsForExpirationTimer,
+  type PropsForCommunityInvitation,
+  type PropsForGroupUpdate,
+  type PropsForGroupUpdateAdd,
+  type PropsForGroupUpdateAvatarChange,
+  type PropsForGroupUpdateKicked,
+  type PropsForGroupUpdateLeft,
+  type PropsForGroupUpdateName,
+  type PropsForGroupUpdatePromoted,
+  type PropsForMessageWithoutConvoProps,
+  type PropsForQuote,
   messagesChanged,
 } from '../state/ducks/conversations';
-import { AttachmentTypeWithPath, isVoiceMessage } from '../types/Attachment';
+import { type AttachmentTypeWithPath, isVoiceMessage } from '../types/Attachment';
 import {
   deleteExternalMessageFiles,
   getAbsoluteAttachmentPath,
@@ -72,16 +72,16 @@ import {
   loadPreviewData,
   loadQuoteData,
 } from '../types/MessageAttachment';
-import { ReactionList } from '../types/Reaction';
+import type { ReactionList } from '../types/Reaction';
 import { getAttachmentMetadata } from '../types/message/initializeAttachmentMetadata';
 import { assertUnreachable, roomHasBlindEnabled } from '../types/sqlSharedTypes';
 import { LinkPreviews } from '../util/linkPreviews';
 import { Notifications } from '../util/notifications';
 import { Storage } from '../util/storage';
-import { ConversationModel } from './conversation';
+import type { ConversationModel } from './conversation';
 import { READ_MESSAGE_STATE } from './conversationAttributes';
 import { ConversationInteractionStatus, ConversationInteractionType } from '../interactions/types';
-import { LastMessageStatusType, type PropsForCallNotification } from '../state/ducks/types';
+import type { LastMessageStatusType, PropsForCallNotification } from '../state/ducks/types';
 import {
   getGroupDisplayPictureChangeStr,
   getGroupNameChangeStr,
@@ -93,7 +93,7 @@ import {
 import { NetworkTime } from '../util/NetworkTime';
 import { MessageQueue } from '../session/sending';
 import { getTimerNotificationStr } from './timerNotifications';
-import { ExpirationTimerUpdate } from '../session/disappearing_messages/types';
+import type { ExpirationTimerUpdate } from '../session/disappearing_messages/types';
 import { Model } from './models';
 
 // tslint:disable: cyclomatic-complexity
@@ -688,7 +688,7 @@ export class MessageModel extends Model<MessageAttributes> {
         if (preview.image) {
           image = this.getPropsForAttachment(preview.image);
         }
-      } catch (e) {
+      } catch (_e) {
         window?.log?.info('Failed to show preview');
       }
 

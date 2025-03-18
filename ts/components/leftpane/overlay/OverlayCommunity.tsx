@@ -7,7 +7,7 @@ import { SessionJoinableRooms } from './SessionJoinableDefaultRooms';
 
 import {
   joinOpenGroupV2WithUIEvents,
-  JoinSogsRoomUICallbackArgs,
+  type JoinSogsRoomUICallbackArgs,
 } from '../../../session/apis/open_group_api/opengroupV2/JoinOpenGroupV2';
 import { openGroupV2CompleteURLRegex } from '../../../session/apis/open_group_api/utils/OpenGroupUtils';
 import { resetLeftOverlayMode } from '../../../state/ducks/section';
@@ -121,7 +121,7 @@ export const OverlayCommunity = () => {
         onClick={onTryJoinRoom}
         dataTestId="join-community-button"
       />
-      {!loading ? <Spacer2XL /> : null}
+      {loading ? null : <Spacer2XL />}
       <SessionSpinner loading={loading} />
       <SessionJoinableRooms onJoinClick={onTryJoinRoom} alreadyJoining={loading} />
     </StyledLeftPaneOverlay>

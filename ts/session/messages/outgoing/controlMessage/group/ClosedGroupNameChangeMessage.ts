@@ -1,5 +1,5 @@
 import { SignalService } from '../../../../../protobuf';
-import { ClosedGroupMessage, ClosedGroupMessageParams } from './ClosedGroupMessage';
+import { ClosedGroupMessage, type ClosedGroupMessageParams } from './ClosedGroupMessage';
 
 interface ClosedGroupNameChangeMessageParams extends ClosedGroupMessageParams {
   name: string;

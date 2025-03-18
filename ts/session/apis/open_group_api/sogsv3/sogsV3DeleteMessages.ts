@@ -2,10 +2,10 @@ import AbortController from 'abort-controller';
 import {
   batchFirstSubIsSuccess,
   batchGlobalIsSuccess,
-  OpenGroupBatchRow,
+  type OpenGroupBatchRow,
   sogsBatchSend,
 } from './sogsV3BatchPoll';
-import { OpenGroupRequestCommonType } from '../../../../data/types';
+import type { OpenGroupRequestCommonType } from '../../../../data/types';
 import { DURATION } from '../../../constants';
 
 /**
@@ -30,7 +30,7 @@ export const deleteSogsMessageByServerIds = async (
 
   try {
     return batchGlobalIsSuccess(result) && batchFirstSubIsSuccess(result);
-  } catch (e) {
+  } catch (_e) {
     window?.log?.error("deleteMessageByServerIds Can't decode JSON body");
   }
   return false;

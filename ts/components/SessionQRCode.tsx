@@ -1,10 +1,10 @@
-import { MouseEvent, useEffect, useRef, useState } from 'react';
+import { type MouseEvent, useEffect, useRef, useState } from 'react';
 import { QRCode } from 'react-qrcode-logo';
-import styled, { CSSProperties } from 'styled-components';
+import styled, { type CSSProperties } from 'styled-components';
 import { THEME_GLOBALS } from '../themes/globals';
 import { renderQRCode } from '../util/qrCodes';
 import { AnimatedFlex } from './basic/Flex';
-import { SessionIconType } from './icon';
+import type { SessionIconType } from './icon';
 
 // AnimatedFlex because we fade in the QR code a flicker on first render
 const StyledQRView = styled(AnimatedFlex)<{

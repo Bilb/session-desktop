@@ -3,18 +3,18 @@ import { AbortController } from 'abort-controller';
 
 import { MessageSender } from '../../sending';
 import { SnodeResponseError } from '../../utils/errors';
-import { processOnionRequestErrorAtDestination, SnodeResponse } from './onions';
+import { processOnionRequestErrorAtDestination, type SnodeResponse } from './onions';
 import { SessionRpc } from './sessionRpc';
 import {
   builtRequestToLoggingId,
-  BuiltSnodeSubRequests,
+  type BuiltSnodeSubRequests,
   MAX_SUBREQUESTS_COUNT,
-  RawSnodeSubRequests,
-  WithMethodBatchType,
+  type RawSnodeSubRequests,
+  type WithMethodBatchType,
 } from './SnodeRequestTypes';
-import { NotEmptyArrayOfBatchResults } from './BatchResultEntry';
-import { MergedAbortSignal, WithTimeoutMs } from './requestWith';
-import { WithAllow401s, WithAssociatedWith, WithTargetNode } from '../../types/with';
+import type { NotEmptyArrayOfBatchResults } from './BatchResultEntry';
+import type { MergedAbortSignal, WithTimeoutMs } from './requestWith';
+import type { WithAllow401s, WithAssociatedWith, WithTargetNode } from '../../types/with';
 
 function logSubRequests(requests: Array<BuiltSnodeSubRequests>) {
   return `[${requests.map(builtRequestToLoggingId).join(', ')}]`;

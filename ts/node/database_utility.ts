@@ -1,6 +1,6 @@
-import * as BetterSqlite3 from '@signalapp/better-sqlite3';
+import type * as BetterSqlite3 from '@signalapp/better-sqlite3';
 import { difference, isNumber, omit, pick } from 'lodash';
-import {
+import type {
   ConversationAttributes,
   ConversationAttributesWithNotSavedOnes,
 } from '../models/conversationAttributes';

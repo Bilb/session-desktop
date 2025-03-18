@@ -1,4 +1,4 @@
-import { SessionDataTestId } from 'react';
+import type { SessionDataTestId } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { useMessageExpirationPropsById } from '../../../../hooks/useParamSelector';
@@ -8,7 +8,7 @@ import { useIsDetailMessageView } from '../../../../contexts/isDetailViewContext
 import { getMostRecentOutgoingMessageId } from '../../../../state/selectors/conversations';
 import { useSelectedIsGroupOrCommunity } from '../../../../state/selectors/selectedConversation';
 import { SpacerXS } from '../../../basic/Text';
-import { SessionIcon, SessionIconType } from '../../../icon';
+import { SessionIcon, type SessionIconType } from '../../../icon';
 import { ExpireTimer } from '../../ExpireTimer';
 import { saveLogToDesktop } from '../../../../util/logging';
 

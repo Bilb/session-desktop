@@ -1,9 +1,9 @@
-import { MouseEvent, useState } from 'react';
+import { type MouseEvent, useState } from 'react';
 
 import { isEmpty } from 'lodash';
 import styled from 'styled-components';
 import { useIsMessageSelectionMode } from '../../../../../state/selectors/selectedConversation';
-import * as MIME from '../../../../../types/MIME';
+import type * as MIME from '../../../../../types/MIME';
 import { QuoteAuthor } from './QuoteAuthor';
 import { QuoteIconContainer } from './QuoteIconContainer';
 import { QuoteText } from './QuoteText';

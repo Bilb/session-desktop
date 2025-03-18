@@ -7,7 +7,7 @@ import { default as insecureNodeFetch } from 'node-fetch';
 
 import { OnionPaths } from '.';
 import { Data } from '../../data/data';
-import { Snode } from '../../data/types';
+import type { Snode } from '../../data/types';
 import { updateOnionPaths } from '../../state/ducks/onion';
 import { APPLICATION_JSON } from '../../types/MIME';
 import { ERROR_CODE_NO_CONNECT } from '../apis/snode_api/SNodeAPI';
@@ -473,7 +473,7 @@ async function buildNewOnionPathsWorker() {
       });
       const oneNodeForEachSubnet24KeepingRatio = _.flatten(
         _.map(allNodesGroupedBySubnet24, group => {
-          return _.fill(Array(group.length), _.sample(group) as Snode);
+          return _.fill(new Array(group.length), _.sample(group) as Snode);
         })
       );
       if (oneNodeForEachSubnet24KeepingRatio.length <= SnodePoolConstants.minSnodePoolCount) {

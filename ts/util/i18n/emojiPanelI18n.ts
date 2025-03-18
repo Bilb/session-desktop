@@ -15,7 +15,7 @@ export const loadEmojiPanelI18n = async () => {
 
       const langData = await import(`@emoji-mart/data/i18n/${lang}.json`);
       return langData;
-    } catch (err) {
+    } catch (_err) {
       const firstDashIndex = lang.indexOf('-');
       if (firstDashIndex > 0) {
         try {
@@ -25,7 +25,7 @@ export const loadEmojiPanelI18n = async () => {
 
           const langData = await import(`@emoji-mart/data/i18n/${shortenLang}.json`);
           return langData;
-        } catch (e) {
+        } catch (_e) {
           // don't rethrow, we want the log below to be shown
         }
       }

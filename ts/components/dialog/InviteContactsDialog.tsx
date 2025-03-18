@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import useKey from 'react-use/lib/useKey';
 
-import { PubkeyType } from 'libsession_util_nodejs';
+import type { PubkeyType } from 'libsession_util_nodejs';
 import _, { difference, uniq } from 'lodash';
 import { useDispatch } from 'react-redux';
 import { VALIDATION } from '../../session/constants';

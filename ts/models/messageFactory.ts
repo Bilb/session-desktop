@@ -2,7 +2,7 @@ import { UserUtils } from '../session/utils';
 import { SessionUtilConvoInfoVolatile } from '../session/utils/libsession/libsession_utils_convo_info_volatile';
 import { READ_MESSAGE_STATE } from './conversationAttributes';
 import { MessageModel } from './message';
-import { MessageAttributesOptionals, MessageModelType } from './messageType';
+import type { MessageAttributesOptionals, MessageModelType } from './messageType';
 
 function getSharedAttributesForSwarmMessage({
   conversationId,

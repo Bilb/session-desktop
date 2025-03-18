@@ -1,5 +1,5 @@
 /* eslint-disable no-await-in-loop */
-import { GroupPubkeyType, WithGroupPubkey } from 'libsession_util_nodejs';
+import type { GroupPubkeyType, WithGroupPubkey } from 'libsession_util_nodejs';
 import { to_hex } from 'libsodium-wrappers-sumo';
 import { compact, isArray, isEmpty, isNumber } from 'lodash';
 import AbortController from 'abort-controller';
@@ -15,30 +15,30 @@ import {
   DeleteAllFromGroupNodeSubRequest,
   DeleteHashesFromGroupNodeSubRequest,
   MAX_SUBREQUESTS_COUNT,
-  StoreGroupKeysSubRequest,
-  StoreGroupMessageSubRequest,
+  type StoreGroupKeysSubRequest,
+  type StoreGroupMessageSubRequest,
   SubaccountRevokeSubRequest,
   SubaccountUnrevokeSubRequest,
 } from '../../../apis/snode_api/SnodeRequestTypes';
 import { DeleteGroupHashesFactory } from '../../../apis/snode_api/factories/DeleteGroupHashesRequestFactory';
 import { StoreGroupRequestFactory } from '../../../apis/snode_api/factories/StoreGroupRequestFactory';
 import { SnodeNamespaces } from '../../../apis/snode_api/namespaces';
-import { WithRevokeSubRequest } from '../../../apis/snode_api/types';
+import type { WithRevokeSubRequest } from '../../../apis/snode_api/types';
 import { ConvoHub } from '../../../conversations';
 import { MessageSender } from '../../../sending/MessageSender';
 import { PubKey } from '../../../types';
 import { allowOnlyOneAtATime, timeoutWithAbort } from '../../Promise';
 import { ed25519Str } from '../../String';
-import { GroupSuccessfulChange, LibSessionUtil } from '../../libsession/libsession_utils';
+import { type GroupSuccessfulChange, LibSessionUtil } from '../../libsession/libsession_utils';
 import { runners } from '../JobRunner';
 import {
-  AddJobCheckReturn,
-  GroupSyncPersistedData,
+  type AddJobCheckReturn,
+  type GroupSyncPersistedData,
   PersistedJob,
   RunJobResult,
 } from '../PersistedJob';
 import { DURATION } from '../../../constants';
-import { WithAllow401s } from '../../../types/with';
+import type { WithAllow401s } from '../../../types/with';
 import type { WithTimeoutMs } from '../../../apis/snode_api/requestWith';
 import { Data } from '../../../../data/data';
 import { GroupUpdateInfoChangeMessage } from '../../../messages/outgoing/controlMessage/group_v2/to_group/GroupUpdateInfoChangeMessage';
@@ -347,7 +347,7 @@ async function allFailedToSentGroupControlMessagesToRetry(groupPk: GroupPubkeyTy
       30 * DURATION.SECONDS,
       controller
     );
-  } catch (e) {
+  } catch (_e) {
     window.log.warn('failed');
   }
 }
@@ -455,7 +455,10 @@ async function queueNewJobIfNeeded(groupPk: GroupPubkeyType) {
     // we postpone by 1000ms to make sure whoever is adding this job is done with what is needs to do first
     // this call will make sure that there is only one configuration sync job at all times
     await runners.groupSyncRunner.addJob(
-      new GroupSyncJob({ identifier: groupPk, nextAttemptTimestamp: Date.now() + 1000 })
+      new GroupSyncJob({
+        identifier: groupPk,
+        nextAttemptTimestamp: Date.now() + 1000,
+      })
     );
     return;
   }

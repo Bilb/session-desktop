@@ -1,10 +1,10 @@
 import { isString } from 'lodash';
 
 import { useSelector } from 'react-redux';
-import { AutoSizer, Index, List, ListRowProps } from 'react-virtualized';
-import styled, { CSSProperties } from 'styled-components';
+import { AutoSizer, type Index, List, type ListRowProps } from 'react-virtualized';
+import styled, { type CSSProperties } from 'styled-components';
 import {
-  DirectContactsByNameType,
+  type DirectContactsByNameType,
   getContactsCount,
   getSortedContactsWithBreaks,
 } from '../../../../state/selectors/conversations';
@@ -13,7 +13,7 @@ import { StyledLeftPaneList } from '../../LeftPaneList';
 import { StyledChooseActionTitle } from './ActionRow';
 import { ContactRow, ContactRowBreak } from './ContactRow';
 import { getThemeValue, pxValueToNumber } from '../../../../themes/globals';
-import { SearchResultsMergedListItem } from '../../../../state/selectors/search';
+import type { SearchResultsMergedListItem } from '../../../../state/selectors/search';
 import { Localizer } from '../../../basic/Localizer';
 
 const StyledContactSection = styled.div`

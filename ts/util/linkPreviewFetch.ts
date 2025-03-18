@@ -1,9 +1,16 @@
-import { RequestInit, Response } from 'node-fetch';
-import { AbortSignal } from 'abort-controller';
+import type { RequestInit, Response } from 'node-fetch';
+import type { AbortSignal } from 'abort-controller';
 // eslint-disable-next-line import/no-unresolved
-import { AbortSignal as AbortSignalNode } from 'node-fetch/externals';
+import type { AbortSignal as AbortSignalNode } from 'node-fetch/externals';
 
-import { IMAGE_GIF, IMAGE_ICO, IMAGE_JPEG, IMAGE_PNG, IMAGE_WEBP, MIMEType } from '../types/MIME';
+import {
+  IMAGE_GIF,
+  IMAGE_ICO,
+  IMAGE_JPEG,
+  IMAGE_PNG,
+  IMAGE_WEBP,
+  type MIMEType,
+} from '../types/MIME';
 
 const MAX_REQUEST_COUNT_WITH_REDIRECTS = 20;
 
@@ -111,7 +118,7 @@ function maybeParseUrl(href: string, base: string): null | URL {
   let result: URL;
   try {
     result = new URL(href, base);
-  } catch (err) {
+  } catch (_err) {
     return null;
   }
   // We never need the hash
@@ -161,10 +168,10 @@ const isInlineContentDisposition = (headerValue: string | null): boolean =>
 const parseContentLength = (headerValue: string | null): number => {
   // No need to parse gigantic Content-Lengths; only parse the first 10 digits.
   if (typeof headerValue !== 'string' || !/^\d{1,10}$/g.test(headerValue)) {
-    return Infinity;
+    return Number.POSITIVE_INFINITY;
   }
-  const result = parseInt(headerValue, 10);
-  return Number.isNaN(result) ? Infinity : result;
+  const result = Number.parseInt(headerValue, 10);
+  return Number.isNaN(result) ? Number.POSITIVE_INFINITY : result;
 };
 
 const emptyHtmlDocument = (): HTMLDocument => new DOMParser().parseFromString('', 'text/html');
@@ -185,7 +192,7 @@ const parseHtmlBytes = (bytes: Readonly<Uint8Array>, httpCharset: string | null)
     try {
       decoder = new TextDecoder(httpCharset);
       isSureOfCharset = true;
-    } catch (err) {
+    } catch (_err) {
       decoder = new TextDecoder();
       isSureOfCharset = false;
     }
@@ -197,14 +204,14 @@ const parseHtmlBytes = (bytes: Readonly<Uint8Array>, httpCharset: string | null)
   let decoded: string;
   try {
     decoded = decoder.decode(bytes);
-  } catch (err) {
+  } catch (_err) {
     decoded = '';
   }
 
   let document: HTMLDocument;
   try {
     document = new DOMParser().parseFromString(decoded, 'text/html');
-  } catch (err) {
+  } catch (_err) {
     document = emptyHtmlDocument();
   }
 
@@ -269,7 +276,7 @@ const getHtmlDocument = async (
       }
     }
     /* eslint-enable no-restricted-syntax */
-  } catch (err) {
+  } catch (_err) {
     window?.log?.warn('getHtmlDocument: error when reading body; continuing with what we got');
   }
 
@@ -372,7 +379,7 @@ export async function fetchLinkPreviewMetadata(
       },
       signal: abortSignal as AbortSignalNode,
     });
-  } catch (err) {
+  } catch (_err) {
     window?.log?.warn('fetchLinkPreviewMetadata: failed to fetch link preview HTML; bailing');
     return null;
   }
@@ -426,7 +433,7 @@ export async function fetchLinkPreviewMetadata(
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (response.body as any).destroy();
-  } catch (err) {
+  } catch (_err) {
     // Ignored.
   }
 
@@ -457,7 +464,7 @@ export async function fetchLinkPreviewImage(
       size: MAX_IMAGE_CONTENT_LENGTH,
       signal: abortSignal as AbortSignalNode,
     });
-  } catch (err) {
+  } catch (_err) {
     window?.log?.warn('fetchLinkPreviewImage: failed to fetch image; bailing');
     return null;
   }
@@ -490,7 +497,7 @@ export async function fetchLinkPreviewImage(
   let data: ArrayBuffer;
   try {
     data = await response.arrayBuffer();
-  } catch (err) {
+  } catch (_err) {
     window?.log?.warn('fetchLinkPreviewImage: failed to read body; bailing');
     return null;
   }

@@ -1,4 +1,4 @@
-import { CSSProperties, MouseEvent, MutableRefObject, useRef } from 'react';
+import { type CSSProperties, type MouseEvent, type MutableRefObject, useRef } from 'react';
 
 import { isUndefined } from 'lodash';
 import { useDispatch } from 'react-redux';
@@ -11,7 +11,7 @@ import * as MIME from '../../types/MIME';
 import { assertUnreachable } from '../../types/sqlSharedTypes';
 import { GoogleChrome } from '../../util';
 import { Flex } from '../basic/Flex';
-import { SessionIconButton, SessionIconSize, SessionIconType } from '../icon';
+import { SessionIconButton, type SessionIconSize, type SessionIconType } from '../icon';
 import { AriaLabels } from '../../util/hardcodedAriaLabels';
 
 const colorSVG = (url: string, color: string) => {
@@ -302,14 +302,14 @@ export const Lightbox = (props: Props) => {
         <div style={styles.controlsOffsetPlaceholder} />
         <div style={styles.objectParentContainer} role="button">
           <div style={styles.objectContainer as any}>
-            {!isUndefined(contentType) ? (
+            {isUndefined(contentType) ? null : (
               <LightboxObject
                 objectURL={objectURL}
                 contentType={contentType}
                 renderedRef={renderedRef}
                 onObjectClick={onObjectClick}
               />
-            ) : null}
+            )}
             {caption ? <div style={styles.caption as any}>{caption}</div> : null}
           </div>
         </div>

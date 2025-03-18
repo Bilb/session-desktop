@@ -7,7 +7,7 @@ import { isImage } from '../../types/MIME';
 import { Flex } from '../basic/Flex';
 import { SessionIconButton } from '../icon';
 import { SessionSpinner } from '../loading';
-import { StagedLinkPreviewImage } from './composition/CompositionBox';
+import type { StagedLinkPreviewImage } from './composition/CompositionBox';
 import { AriaLabels } from '../../util/hardcodedAriaLabels';
 
 type Props = {

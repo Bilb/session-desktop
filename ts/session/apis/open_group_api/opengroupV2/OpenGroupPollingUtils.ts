@@ -5,8 +5,8 @@ import { OpenGroupData } from '../../../../data/opengroups';
 import { UserUtils } from '../../../utils';
 import { fromHexToArray } from '../../../utils/String';
 import { SogsBlinding } from '../sogsv3/sogsBlinding';
-import { OpenGroupMessageV2 } from './OpenGroupMessageV2';
-import { OpenGroupV2Room } from '../../../../data/types';
+import type { OpenGroupMessageV2 } from './OpenGroupMessageV2';
+import type { OpenGroupV2Room } from '../../../../data/types';
 import { NetworkTime } from '../../../../util/NetworkTime';
 
 export type OpenGroupRequestHeaders = {
@@ -82,7 +82,7 @@ const getAllValidRoomInfos = (
         allServerPubKeys.push(fetchedInfo.serverPublicKey);
 
         return fetchedInfo;
-      } catch (e) {
+      } catch (_e) {
         window?.log?.warn('failed to fetch room infos for room', roomId);
         return null;
       }

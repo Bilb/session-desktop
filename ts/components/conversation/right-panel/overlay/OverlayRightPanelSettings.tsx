@@ -1,5 +1,5 @@
 import { compact, flatten, isEqual } from 'lodash';
-import { SessionDataTestId, useEffect, useState } from 'react';
+import { type SessionDataTestId, useEffect, useState } from 'react';
 
 import { useDispatch } from 'react-redux';
 import useInterval from 'react-use/lib/useInterval';
@@ -45,13 +45,13 @@ import {
   useSelectedSubscriberCount,
   useSelectedWeAreAdmin,
 } from '../../../../state/selectors/selectedConversation';
-import { AttachmentTypeWithPath } from '../../../../types/Attachment';
+import type { AttachmentTypeWithPath } from '../../../../types/Attachment';
 import { getAbsoluteAttachmentPath } from '../../../../types/MessageAttachment';
 import { Avatar, AvatarSize } from '../../../avatar/Avatar';
 import { Flex } from '../../../basic/Flex';
 import { SpacerLG, SpacerMD, SpacerXL } from '../../../basic/Text';
 import { PanelButtonGroup, PanelIconButton } from '../../../buttons';
-import { MediaItemType } from '../../../lightbox/LightboxGallery';
+import type { MediaItemType } from '../../../lightbox/LightboxGallery';
 import { MediaGallery } from '../../media-gallery/MediaGallery';
 import { Header, StyledScrollContainer } from './components';
 import { Localizer } from '../../../basic/Localizer';

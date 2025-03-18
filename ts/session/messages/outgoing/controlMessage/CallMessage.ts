@@ -1,7 +1,7 @@
 import { SignalService } from '../../../../protobuf';
 import { signalservice } from '../../../../protobuf/compiled';
 import { TTL_DEFAULT } from '../../../constants';
-import { ExpirableMessage, ExpirableMessageParams } from '../ExpirableMessage';
+import { ExpirableMessage, type ExpirableMessageParams } from '../ExpirableMessage';
 
 interface CallMessageParams extends ExpirableMessageParams {
   type: SignalService.CallMessage.Type;

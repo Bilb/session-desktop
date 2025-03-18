@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { closeRightPanel } from '../../../../../state/ducks/conversations';

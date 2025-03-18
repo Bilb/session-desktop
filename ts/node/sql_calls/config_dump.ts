@@ -3,15 +3,15 @@
  */
 
 import { compact, uniq } from 'lodash';
-import { GroupPubkeyType } from 'libsession_util_nodejs';
+import type { GroupPubkeyType } from 'libsession_util_nodejs';
 import {
   CONFIG_DUMP_TABLE,
-  ConfigDumpDataNode,
-  ConfigDumpRow,
-  ConfigDumpRowWithoutData,
+  type ConfigDumpDataNode,
+  type ConfigDumpRow,
+  type ConfigDumpRowWithoutData,
 } from '../../types/sqlSharedTypes';
 // eslint-disable-next-line import/no-unresolved, import/extensions
-import { ConfigWrapperObjectTypesMeta } from '../../webworker/workers/browser/libsession_worker_functions';
+import type { ConfigWrapperObjectTypesMeta } from '../../webworker/workers/browser/libsession_worker_functions';
 import { assertGlobalInstance } from '../sqlInstance';
 
 function parseRow(

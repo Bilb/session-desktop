@@ -1,4 +1,4 @@
-import { CONSTANTS, ConstantsType } from 'libsession_util_nodejs';
+import { CONSTANTS, type ConstantsType } from 'libsession_util_nodejs';
 
 // NOTE CONSTANTS is an immediately invoked function that returns the libsession constants object
 const {

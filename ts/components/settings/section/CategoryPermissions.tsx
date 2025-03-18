@@ -10,7 +10,10 @@ import { SessionToggleWithDescription } from '../SessionSettingListItem';
 
 const toggleCallMediaPermissions = async (triggerUIUpdate: () => void) => {
   const currentValue = window.getCallMediaPermissions();
-  if (!currentValue) {
+  if (currentValue) {
+    await window.toggleCallMediaPermissionsTo(false);
+    triggerUIUpdate();
+  } else {
     window.inboxStore?.dispatch(
       updateConfirmModal({
         title: window.i18n('callsVoiceAndVideoBeta'),
@@ -31,9 +34,6 @@ const toggleCallMediaPermissions = async (triggerUIUpdate: () => void) => {
         },
       })
     );
-  } else {
-    await window.toggleCallMediaPermissionsTo(false);
-    triggerUIUpdate();
   }
 };
 

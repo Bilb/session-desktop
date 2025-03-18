@@ -1,15 +1,15 @@
-import _, { isFinite, isNumber } from 'lodash';
+import _, { isNumber, isFinite as isFiniteL } from 'lodash';
 import { addKeyPairToCacheAndDBIfNeeded } from '../../receiver/closedGroups';
-import { ECKeyPair } from '../../receiver/keypairs';
+import type { ECKeyPair } from '../../receiver/keypairs';
 import { openConversationWithMessages } from '../../state/ducks/conversations';
 import { updateConfirmModal } from '../../state/ducks/modalDialog';
 import { getSwarmPollingInstance } from '../apis/snode_api';
 import { SnodeNamespaces } from '../apis/snode_api/namespaces';
 import { generateClosedGroupPublicKey, generateCurve25519KeyPairWithoutPrefix } from '../crypto';
-import { ClosedGroup, GroupInfo } from '../group/closed-group';
+import { ClosedGroup, type GroupInfo } from '../group/closed-group';
 import {
   ClosedGroupNewMessage,
-  ClosedGroupNewMessageParams,
+  type ClosedGroupNewMessageParams,
 } from '../messages/outgoing/controlMessage/group/ClosedGroupNewMessage';
 import { PubKey } from '../types';
 import { UserUtils } from '../utils';
@@ -89,7 +89,10 @@ export async function createClosedGroup(groupName: string, members: Array<string
   // commit again as now the keypair is saved and can be added to the libsession wrapper UserGroup
   await convo.commit();
 
-  await openConversationWithMessages({ conversationKey: groupPublicKey, messageId: null });
+  await openConversationWithMessages({
+    conversationKey: groupPublicKey,
+    messageId: null,
+  });
 }
 
 function getMessageArgs(group_name: string, names: Array<string>) {
@@ -135,7 +138,7 @@ async function sendToGroupMembers(
   groupName: string,
   admins: Array<string>,
   encryptionKeyPair: ECKeyPair,
-  isRetry: boolean = false
+  isRetry = false
 ): Promise<any> {
   const promises = createInvitePromises(
     listOfMembers,
@@ -148,7 +151,7 @@ async function sendToGroupMembers(
   // evaluating if all invites sent, if failed give the option to retry failed invites via modal dialog
   const inviteResults = await Promise.all(promises);
   const allInvitesSent = _.every(inviteResults, inviteResult => {
-    return isNumber(inviteResult) && isFinite(inviteResult);
+    return isNumber(inviteResult) && isFiniteL(inviteResult);
   });
 
   if (allInvitesSent) {

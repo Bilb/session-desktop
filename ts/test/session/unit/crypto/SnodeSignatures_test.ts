@@ -1,6 +1,6 @@
 import { expect, use } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import { UserGroupsGet } from 'libsession_util_nodejs';
+import type { UserGroupsGet } from 'libsession_util_nodejs';
 import Sinon from 'sinon';
 import { HexString } from '../../../../node/hexStrings';
 import { getSodiumNode } from '../../../../node/sodiumNode';
@@ -11,7 +11,7 @@ import { concatUInt8Array } from '../../../../session/crypto';
 import { UserUtils } from '../../../../session/utils';
 import { fromBase64ToArray, fromHexToArray } from '../../../../session/utils/String';
 import { NetworkTime } from '../../../../util/NetworkTime';
-import { WithSignature } from '../../../../session/types/with';
+import type { WithSignature } from '../../../../session/types/with';
 
 use(chaiAsPromised);
 

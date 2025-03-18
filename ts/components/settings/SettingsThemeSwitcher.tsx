@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { getPrimaryColor } from '../../state/selectors/primaryColor';
 import { useTheme } from '../../state/selectors/theme';
 import {
-  StyleSessionSwitcher,
+  type StyleSessionSwitcher,
   getPrimaryColors,
   getThemeColors,
 } from '../../themes/constants/colors';

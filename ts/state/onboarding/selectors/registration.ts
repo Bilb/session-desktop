@@ -1,13 +1,13 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { useSelector } from 'react-redux';
-import {
+import type {
   AccountCreation,
   AccountRestoration,
   OnboardDirection,
   Onboarding,
   OnboardingState,
 } from '../ducks/registration';
-import { OnboardingStoreState } from '../store';
+import type { OnboardingStoreState } from '../store';
 
 // #region Getters
 const getRegistration = (state: OnboardingStoreState): OnboardingState => {

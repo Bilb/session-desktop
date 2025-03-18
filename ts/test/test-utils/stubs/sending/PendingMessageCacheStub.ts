@@ -1,5 +1,5 @@
 import { PendingMessageCache } from '../../../../session/sending';
-import { OutgoingRawMessage } from '../../../../session/types';
+import type { OutgoingRawMessage } from '../../../../session/types';
 
 export class PendingMessageCacheStub extends PendingMessageCache {
   public dbData: Array<OutgoingRawMessage>;
@@ -16,6 +16,6 @@ export class PendingMessageCacheStub extends PendingMessageCache {
     return this.dbData;
   }
 
-  // eslint-disable-next-line  no-empty-function
+  // biome-ignore lint/suspicious/noEmptyBlockStatements: <explanation>
   protected async saveToDB() {}
 }

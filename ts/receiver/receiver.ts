@@ -2,7 +2,7 @@
 import { isEmpty, last, toNumber } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 
-import { EnvelopePlus } from './types';
+import type { EnvelopePlus } from './types';
 
 import { IncomingMessageCache } from './cache';
 
@@ -17,7 +17,7 @@ import { StringUtils, UserUtils } from '../session/utils';
 import { perfEnd, perfStart } from '../session/utils/Performance';
 import { sleepFor } from '../session/utils/Promise';
 import { createTaskWithTimeout } from '../session/utils/TaskWithTimeout';
-import { UnprocessedParameter } from '../types/sqlSharedTypes';
+import type { UnprocessedParameter } from '../types/sqlSharedTypes';
 import { getEnvelopeId } from './common';
 
 export { downloadAttachment } from './attachments';
@@ -142,6 +142,8 @@ async function handleRequestDetail(
 ): Promise<void> {
   const envelope: any = contentIsEnvelope(data) ? data : SignalService.Envelope.decode(data);
 
+  let dataCorrect: Uint8Array | EnvelopePlus = data;
+
   // The message is for a group
   if (inConversation) {
     const ourNumber = UserUtils.getOurPubKeyStrFromCache();
@@ -155,8 +157,7 @@ async function handleRequestDetail(
     // plaintext (and protobuf.Envelope) does not have that field...
     envelope.source = inConversation;
 
-    // eslint-disable-next-line no-param-reassign
-    data = SignalService.Envelope.encode(envelope).finish();
+    dataCorrect = SignalService.Envelope.encode(envelope).finish();
     if (!PubKey.is03Pubkey(senderIdentity)) {
       envelope.senderIdentity = senderIdentity;
     }
@@ -174,7 +175,7 @@ async function handleRequestDetail(
 
     await IncomingMessageCache.addToCache(
       envelope,
-      contentIsEnvelope(data) ? data.content : data,
+      contentIsEnvelope(dataCorrect) ? dataCorrect.content : dataCorrect,
       messageHash
     );
     perfEnd(`addToCache-${envelope.id}`, 'addToCache');

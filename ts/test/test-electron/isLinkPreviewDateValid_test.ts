@@ -19,8 +19,8 @@ describe('isLinkPreviewDateValid', () => {
   });
 
   it('returns false for any infinite value', () => {
-    expect(isLinkPreviewDateValid(Infinity)).to.be.eq(false);
-    expect(isLinkPreviewDateValid(-Infinity)).to.be.eq(false);
+    expect(isLinkPreviewDateValid(Number.POSITIVE_INFINITY)).to.be.eq(false);
+    expect(isLinkPreviewDateValid(Number.NEGATIVE_INFINITY)).to.be.eq(false);
   });
 
   it('returns false for timestamps more than a day from now', () => {

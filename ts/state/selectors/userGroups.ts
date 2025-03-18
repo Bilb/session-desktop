@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux';
 import { isEmpty } from 'lodash';
 import { PubKey } from '../../session/types';
-import { UserGroupState } from '../ducks/userGroups';
-import { StateType } from '../reducer';
+import type { UserGroupState } from '../ducks/userGroups';
+import type { StateType } from '../reducer';
 
 const getUserGroupState = (state: StateType): UserGroupState => state.userGroups;
 

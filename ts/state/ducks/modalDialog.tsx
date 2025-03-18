@@ -1,12 +1,12 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { BlockOrUnblockModalState } from '../../components/dialog/blockOrUnblock/BlockOrUnblockModalState';
-import { EnterPasswordModalProps } from '../../components/dialog/EnterPasswordModal';
-import { HideRecoveryPasswordDialogProps } from '../../components/dialog/HideRecoveryPasswordDialog';
-import { SessionConfirmDialogProps } from '../../components/dialog/SessionConfirm';
-import { MediaItemType } from '../../components/lightbox/LightboxGallery';
-import { AttachmentTypeWithPath } from '../../types/Attachment';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type { BlockOrUnblockModalState } from '../../components/dialog/blockOrUnblock/BlockOrUnblockModalState';
+import type { EnterPasswordModalProps } from '../../components/dialog/EnterPasswordModal';
+import type { HideRecoveryPasswordDialogProps } from '../../components/dialog/HideRecoveryPasswordDialog';
+import type { SessionConfirmDialogProps } from '../../components/dialog/SessionConfirm';
+import type { MediaItemType } from '../../components/lightbox/LightboxGallery';
+import type { AttachmentTypeWithPath } from '../../types/Attachment';
 import type { EditProfilePictureModalProps, PasswordAction } from '../../types/ReduxTypes';
-import { WithConvoId } from '../../session/types/with';
+import type { WithConvoId } from '../../session/types/with';
 
 export type BanType = 'ban' | 'unban';
 

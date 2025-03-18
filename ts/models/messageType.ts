@@ -1,15 +1,15 @@
-import { PubkeyType } from 'libsession_util_nodejs';
+import type { PubkeyType } from 'libsession_util_nodejs';
 import { defaultsDeep } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
-import {
+import type {
   DisappearingMessageType,
   ExpirationTimerUpdate,
 } from '../session/disappearing_messages/types';
-import { PropsForMessageWithConvoProps } from '../state/ducks/conversations';
-import { AttachmentTypeWithPath } from '../types/Attachment';
-import { Reaction, ReactionList, SortedReactionList } from '../types/Reaction';
+import type { PropsForMessageWithConvoProps } from '../state/ducks/conversations';
+import type { AttachmentTypeWithPath } from '../types/Attachment';
+import type { Reaction, ReactionList, SortedReactionList } from '../types/Reaction';
 import { READ_MESSAGE_STATE } from './conversationAttributes';
-import {
+import type {
   LastMessageStatusType,
   CallNotificationType,
   InteractionNotificationType,
@@ -183,8 +183,8 @@ export interface MessageAttributesOptionals {
   hasFileAttachments?: 1 | 0;
   hasVisualMediaAttachments?: 1 | 0;
   dataExtractionNotification?: DataExtractionNotificationMsg;
+  // biome-ignore lint/complexity/noBannedTypes: keeping it as a object in case we ever add a field here
   messageRequestResponse?: {
-    // keeping it as a object in case we ever add a field here.
     // Note: we had isApproved field, but it was unused so I got rid of it
   };
   unread?: number;

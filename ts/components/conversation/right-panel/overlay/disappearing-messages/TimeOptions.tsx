@@ -1,7 +1,7 @@
 import { isEmpty } from 'lodash';
 
-import { DisappearTimeOptionDataTestId } from 'react';
-import {
+import type { DisappearTimeOptionDataTestId } from 'react';
+import type {
   TimerOptionsArray,
   TimerSeconds,
 } from '../../../../../session/disappearing_messages/timerOptions';

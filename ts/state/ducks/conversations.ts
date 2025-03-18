@@ -1,31 +1,34 @@
 /* eslint-disable no-restricted-syntax */
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { PubkeyType } from 'libsession_util_nodejs';
+import { createAsyncThunk, createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type { PubkeyType } from 'libsession_util_nodejs';
 import { omit, toNumber } from 'lodash';
-import { ReplyingToMessageProps } from '../../components/conversation/composition/CompositionBox';
-import { QuotedAttachmentType } from '../../components/conversation/message/message-content/quote/Quote';
+import type { ReplyingToMessageProps } from '../../components/conversation/composition/CompositionBox';
+import type { QuotedAttachmentType } from '../../components/conversation/message/message-content/quote/Quote';
 import { Data } from '../../data/data';
 
-import { ConversationNotificationSettingType } from '../../models/conversationAttributes';
-import { MessageModelType, PropsForDataExtractionNotification } from '../../models/messageType';
+import type { ConversationNotificationSettingType } from '../../models/conversationAttributes';
+import type {
+  MessageModelType,
+  PropsForDataExtractionNotification,
+} from '../../models/messageType';
 import { ConvoHub } from '../../session/conversations';
 import { DisappearingMessages } from '../../session/disappearing_messages';
-import {
+import type {
   DisappearingMessageConversationModeType,
   DisappearingMessageType,
 } from '../../session/disappearing_messages/types';
-import { ReactionList } from '../../types/Reaction';
+import type { ReactionList } from '../../types/Reaction';
 import { resetRightOverlayMode } from './section';
-import {
+import type {
   LastMessageStatusType,
   LastMessageType,
   PropsForCallNotification,
   PropsForInteractionNotification,
-  type PropsForMessageRequestResponse,
+  PropsForMessageRequestResponse,
 } from './types';
-import { AttachmentType } from '../../types/Attachment';
-import { CONVERSATION_PRIORITIES, ConversationTypeEnum } from '../../models/types';
-import { WithConvoId, WithMessageHash, WithMessageId } from '../../session/types/with';
+import type { AttachmentType } from '../../types/Attachment';
+import { CONVERSATION_PRIORITIES, type ConversationTypeEnum } from '../../models/types';
+import type { WithConvoId, WithMessageHash, WithMessageId } from '../../session/types/with';
 import { cancelUpdatesToDispatch } from '../../models/message';
 import type { SessionSuggestionDataItem } from '../../components/conversation/composition/types';
 import { Storage } from '../../util/storage';

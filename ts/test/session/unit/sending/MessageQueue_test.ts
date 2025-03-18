@@ -10,22 +10,23 @@
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { describe } from 'mocha';
-import Sinon, * as sinon from 'sinon';
+import Sinon from 'sinon';
+import type * as sinon from 'sinon';
 
-import { PubkeyType } from 'libsession_util_nodejs';
+import type { PubkeyType } from 'libsession_util_nodejs';
 import { randombytes_buf } from 'libsodium-wrappers-sumo';
-import { ContentMessage } from '../../../../session/messages/outgoing';
+import type { ContentMessage } from '../../../../session/messages/outgoing';
 import { ClosedGroupMessage } from '../../../../session/messages/outgoing/controlMessage/group/ClosedGroupMessage';
 import { MessageSender } from '../../../../session/sending';
 import { MessageQueueCl } from '../../../../session/sending/MessageQueue';
-import { PubKey } from '../../../../session/types';
+import type { PubKey } from '../../../../session/types';
 import { PromiseUtils, UserUtils } from '../../../../session/utils';
 import { TestUtils } from '../../../test-utils';
 import { PendingMessageCacheStub } from '../../../test-utils/stubs';
 
 import { SnodeNamespaces } from '../../../../session/apis/snode_api/namespaces';
 import { MessageSentHandler } from '../../../../session/sending/MessageSentHandler';
-import { TypedStub, generateFakeSnode, stubData } from '../../../test-utils/utils';
+import { type TypedStub, generateFakeSnode, stubData } from '../../../test-utils/utils';
 import { MessageWrapper } from '../../../../session/sending/MessageWrapper';
 import { SnodePool } from '../../../../session/apis/snode_api/snodePool';
 import { BatchRequests } from '../../../../session/apis/snode_api/batchRequest';

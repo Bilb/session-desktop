@@ -1,5 +1,5 @@
 import useAsyncFn from 'react-use/lib/useAsyncFn';
-import { WithMessageId } from '../../../../session/types/with';
+import type { WithMessageId } from '../../../../session/types/with';
 import { useMessageDirection, useMessageStatus } from '../../../../state/selectors';
 import { ItemWithDataTestId } from '../MenuItemWithDataTestId';
 import { Data } from '../../../../data/data';

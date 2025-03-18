@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode, useEffect, useRef, useState } from 'react';
+import { type ReactElement, type ReactNode, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 type SplitViewProps = {
@@ -61,7 +61,7 @@ const TopSplitViewPanel = ({
       topRef.current.style.height = `${topHeight}px`;
       topRef.current.style.minHeight = `${topHeight}px`;
     }
-  }, [topRef, topHeight, setTopHeight]);
+  }, [topHeight, setTopHeight]);
 
   return <StyledTop ref={topRef}>{children}</StyledTop>;
 };

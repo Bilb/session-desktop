@@ -1,6 +1,6 @@
-import { GroupPubkeyType } from 'libsession_util_nodejs';
+import type { GroupPubkeyType } from 'libsession_util_nodejs';
 import { SignalService } from '../../../../../../protobuf';
-import { GroupUpdateMessage, GroupUpdateMessageParams } from '../GroupUpdateMessage';
+import { GroupUpdateMessage, type GroupUpdateMessageParams } from '../GroupUpdateMessage';
 
 interface Params extends GroupUpdateMessageParams {
   groupPk: GroupPubkeyType;

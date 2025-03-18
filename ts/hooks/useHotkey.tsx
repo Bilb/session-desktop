@@ -1,4 +1,4 @@
-import useKey, { Handler, KeyPredicate, UseKeyOptions } from 'react-use/lib/useKey';
+import useKey, { type Handler, type KeyPredicate, type UseKeyOptions } from 'react-use/lib/useKey';
 
 function specialKeyPressed(event: KeyboardEvent) {
   const pressed = [];

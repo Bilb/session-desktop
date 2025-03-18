@@ -1,6 +1,6 @@
 import type { SuggestionDataItem } from 'react-mentions';
 import { MemberListItem } from '../../MemberListItem';
-import { HTMLDirection } from '../../../util/i18n/rtlSupport';
+import type { HTMLDirection } from '../../../util/i18n/rtlSupport';
 
 const listRTLStyle = { position: 'absolute', bottom: '0px', right: '100%' };
 

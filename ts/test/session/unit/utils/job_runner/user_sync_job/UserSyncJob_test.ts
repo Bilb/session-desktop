@@ -3,26 +3,26 @@ import { omit } from 'lodash';
 import Long from 'long';
 import Sinon from 'sinon';
 import { getSodiumNode } from '../../../../../../node/sodiumNode';
-import { NotEmptyArrayOfBatchResults } from '../../../../../../session/apis/snode_api/BatchResultEntry';
+import type { NotEmptyArrayOfBatchResults } from '../../../../../../session/apis/snode_api/BatchResultEntry';
 import {
   SnodeNamespaces,
-  SnodeNamespacesUserConfig,
+  type SnodeNamespacesUserConfig,
 } from '../../../../../../session/apis/snode_api/namespaces';
 import { ConvoHub } from '../../../../../../session/conversations';
-import { LibSodiumWrappers } from '../../../../../../session/crypto';
+import type { LibSodiumWrappers } from '../../../../../../session/crypto';
 import { MessageSender } from '../../../../../../session/sending';
 import { UserUtils } from '../../../../../../session/utils';
 import { RunJobResult } from '../../../../../../session/utils/job_runners/PersistedJob';
 import { UserSync } from '../../../../../../session/utils/job_runners/jobs/UserSyncJob';
 import {
   LibSessionUtil,
-  PendingChangesForUs,
-  UserDestinationChanges,
-  UserSuccessfulChange,
+  type PendingChangesForUs,
+  type UserDestinationChanges,
+  type UserSuccessfulChange,
 } from '../../../../../../session/utils/libsession/libsession_utils';
 import { UserGenericWrapperActions } from '../../../../../../webworker/workers/browser/libsession_worker_interface';
 import { TestUtils } from '../../../../../test-utils';
-import { TypedStub, stubConfigDumpData } from '../../../../../test-utils/utils';
+import { type TypedStub, stubConfigDumpData } from '../../../../../test-utils/utils';
 import { NetworkTime } from '../../../../../../util/NetworkTime';
 
 function userChange(

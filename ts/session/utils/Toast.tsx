@@ -191,7 +191,7 @@ export function pushFailedToAddAsModerator() {
 }
 
 export function pushFailedToRemoveFromModerator(names: Array<string>) {
-  let localizedString: string = '';
+  let localizedString = '';
   switch (names.length) {
     case 0:
       throw new Error('pushFailedToRemoveFromModerator invalid case error');
@@ -221,7 +221,7 @@ export function pushUserAddedToModerators(name: string) {
 }
 
 export function pushUserRemovedFromModerators(names: Array<string>) {
-  let localizedString: string = '';
+  let localizedString = '';
   switch (names.length) {
     case 0:
       throw new Error('pushUserRemovedFromModerators invalid case error');

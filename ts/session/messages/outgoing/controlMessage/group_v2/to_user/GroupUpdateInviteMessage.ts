@@ -1,7 +1,7 @@
 import { SignalService } from '../../../../../../protobuf';
 import { UserUtils } from '../../../../../utils';
 import { Preconditions } from '../../../preconditions';
-import { GroupUpdateMessage, GroupUpdateMessageParams } from '../GroupUpdateMessage';
+import { GroupUpdateMessage, type GroupUpdateMessageParams } from '../GroupUpdateMessage';
 
 interface Params extends GroupUpdateMessageParams {
   groupName: string;

@@ -2,13 +2,13 @@ import { createSelector } from '@reduxjs/toolkit';
 import { compact, isEmpty, remove, sortBy } from 'lodash';
 
 import { useSelector } from 'react-redux';
-import { StateType } from '../reducer';
+import type { StateType } from '../reducer';
 
 import { UserUtils } from '../../session/utils';
-import { MessageResultProps } from '../../types/message';
+import type { MessageResultProps } from '../../types/message';
 
-import { ConversationLookupType } from '../ducks/conversations';
-import { SearchStateType } from '../ducks/search';
+import type { ConversationLookupType } from '../ducks/conversations';
+import type { SearchStateType } from '../ducks/search';
 import { getConversationLookup } from './conversations';
 import { ConversationTypeEnum } from '../../models/types';
 

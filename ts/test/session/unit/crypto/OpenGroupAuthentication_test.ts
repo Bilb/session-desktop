@@ -7,7 +7,7 @@ import { SogsBlinding } from '../../../../session/apis/open_group_api/sogsv3/sog
 import { concatUInt8Array, getSodiumRenderer } from '../../../../session/crypto';
 import { KeyPrefixType } from '../../../../session/types';
 import { StringUtils } from '../../../../session/utils';
-import { ByteKeyPair } from '../../../../session/utils/User';
+import type { ByteKeyPair } from '../../../../session/utils/User';
 
 chai.use(chaiBytes);
 
@@ -315,7 +315,7 @@ const decryptBlindedMessage = async (
   );
 
   if (plaintextIncoming.length <= 32) {
-    // throw Error;
+    // throw new Error;
     console.error('decryptBlindedMessage: plaintext insufficient length');
     return undefined;
   }
@@ -324,7 +324,7 @@ const decryptBlindedMessage = async (
   const senderEdpk = plaintextIncoming.slice(plaintextIncoming.length - 32);
 
   if (to_hex(kA) !== to_hex(sodium.crypto_scalarmult_ed25519_noclamp(k, senderEdpk))) {
-    throw Error;
+    throw new Error();
   }
 
   const messageText = StringUtils.decode(msg, 'utf8');

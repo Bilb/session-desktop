@@ -1,5 +1,5 @@
 /* eslint-disable no-await-in-loop */
-import { ContactInfo, GroupPubkeyType, UserGroupsGet } from 'libsession_util_nodejs';
+import type { ContactInfo, GroupPubkeyType, UserGroupsGet } from 'libsession_util_nodejs';
 import { compact, difference, isEmpty, isNil, isNumber, toNumber } from 'lodash';
 import { ConfigDumpData } from '../data/configDump/configDump';
 import { SettingsKey } from '../data/settings-key';
@@ -29,14 +29,14 @@ import { HexString } from '../node/hexStrings';
 import {
   SnodeNamespace,
   SnodeNamespaces,
-  SnodeNamespacesUserConfig,
+  type SnodeNamespacesUserConfig,
 } from '../session/apis/snode_api/namespaces';
-import { RetrieveMessageItemWithNamespace } from '../session/apis/snode_api/types';
-import { GroupInfo } from '../session/group/closed-group';
+import type { RetrieveMessageItemWithNamespace } from '../session/apis/snode_api/types';
+import type { GroupInfo } from '../session/group/closed-group';
 import { groupInfoActions } from '../state/ducks/metaGroups';
 import {
-  ConfigWrapperObjectTypesMeta,
-  ConfigWrapperUser,
+  type ConfigWrapperObjectTypesMeta,
+  type ConfigWrapperUser,
   getGroupPubkeyFromWrapperType,
   isBlindingWrapperType,
   isMultiEncryptWrapperType,
@@ -56,7 +56,7 @@ import {
   UserGroupsWrapperActions,
 } from '../webworker/workers/browser/libsession_worker_interface';
 import { addKeyPairToCacheAndDBIfNeeded } from './closedGroups';
-import { HexKeyPair } from './keypairs';
+import type { HexKeyPair } from './keypairs';
 import { queueAllCachedFromSource } from './receiver';
 
 import { CONVERSATION } from '../session/constants';
@@ -478,7 +478,7 @@ async function handleCommunitiesUpdate() {
           m.roomCasePreserved
         );
         return builtConvoId;
-      } catch (e) {
+      } catch (_e) {
         return null;
       }
     })
@@ -492,7 +492,7 @@ async function handleCommunitiesUpdate() {
           m.roomCasePreserved
         );
         return allCommunitiesIdsInDB.includes(builtConvoId) ? null : m;
-      } catch (e) {
+      } catch (_e) {
         return null;
       }
     })
@@ -685,7 +685,7 @@ async function handleLegacyGroupUpdate(latestEnvelopeTimestamp: number) {
           };
 
           await addKeyPairToCacheAndDBIfNeeded(fromWrapper.pubkeyHex, inWrapperKeypair);
-        } catch (e) {
+        } catch (_e) {
           window.log.warn('failed to save key pair for legacy group', fromWrapper.pubkeyHex);
         }
       }
@@ -726,7 +726,13 @@ async function handleSingleGroupUpdate({
   }
 
   const convoExisting = ConvoHub.use().get(groupPk);
-  if (!convoExisting) {
+  if (convoExisting) {
+    // Note: the priority is the only **field** we want to sync from our user group wrapper for 03-groups
+    const changes = await convoExisting.setPriorityFromWrapper(groupInWrapper.priority, false);
+    if (changes) {
+      await convoExisting.commit();
+    }
+  } else {
     const created = await ConvoHub.use().getOrCreateAndWait(groupPk, ConversationTypeEnum.GROUPV2);
     const joinedAt =
       groupInWrapper.joinedAtSeconds * 1000 || CONVERSATION.LAST_JOINED_FALLBACK_TIMESTAMP;
@@ -745,12 +751,6 @@ async function handleSingleGroupUpdate({
     });
     await created.commit();
     getSwarmPollingInstance().addGroupId(PubKey.cast(groupPk));
-  } else {
-    // Note: the priority is the only **field** we want to sync from our user group wrapper for 03-groups
-    const changes = await convoExisting.setPriorityFromWrapper(groupInWrapper.priority, false);
-    if (changes) {
-      await convoExisting.commit();
-    }
   }
 }
 
@@ -1085,10 +1085,10 @@ async function updateOurProfileViaLibSession(
 
   await setLastProfileUpdateTimestamp(toNumber(sentAt));
   // do not trigger a sign in by linking if the display name is empty
-  if (!isEmpty(displayName)) {
-    window.Whisper.events.trigger(configurationMessageReceived, displayName);
-  } else {
+  if (isEmpty(displayName)) {
     window?.log?.warn('Got a configuration message but the display name is empty');
+  } else {
+    window.Whisper.events.trigger(configurationMessageReceived, displayName);
   }
 }
 

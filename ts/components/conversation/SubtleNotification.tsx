@@ -1,4 +1,4 @@
-import { SessionDataTestId } from 'react';
+import type { SessionDataTestId } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import {

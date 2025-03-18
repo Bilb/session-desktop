@@ -5,7 +5,7 @@ import chaiAsPromised from 'chai-as-promised';
 
 // Can't import type as StringUtils.Encoding
 import { StringUtils } from '../../../../session/utils';
-import { Encoding } from '../../../../session/utils/String';
+import type { Encoding } from '../../../../session/utils/String';
 
 chai.use(chaiAsPromised as any);
 
@@ -83,7 +83,7 @@ describe('String Utils', () => {
 
     it('can encode huge string', () => {
       const stringSize = 2 ** 16;
-      const testString = Array(stringSize).fill('0').join('');
+      const testString = new Array(stringSize).fill('0').join('');
 
       const allEncodedings = (['base64', 'hex', 'binary', 'utf8'] as Array<Encoding>).map(e =>
         StringUtils.encode(testString, e)
@@ -143,7 +143,7 @@ describe('String Utils', () => {
 
     it('can decode huge buffer', () => {
       const bytes = 2 ** 16;
-      const bufferString = Array(bytes).fill('A').join('');
+      const bufferString = new Array(bytes).fill('A').join('');
       const buffer = ByteBuffer.fromUTF8(bufferString);
 
       const encodings = ['base64', 'hex', 'binary', 'utf8'] as Array<Encoding>;

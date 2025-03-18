@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import { SessionHtmlRenderer } from './SessionHTMLRenderer';
 import {
-  GetMessageArgs,
-  LocalizerComponentProps,
-  MergedLocalizerTokens,
+  type GetMessageArgs,
+  type LocalizerComponentProps,
+  type MergedLocalizerTokens,
   sanitizeArgs,
 } from '../../localization/localeTools';
 import { getCrowdinLocale } from '../../util/i18n/shared';

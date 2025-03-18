@@ -2,7 +2,7 @@ import { expect } from 'chai';
 
 import Sinon from 'sinon';
 import { ConversationModel } from '../../../../models/conversation';
-import { ConversationAttributes } from '../../../../models/conversationAttributes';
+import type { ConversationAttributes } from '../../../../models/conversationAttributes';
 import { ConvoHub } from '../../../../session/conversations';
 import { UserUtils } from '../../../../session/utils';
 import { SessionUtilContact } from '../../../../session/utils/libsession/libsession_utils_contacts';
@@ -47,7 +47,10 @@ describe('libsession_contacts', () => {
     it('excludes non private', () => {
       expect(
         SessionUtilContact.isContactToStoreInWrapper(
-          new ConversationModel({ ...validArgs, type: ConversationTypeEnum.GROUP })
+          new ConversationModel({
+            ...validArgs,
+            type: ConversationTypeEnum.GROUP,
+          })
         )
       ).to.be.eq(false);
     });
@@ -55,7 +58,10 @@ describe('libsession_contacts', () => {
     it('includes private', () => {
       expect(
         SessionUtilContact.isContactToStoreInWrapper(
-          new ConversationModel({ ...validArgs, type: ConversationTypeEnum.PRIVATE })
+          new ConversationModel({
+            ...validArgs,
+            type: ConversationTypeEnum.PRIVATE,
+          })
         )
       ).to.be.eq(true);
     });
@@ -237,7 +243,7 @@ describe('libsession_contacts', () => {
 
       expect(wrapperContact, 'something should be returned from the wrapper').to.not.be.null;
       if (!wrapperContact) {
-        throw Error('something should be returned from the wrapper');
+        throw new Error('something should be returned from the wrapper');
       }
 
       expect(wrapperContact.id, 'id in the wrapper should match the inputted contact').to.equal(
@@ -291,7 +297,7 @@ describe('libsession_contacts', () => {
 
       expect(wrapperContact, 'something should be returned from the wrapper').to.not.be.null;
       if (!wrapperContact) {
-        throw Error('something should be returned from the wrapper');
+        throw new Error('something should be returned from the wrapper');
       }
 
       expect(

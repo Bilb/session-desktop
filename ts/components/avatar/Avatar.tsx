@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { isEqual } from 'lodash';
-import { memo, SessionDataTestId, useState } from 'react';
+import { memo, type SessionDataTestId, useState } from 'react';
 import styled from 'styled-components';
 
 import { useDisableDrag } from '../../hooks/useDisableDrag';

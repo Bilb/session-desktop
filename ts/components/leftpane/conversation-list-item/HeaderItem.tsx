@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 
-import { MouseEvent } from 'react';
+import type { MouseEvent } from 'react';
 import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { useConvoIdFromContext } from '../../../contexts/ConvoIdContext';

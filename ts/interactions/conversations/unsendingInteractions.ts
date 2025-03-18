@@ -1,9 +1,9 @@
-import { GroupPubkeyType, PubkeyType } from 'libsession_util_nodejs';
+import type { GroupPubkeyType, PubkeyType } from 'libsession_util_nodejs';
 import { compact, isEmpty } from 'lodash';
 import { SessionButtonColor } from '../../components/basic/SessionButton';
 import { Data } from '../../data/data';
-import { ConversationModel } from '../../models/conversation';
-import { MessageModel } from '../../models/message';
+import type { ConversationModel } from '../../models/conversation';
+import type { MessageModel } from '../../models/message';
 import { deleteSogsMessageByServerIds } from '../../session/apis/open_group_api/sogsv3/sogsV3DeleteMessages';
 import { SnodeAPI } from '../../session/apis/snode_api/SNodeAPI';
 import { SnodeNamespaces } from '../../session/apis/snode_api/namespaces';
@@ -21,7 +21,7 @@ import { ed25519Str } from '../../session/utils/String';
 import { UserGroupsWrapperActions } from '../../webworker/workers/browser/libsession_worker_interface';
 import { NetworkTime } from '../../util/NetworkTime';
 import { MessageQueue } from '../../session/sending';
-import { WithLocalMessageDeletionType } from '../../session/types/with';
+import type { WithLocalMessageDeletionType } from '../../session/types/with';
 
 async function unsendMessagesForEveryone1o1AndLegacy(
   conversation: ConversationModel,
@@ -545,8 +545,9 @@ export async function deleteMessagesById(messageIds: Array<string>, conversation
   window.inboxStore?.dispatch(
     updateConfirmModal({
       title: window.i18n('deleteMessage', { count: selectedMessages.length }),
-      radioOptions: !isMe
-        ? [
+      radioOptions: isMe
+        ? undefined
+        : [
             {
               label: window.i18n('clearMessagesForMe'),
               value: 'clearMessagesForMe' as const,
@@ -559,8 +560,7 @@ export async function deleteMessagesById(messageIds: Array<string>, conversation
               inputDataTestId: 'input-deleteForEveryone' as const,
               labelDataTestId: 'label-deleteForEveryone' as const,
             },
-          ]
-        : undefined,
+          ],
       okText: window.i18n('delete'),
       okTheme: SessionButtonColor.Danger,
       onClickOk: async args => {
@@ -611,7 +611,7 @@ async function deleteOpenGroupMessages(
     })
   );
 
-  let allMessagesAreDeleted: boolean = false;
+  let allMessagesAreDeleted = false;
   if (validServerIdsToRemove.length) {
     allMessagesAreDeleted = await deleteSogsMessageByServerIds(validServerIdsToRemove, roomInfos);
   }

@@ -1,10 +1,10 @@
 import { expect } from 'chai';
 
-import { LegacyGroupInfo, UserGroupsWrapperNode } from 'libsession_util_nodejs';
+import { type LegacyGroupInfo, UserGroupsWrapperNode } from 'libsession_util_nodejs';
 import { describe } from 'mocha';
 import Sinon from 'sinon';
 import { ConversationModel } from '../../../../models/conversation';
-import { ConversationAttributes } from '../../../../models/conversationAttributes';
+import type { ConversationAttributes } from '../../../../models/conversationAttributes';
 import { ConvoHub } from '../../../../session/conversations';
 import { UserUtils } from '../../../../session/utils';
 import { toHex } from '../../../../session/utils/String';
@@ -52,7 +52,11 @@ describe('libsession_user_groups', () => {
       it('excludes public group/community inactive', () => {
         expect(
           SessionUtilUserGroups.isUserGroupToStoreInWrapper(
-            new ConversationModel({ ...validArgs, ...communityArgs, active_at: undefined } as any)
+            new ConversationModel({
+              ...validArgs,
+              ...communityArgs,
+              active_at: undefined,
+            } as any)
           )
         ).to.be.eq(false);
       });
@@ -185,7 +189,7 @@ describe('libsession_user_groups', () => {
 
         expect(wrapperGroup, 'something should be returned from the wrapper').to.not.be.null;
         if (!wrapperGroup) {
-          throw Error('something should be returned from the wrapper');
+          throw new Error('something should be returned from the wrapper');
         }
 
         wrapperGroup = wrapperGroup as LegacyGroupInfo;
@@ -257,7 +261,7 @@ describe('libsession_user_groups', () => {
 
         expect(wrapperGroup, 'something should be returned from the wrapper').to.not.be.null;
         if (!wrapperGroup) {
-          throw Error('something should be returned from the wrapper');
+          throw new Error('something should be returned from the wrapper');
         }
 
         wrapperGroup = wrapperGroup as LegacyGroupInfo;

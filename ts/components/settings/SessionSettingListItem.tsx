@@ -2,18 +2,18 @@ import styled from 'styled-components';
 
 import { shell } from 'electron';
 import { isEmpty, pick } from 'lodash';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { Flex } from '../basic/Flex';
 import {
   SessionButton,
-  SessionButtonColor,
-  SessionButtonShape,
-  SessionButtonType,
+  type SessionButtonColor,
+  type SessionButtonShape,
+  type SessionButtonType,
 } from '../basic/SessionButton';
 import { SessionToggle } from '../basic/SessionToggle';
 import { SpacerSM } from '../basic/Text';
-import { SessionConfirmDialogProps } from '../dialog/SessionConfirm';
-import { SessionIcon, SessionIconButton, SessionIconProps } from '../icon';
+import type { SessionConfirmDialogProps } from '../dialog/SessionConfirm';
+import { SessionIcon, SessionIconButton, type SessionIconProps } from '../icon';
 
 type ButtonSettingsProps = {
   title?: string;
@@ -94,12 +94,12 @@ export const SettingsTitleAndDescription = (props: {
         alignItems={'center'}
       >
         <StyledTitleSettingsItem>{title}</StyledTitleSettingsItem>
-        {!isEmpty(icon) ? (
+        {isEmpty(icon) ? null : (
           <>
             <SpacerSM />
             <SessionIcon {...pick(icon, ['iconType', 'iconSize', 'iconColor'])} />
           </>
-        ) : null}
+        )}
       </Flex>
       <StyledDescriptionContainer>
         {description && (

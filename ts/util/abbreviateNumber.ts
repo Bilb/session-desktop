@@ -3,7 +3,7 @@
 
 const abbreviations = ['k', 'm', 'b', 't'];
 
-export function abbreviateNumber(number: number, decimals: number = 2): string {
+export function abbreviateNumber(number: number, decimals = 2): string {
   let result = String(number);
   const d = 10 ** decimals;
 

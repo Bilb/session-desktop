@@ -2,12 +2,12 @@ import styled from 'styled-components';
 import { useIconToImageURL } from '../../../hooks/useIconToImageURL';
 import { updateLightBoxOptions } from '../../../state/ducks/modalDialog';
 import { prepareQRCodeForLightBox } from '../../../util/qrCodes';
-import { QRCodeLogoProps, SessionQRCode } from '../../SessionQRCode';
+import { type QRCodeLogoProps, SessionQRCode } from '../../SessionQRCode';
 import { Avatar, AvatarSize } from '../../avatar/Avatar';
 import { Flex } from '../../basic/Flex';
 import { SpacerSM } from '../../basic/Text';
 import { SessionIconButton } from '../../icon';
-import { ProfileDialogModes } from './EditProfileDialog';
+import type { ProfileDialogModes } from './EditProfileDialog';
 
 const qrLogoProps: QRCodeLogoProps = {
   iconType: 'brandThin',

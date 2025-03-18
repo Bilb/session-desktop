@@ -1,7 +1,7 @@
 // REMOVE COMMENT AFTER: This can just export pure functions as it doesn't need state
 
 import { AbortController } from 'abort-controller';
-import { GroupPubkeyType, PubkeyType } from 'libsession_util_nodejs';
+import type { GroupPubkeyType, PubkeyType } from 'libsession_util_nodejs';
 import { isArray, isEmpty, isNumber, isString } from 'lodash';
 import pRetry from 'p-retry';
 import { Data } from '../../data/data';
@@ -12,54 +12,57 @@ import {
   sendSogsMessageOnionV4,
 } from '../apis/open_group_api/sogsv3/sogsV3SendMessage';
 import {
-  BuiltSnodeSubRequests,
-  DeleteAllFromGroupMsgNodeSubRequest,
-  DeleteHashesFromGroupNodeSubRequest,
-  DeleteHashesFromUserNodeSubRequest,
+  type BuiltSnodeSubRequests,
+  type DeleteAllFromGroupMsgNodeSubRequest,
+  type DeleteHashesFromGroupNodeSubRequest,
+  type DeleteHashesFromUserNodeSubRequest,
   isStoreUserInitiatedSubRequest,
-  MethodBatchType,
-  RawSnodeSubRequests,
-  StoreGroupInfoSubRequest,
-  StoreGroupKeysSubRequest,
-  StoreGroupMembersSubRequest,
+  type MethodBatchType,
+  type RawSnodeSubRequests,
+  type StoreGroupInfoSubRequest,
+  type StoreGroupKeysSubRequest,
+  type StoreGroupMembersSubRequest,
   StoreGroupMessageSubRequest,
-  StoreGroupRevokedRetrievableSubRequest,
+  type StoreGroupRevokedRetrievableSubRequest,
   StoreLegacyGroupMessageSubRequest,
   StoreUserConfigSubRequest,
   StoreUserMessageSubRequest,
-  SubaccountRevokeSubRequest,
-  SubaccountUnrevokeSubRequest,
+  type SubaccountRevokeSubRequest,
+  type SubaccountUnrevokeSubRequest,
   type DeleteAllFromGroupNodeSubRequest,
 } from '../apis/snode_api/SnodeRequestTypes';
-import { NotEmptyArrayOfBatchResults } from '../apis/snode_api/BatchResultEntry';
+import type { NotEmptyArrayOfBatchResults } from '../apis/snode_api/BatchResultEntry';
 import { BatchRequests } from '../apis/snode_api/batchRequest';
 import { GetNetworkTime } from '../apis/snode_api/getNetworkTime';
 import { SnodeNamespace, SnodeNamespaces } from '../apis/snode_api/namespaces';
 import {
-  SigResultAdmin,
-  SigResultSubAccount,
+  type SigResultAdmin,
+  type SigResultSubAccount,
   SnodeGroupSignature,
 } from '../apis/snode_api/signature/groupSignature';
-import { SnodeSignature, SnodeSignatureResult } from '../apis/snode_api/signature/snodeSignatures';
+import {
+  SnodeSignature,
+  type SnodeSignatureResult,
+} from '../apis/snode_api/signature/snodeSignatures';
 import { SnodePool } from '../apis/snode_api/snodePool';
 import { DURATION, TTL_DEFAULT } from '../constants';
 import { ConvoHub } from '../conversations';
 import { addMessagePadding } from '../crypto/BufferPadding';
-import { ContentMessage } from '../messages/outgoing';
+import type { ContentMessage } from '../messages/outgoing';
 import { UnsendMessage } from '../messages/outgoing/controlMessage/UnsendMessage';
 import { ClosedGroupNewMessage } from '../messages/outgoing/controlMessage/group/ClosedGroupNewMessage';
-import { OpenGroupVisibleMessage } from '../messages/outgoing/visibleMessage/OpenGroupVisibleMessage';
+import type { OpenGroupVisibleMessage } from '../messages/outgoing/visibleMessage/OpenGroupVisibleMessage';
 import { PubKey } from '../types';
-import { OutgoingRawMessage } from '../types/RawMessage';
+import type { OutgoingRawMessage } from '../types/RawMessage';
 import { UserUtils } from '../utils';
 import { ed25519Str, fromUInt8ArrayToBase64 } from '../utils/String';
 import { MessageSentHandler } from './MessageSentHandler';
-import { EncryptAndWrapMessageResults, MessageWrapper } from './MessageWrapper';
-import { SaveSeenMessageHash, stringify } from '../../types/sqlSharedTypes';
-import { OpenGroupRequestCommonType } from '../../data/types';
+import { type EncryptAndWrapMessageResults, MessageWrapper } from './MessageWrapper';
+import { type SaveSeenMessageHash, stringify } from '../../types/sqlSharedTypes';
+import type { OpenGroupRequestCommonType } from '../../data/types';
 import { NetworkTime } from '../../util/NetworkTime';
-import { MergedAbortSignal } from '../apis/snode_api/requestWith';
-import { WithAllow401s } from '../types/with';
+import type { MergedAbortSignal } from '../apis/snode_api/requestWith';
+import type { WithAllow401s } from '../types/with';
 import { ERROR_421_HANDLED_RETRY_REQUEST } from '../apis/snode_api/onions';
 
 // ================ SNODE STORE ================

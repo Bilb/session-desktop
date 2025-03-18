@@ -6,7 +6,7 @@ import { Storage } from './storage';
 const BLOCKED_NUMBERS_ID = 'blocked';
 
 export class BlockedNumberController {
-  private static loaded: boolean = false;
+  private static loaded = false;
   private static blockedNumbers: Set<string> = new Set();
 
   /**
@@ -64,7 +64,7 @@ export class BlockedNumberController {
       try {
         // eslint-disable-next-line no-await-in-loop
         await Convo.commitConversationAndRefreshWrapper(user);
-      } catch (e) {
+      } catch (_e) {
         window.log.warn(
           'failed to SessionUtilContact.insertContactFromDBIntoWrapperAndRefresh with: ',
           user

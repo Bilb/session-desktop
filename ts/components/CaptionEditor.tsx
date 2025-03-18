@@ -1,6 +1,6 @@
 import * as GoogleChrome from '../util/GoogleChrome';
 
-import { AttachmentType } from '../types/Attachment';
+import type { AttachmentType } from '../types/Attachment';
 import { AriaLabels } from '../util/hardcodedAriaLabels';
 
 type Props = {

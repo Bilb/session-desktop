@@ -1,14 +1,14 @@
-import { PubkeyType } from 'libsession_util_nodejs';
+import type { PubkeyType } from 'libsession_util_nodejs';
 import { isEmpty } from 'lodash';
 import { SignalService } from '../../../../../../protobuf';
 import { assertUnreachable } from '../../../../../../types/sqlSharedTypes';
 import { SnodeNamespaces } from '../../../../../apis/snode_api/namespaces';
-import { LibSodiumWrappers } from '../../../../../crypto';
+import type { LibSodiumWrappers } from '../../../../../crypto';
 import { stringToUint8Array } from '../../../../../utils/String';
 import {
-  AdminSigDetails,
+  type AdminSigDetails,
   GroupUpdateMessage,
-  GroupUpdateMessageParams,
+  type GroupUpdateMessageParams,
 } from '../GroupUpdateMessage';
 
 type MembersAddedMessageParams = GroupUpdateMessageParams & {

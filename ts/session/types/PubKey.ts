@@ -1,4 +1,4 @@
-import { GroupPubkeyType, PubkeyType } from 'libsession_util_nodejs';
+import type { GroupPubkeyType, PubkeyType } from 'libsession_util_nodejs';
 import { fromHexToArray } from '../utils/String';
 
 export enum KeyPrefixType {

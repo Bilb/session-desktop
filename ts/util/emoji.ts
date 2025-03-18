@@ -2,8 +2,8 @@
 /* eslint-disable no-continue */
 /* eslint-disable no-param-reassign */
 /* eslint-disable import/no-mutable-exports  */
-import { init, I18n } from 'emoji-mart';
-import { FixedBaseEmoji, NativeEmojiData } from '../types/Reaction';
+import { init, type I18n } from 'emoji-mart';
+import type { FixedBaseEmoji, NativeEmojiData } from '../types/Reaction';
 import { loadEmojiPanelI18n } from './i18n/emojiPanelI18n';
 
 export type SizeClassType = 'default' | 'small' | 'medium' | 'large' | 'jumbo';
@@ -59,17 +59,14 @@ export async function initialiseEmojiData(data: any): Promise<void> {
       [value.keywords, false],
       [value.emoticons, false],
     ]
-      .map(([strings, split]) => {
+      .flatMap(([strings, split]) => {
         if (!strings) {
           return null;
         }
-        return (Array.isArray(strings) ? strings : [strings])
-          .map(string =>
-            (split ? string.split(/[-|_|\s]+/) : [string]).map((s: string) => s.toLowerCase())
-          )
-          .flat();
+        return (Array.isArray(strings) ? strings : [strings]).flatMap(string =>
+          (split ? string.split(/[-|_|\s]+/) : [string]).map((s: string) => s.toLowerCase())
+        );
       })
-      .flat()
       .filter(a => a && a.trim())
       .join(',')})}`;
 

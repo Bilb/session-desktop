@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable more/no-then */
-import { GroupPubkeyType, PubkeyType, type ConvoVolatileType } from 'libsession_util_nodejs';
+import type { GroupPubkeyType, PubkeyType, ConvoVolatileType } from 'libsession_util_nodejs';
 import { isEmpty, isNil } from 'lodash';
 
 import AbortController from 'abort-controller';
@@ -64,7 +64,7 @@ type DeleteOptions = { fromSyncMessage: boolean };
 
 class ConvoController {
   private conversations: Array<ConversationModel>;
-  private _initialFetchComplete: boolean = false;
+  private _initialFetchComplete = false;
   private _convoHubInitialPromise?: Promise<any>;
 
   /**
@@ -326,7 +326,7 @@ class ConvoController {
           if (metaGroup && metaGroup.name && !isEmpty(metaGroup.name)) {
             nameInMetaGroup = metaGroup.name;
           }
-        } catch (e) {
+        } catch (_e) {
           // nothing to do
         }
         if (groupInUserGroup && nameInMetaGroup) {
@@ -453,7 +453,10 @@ class ConvoController {
 
   public async delete1o1(
     id: string,
-    options: DeleteOptions & { justHidePrivate?: boolean; keepMessages: boolean }
+    options: DeleteOptions & {
+      justHidePrivate?: boolean;
+      keepMessages: boolean;
+    }
   ) {
     const conversation = await this.deleteConvoInitialChecks(id, '1o1', options.keepMessages);
 

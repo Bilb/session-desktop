@@ -1,6 +1,6 @@
 /* eslint-disable no-await-in-loop */
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { GroupPubkeyType, UserGroupsGet } from 'libsession_util_nodejs';
+import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
+import type { GroupPubkeyType, UserGroupsGet } from 'libsession_util_nodejs';
 
 export type UserGroupState = {
   userGroups: Record<GroupPubkeyType, UserGroupsGet>;

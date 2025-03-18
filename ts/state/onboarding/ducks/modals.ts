@@ -1,6 +1,6 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { TermsOfServicePrivacyDialogProps } from '../../../components/dialog/TermsOfServicePrivacyDialog';
-import { ConfirmModalState } from '../../ducks/modalDialog';
+import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
+import type { TermsOfServicePrivacyDialogProps } from '../../../components/dialog/TermsOfServicePrivacyDialog';
+import type { ConfirmModalState } from '../../ducks/modalDialog';
 
 export type TermsOfServicePrivacyModalState = TermsOfServicePrivacyDialogProps | null;
 

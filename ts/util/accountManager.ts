@@ -9,7 +9,7 @@ import { Data } from '../data/data';
 import { SettingsKey } from '../data/settings-key';
 import { ConversationTypeEnum } from '../models/types';
 import { deleteAllLogs } from '../node/logs';
-import { SessionKeyPair } from '../receiver/keypairs';
+import type { SessionKeyPair } from '../receiver/keypairs';
 import { clearInbox } from '../session/apis/open_group_api/sogsv3/sogsV3ClearInbox';
 import { getAllValidOpenGroupV2ConversationRoomInfos } from '../session/apis/open_group_api/utils/OpenGroupUtils';
 import { getSwarmPollingInstance } from '../session/apis/snode_api';
@@ -310,7 +310,7 @@ async function deleteEverythingOnNetwork() {
     const clearInboxPromises = allRoomInfosArray.map(async roomInfo => {
       const success = await clearInbox(roomInfo);
       if (!success) {
-        throw Error(`Failed to clear inbox for ${roomInfo.conversationId}`);
+        throw new Error(`Failed to clear inbox for ${roomInfo.conversationId}`);
       }
       return true;
     });
@@ -335,7 +335,7 @@ export async function deleteEverythingAndNetworkData() {
     let potentiallyMaliciousSnodes: Array<string> | null = null;
     try {
       potentiallyMaliciousSnodes = await PromiseUtils.timeout(deleteEverythingOnNetwork(), 15000);
-    } catch (e) {
+    } catch (_e) {
       potentiallyMaliciousSnodes = null; // mark as generic fail
     }
 

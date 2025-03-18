@@ -1,6 +1,6 @@
 import { AnimatePresence, MotionGlobalConfig } from 'framer-motion';
 import { isArray, isEqual, unset } from 'lodash';
-import { ElementType, ReactElement, ReactNode } from 'react';
+import type { ElementType, ReactElement, ReactNode } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import TestRenderer from 'react-test-renderer';
 import { SessionTheme } from '../../themes/SessionTheme';
@@ -29,7 +29,7 @@ function getComponentTree(
   result: TestRenderer.ReactTestRenderer
 ): Array<TestRenderer.ReactTestRendererTree> {
   const trees = result.toTree();
-  return !trees ? [] : isArray(trees) ? trees : [trees];
+  return trees ? (isArray(trees) ? trees : [trees]) : [];
 }
 
 function findByDataTestId(

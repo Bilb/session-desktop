@@ -3,10 +3,10 @@ import { OpenGroupData } from '../../../../data/opengroups';
 import { ConvoHub } from '../../../conversations';
 import { getOpenGroupManager } from '../opengroupV2/OpenGroupManagerV2';
 import { SessionUtilUserGroups } from '../../../utils/libsession/libsession_utils_user_groups';
-import { OpenGroupV2Room, OpenGroupRequestCommonType } from '../../../../data/types';
+import type { OpenGroupV2Room, OpenGroupRequestCommonType } from '../../../../data/types';
 
 // eslint-disable-next-line prefer-regex-literals
-const protocolRegex = new RegExp('https?://');
+const protocolRegex = /https?:\/\//;
 
 const dot = '\\.';
 const qMark = '\\?';

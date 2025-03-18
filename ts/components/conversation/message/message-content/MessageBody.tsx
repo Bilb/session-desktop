@@ -3,8 +3,8 @@ import LinkifyIt from 'linkify-it';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 
-import { RenderTextCallbackType } from '../../../../types/Util';
-import { getEmojiSizeClass, SizeClassType } from '../../../../util/emoji';
+import type { RenderTextCallbackType } from '../../../../types/Util';
+import { getEmojiSizeClass, type SizeClassType } from '../../../../util/emoji';
 import { LinkPreviews } from '../../../../util/linkPreviews';
 import { AddMentions } from '../../AddMentions';
 import { AddNewLines } from '../../AddNewLines';

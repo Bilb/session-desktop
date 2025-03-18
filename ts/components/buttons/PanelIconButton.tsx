@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { SessionIcon, SessionIconSize, SessionIconType } from '../icon';
-import { PanelButton, PanelButtonProps, PanelButtonText, StyledContent } from './PanelButton';
+import { SessionIcon, type SessionIconSize, type SessionIconType } from '../icon';
+import { PanelButton, type PanelButtonProps, PanelButtonText, StyledContent } from './PanelButton';
 
 interface PanelIconButton extends Omit<PanelButtonProps, 'children'> {
   text: string;

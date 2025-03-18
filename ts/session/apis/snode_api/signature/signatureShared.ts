@@ -1,4 +1,4 @@
-import { GroupPubkeyType, Uint8ArrayLen100, Uint8ArrayLen64 } from 'libsession_util_nodejs';
+import type { GroupPubkeyType, Uint8ArrayLen100, Uint8ArrayLen64 } from 'libsession_util_nodejs';
 import { isEmpty } from 'lodash';
 import { getSodiumRenderer } from '../../../crypto';
 import { PubKey } from '../../../types';

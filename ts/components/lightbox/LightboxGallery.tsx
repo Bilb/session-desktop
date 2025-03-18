@@ -7,8 +7,8 @@ import { Lightbox } from './Lightbox';
 
 import { updateLightBoxOptions } from '../../state/ducks/modalDialog';
 import { useSelectedConversationKey } from '../../state/selectors/selectedConversation';
-import { MIME } from '../../types';
-import { AttachmentTypeWithPath } from '../../types/Attachment';
+import type { MIME } from '../../types';
+import type { AttachmentTypeWithPath } from '../../types/Attachment';
 import { saveAttachmentToDisk } from '../../util/attachmentsUtil';
 import { saveURLAsFile } from '../../util/saveURLAsFile';
 

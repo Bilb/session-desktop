@@ -2,7 +2,7 @@ import AbortController from 'abort-controller';
 import { isNumber } from 'lodash';
 import { batchFirstSubIsSuccess, batchGlobalIsSuccess, sogsBatchSend } from './sogsV3BatchPoll';
 import { uploadFileToRoomSogs3 } from './sogsV3SendFile';
-import { OpenGroupRequestCommonType } from '../../../../data/types';
+import type { OpenGroupRequestCommonType } from '../../../../data/types';
 import { DURATION } from '../../../constants';
 
 /**

@@ -3,11 +3,11 @@ import { v4 as uuid } from 'uuid';
 import { TestUtils } from '..';
 import { MessageModel } from '../../../models/message';
 import { OpenGroupMessageV2 } from '../../../session/apis/open_group_api/opengroupV2/OpenGroupMessageV2';
-import {
+import type {
   OpenGroupMessageV4,
   OpenGroupReactionMessageV4,
 } from '../../../session/apis/open_group_api/opengroupV2/OpenGroupServerPoller';
-import {
+import type {
   DisappearingMessageType,
   ExpirationTimerUpdate,
 } from '../../../session/disappearing_messages/types';
@@ -16,9 +16,9 @@ import { ClosedGroupVisibleMessage } from '../../../session/messages/outgoing/vi
 import { OpenGroupVisibleMessage } from '../../../session/messages/outgoing/visibleMessage/OpenGroupVisibleMessage';
 import { VisibleMessage } from '../../../session/messages/outgoing/visibleMessage/VisibleMessage';
 import { PubKey } from '../../../session/types';
-import { OpenGroupReaction } from '../../../types/Reaction';
+import type { OpenGroupReaction } from '../../../types/Reaction';
 import { generateFakePubKeyStr } from './pubkey';
-import { OpenGroupRequestCommonType } from '../../../data/types';
+import type { OpenGroupRequestCommonType } from '../../../data/types';
 
 const loremIpsum = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit';
 

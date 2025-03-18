@@ -21,7 +21,9 @@ describe('Onboarding', () => {
     TestUtils.stubI18n();
     TestUtils.stubData('createOrUpdateItem').resolves();
     TestUtils.stubData('removeItemById').resolves();
-    stubWindow('setOpengroupPruning', () => {});
+    stubWindow('setOpengroupPruning', () => {
+      // empty on purpose
+    });
     Sinon.stub(getSwarmPollingInstance(), 'pollOnceForOurDisplayName').resolves(polledDisplayName);
   });
 
@@ -179,7 +181,9 @@ describe('Onboarding', () => {
         const recoveryPassword = '';
         const validDisplayName = 'Hello World';
 
-        await registerSingleDevice(recoveryPassword, 'english', validDisplayName, async () => {});
+        await registerSingleDevice(recoveryPassword, 'english', validDisplayName, async () => {
+          // empty on purpose
+        });
       } catch (error) {
         error.should.be.an.instanceOf(Error);
         error.message.should.equal(
@@ -192,7 +196,9 @@ describe('Onboarding', () => {
         const recoveryPassword = await generateMnemonic();
         const validDisplayName = 'Hello World';
 
-        await registerSingleDevice(recoveryPassword, '', validDisplayName, async () => {});
+        await registerSingleDevice(recoveryPassword, '', validDisplayName, async () => {
+          // empty on purpose
+        });
       } catch (error) {
         error.should.be.an.instanceOf(Error);
         error.message.should.equal('We always need a mnemonicLanguage');
@@ -203,7 +209,9 @@ describe('Onboarding', () => {
         const recoveryPassword = await generateMnemonic();
         const validDisplayName = '';
 
-        await registerSingleDevice(recoveryPassword, 'english', validDisplayName, async () => {});
+        await registerSingleDevice(recoveryPassword, 'english', validDisplayName, async () => {
+          // empty on purpose
+        });
       } catch (error) {
         error.should.be.an.instanceOf(Error);
         error.message.should.equal('We always need a displayName');

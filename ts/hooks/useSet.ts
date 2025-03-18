@@ -11,7 +11,7 @@ export function useSet<T>(initialValues: Array<T> = []) {
       }
       setUniqueValues([...uniqueValues, valueToAdd]);
     },
-    [uniqueValues, setUniqueValues]
+    [uniqueValues]
   );
   const removeFrom = useCallback(
     (valueToRemove: T) => {
@@ -20,14 +20,14 @@ export function useSet<T>(initialValues: Array<T> = []) {
       }
       setUniqueValues(uniqueValues.filter(v => !isEqual(v, valueToRemove)));
     },
-    [uniqueValues, setUniqueValues]
+    [uniqueValues]
   );
 
   const empty = useCallback(() => {
     if (uniqueValues.length) {
       setUniqueValues([]);
     }
-  }, [uniqueValues, setUniqueValues]);
+  }, [uniqueValues]);
 
   return { uniqueValues, addTo, removeFrom, empty };
 }

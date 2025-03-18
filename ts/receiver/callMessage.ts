@@ -2,10 +2,10 @@ import { toNumber } from 'lodash';
 import { SignalService } from '../protobuf';
 import { TTL_DEFAULT } from '../session/constants';
 import { CallManager, UserUtils } from '../session/utils';
-import { WithOptExpireUpdate } from '../session/utils/calling/CallManager';
+import type { WithOptExpireUpdate } from '../session/utils/calling/CallManager';
 import { IncomingMessageCache } from './cache';
-import { EnvelopePlus } from './types';
-import { WithMessageHash } from '../session/types/with';
+import type { EnvelopePlus } from './types';
+import type { WithMessageHash } from '../session/types/with';
 import { NetworkTime } from '../util/NetworkTime';
 
 // messageHash & messageHash are only needed for actions adding a callMessage to the database (so they expire)

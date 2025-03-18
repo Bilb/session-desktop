@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { AbortController } from 'abort-controller';
 
 import autoBind from 'auto-bind';
-import { Component, RefObject, createRef } from 'react';
+import { Component, type RefObject, createRef } from 'react';
 import * as MIME from '../../../types/MIME';
 
 import { SessionEmojiPanel, StyledEmojiPanel } from '../SessionEmojiPanel';
@@ -15,19 +15,19 @@ import { SessionRecording } from '../SessionRecording';
 import { SettingsKey } from '../../../data/settings-key';
 import { showLinkSharingConfirmationModalDialog } from '../../../interactions/conversationInteractions';
 import { ToastUtils } from '../../../session/utils';
-import { ReduxConversationType } from '../../../state/ducks/conversations';
+import type { ReduxConversationType } from '../../../state/ducks/conversations';
 import { removeAllStagedAttachmentsInConversation } from '../../../state/ducks/stagedAttachments';
-import { StateType } from '../../../state/reducer';
+import type { StateType } from '../../../state/reducer';
 import { getQuotedMessage, getSelectedConversation } from '../../../state/selectors/conversations';
 import {
   getIsSelectedBlocked,
   getSelectedCanWrite,
   getSelectedConversationKey,
 } from '../../../state/selectors/selectedConversation';
-import { AttachmentType } from '../../../types/Attachment';
+import type { AttachmentType } from '../../../types/Attachment';
 import { processNewAttachment } from '../../../types/MessageAttachment';
 import { AttachmentUtil } from '../../../util';
-import {
+import type {
   StagedAttachmentImportedType,
   StagedPreviewImportedType,
 } from '../../../util/attachmentsUtil';
@@ -51,7 +51,7 @@ import {
 } from './CompositionButtons';
 import { CompositionTextArea } from './CompositionTextArea';
 import { cleanMentions, mentionsRegex } from './UserMentions';
-import { HTMLDirection } from '../../../util/i18n/rtlSupport';
+import type { HTMLDirection } from '../../../util/i18n/rtlSupport';
 import type { FixedBaseEmoji } from '../../../types/Reaction';
 
 export interface ReplyingToMessageProps {

@@ -1,4 +1,4 @@
-import { MessageAttributes } from '../../models/messageType';
+import type { MessageAttributes } from '../../models/messageType';
 
 type LokiProfile = {
   displayName: string;
@@ -8,4 +8,4 @@ type LokiProfile = {
 
 type MessageResultProps = MessageAttributes & { snippet: string };
 
-export { LokiProfile, MessageResultProps };
+export type { LokiProfile, MessageResultProps };

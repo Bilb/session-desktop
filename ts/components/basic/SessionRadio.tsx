@@ -1,6 +1,6 @@
-import { ChangeEvent, SessionDataTestId, SyntheticEvent } from 'react';
+import type { ChangeEvent, SessionDataTestId, SyntheticEvent } from 'react';
 
-import styled, { CSSProperties } from 'styled-components';
+import styled, { type CSSProperties } from 'styled-components';
 import { Flex } from './Flex';
 
 const StyledButton = styled.button<{ disabled: boolean }>`

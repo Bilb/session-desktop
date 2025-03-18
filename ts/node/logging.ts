@@ -55,7 +55,7 @@ export async function initializeLogger() {
 
   logger.level('debug');
   // eslint-disable-next-line dot-notation
-  (logger as any)['warn']('app start: logger created'); // keep this so we always have restart indications in the app
+  (logger as any).warn('app start: logger created'); // keep this so we always have restart indications in the app
 
   LEVELS.forEach(level => {
     ipc.on(`log-${level}`, (_first, ...rest) => {
@@ -152,7 +152,7 @@ async function fetchLog(logFile: string): Promise<Array<LogEntry>> {
     lines.map(line => {
       try {
         return _.pick(JSON.parse(line), ['level', 'time', 'msg']);
-      } catch (e) {
+      } catch (_e) {
         return null;
       }
     })
@@ -190,7 +190,7 @@ function logAtLevel(level: string, ...args: any) {
       if (typeof item !== 'string') {
         try {
           return JSON.stringify(item);
-        } catch (e) {
+        } catch (_e) {
           return item;
         }
       }

@@ -5,7 +5,7 @@ import { KNOWN_BLINDED_KEYS_ITEM } from '../../../../data/settings-key';
 import { getSodiumNode } from '../../../../node/sodiumNode';
 import {
   addCachedBlindedKey,
-  BlindedIdMapping,
+  type BlindedIdMapping,
   findCachedBlindedIdFromUnblinded,
   findCachedBlindedMatchOrLookItUp,
   getCachedNakedKeyFromBlinded,
@@ -19,7 +19,7 @@ import {
   writeKnownBlindedKeys,
 } from '../../../../session/apis/open_group_api/sogsv3/knownBlindedkeys';
 import { ConvoHub } from '../../../../session/conversations';
-import { LibSodiumWrappers } from '../../../../session/crypto';
+import type { LibSodiumWrappers } from '../../../../session/crypto';
 import { UserUtils } from '../../../../session/utils';
 import { TestUtils } from '../../../test-utils';
 import { expectAsyncToThrow, stubData, stubWindowLog } from '../../../test-utils/utils';

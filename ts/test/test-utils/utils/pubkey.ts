@@ -1,13 +1,17 @@
 import * as crypto from 'crypto';
-import { GroupPubkeyType, PubkeyType, UserGroupsWrapperNode } from 'libsession_util_nodejs';
-import { KeyPair, to_hex } from 'libsodium-wrappers-sumo';
+import {
+  type GroupPubkeyType,
+  type PubkeyType,
+  UserGroupsWrapperNode,
+} from 'libsession_util_nodejs';
+import { type KeyPair, to_hex } from 'libsodium-wrappers-sumo';
 import _ from 'lodash';
-import { Snode } from '../../../data/types';
+import type { Snode } from '../../../data/types';
 import { getSodiumNode } from '../../../node/sodiumNode';
 import { ECKeyPair } from '../../../receiver/keypairs';
 import { SnodePool } from '../../../session/apis/snode_api/snodePool';
 import { PubKey } from '../../../session/types';
-import { ByteKeyPair } from '../../../session/utils/User';
+import type { ByteKeyPair } from '../../../session/utils/User';
 import { stubData } from './stubbing';
 
 export function generateFakePubKey(): PubKey {

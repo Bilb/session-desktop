@@ -1,7 +1,7 @@
-import styled, { CSSProperties } from 'styled-components';
+import styled, { type CSSProperties } from 'styled-components';
 import { Flex } from '../../basic/Flex';
 import { SessionIconButton } from '../../icon';
-import { SubtitleStrings, SubtitleStringsType } from './ConversationHeaderTitle';
+import type { SubtitleStrings, SubtitleStringsType } from './ConversationHeaderTitle';
 
 function loadDataTestId(currentSubtitle: SubtitleStringsType) {
   if (currentSubtitle === 'disappearingMessages') {
@@ -51,16 +51,14 @@ export const SubtitleDotMenu = ({
   style: CSSProperties;
 }) => (
   <StyledSubtitleDotMenu id={id} container={true} alignItems={'center'} style={style}>
-    {Array(optionsCount)
-      .fill(0)
-      .map((_, index) => {
-        return (
-          <StyledSubtitleDot
-            key={`subtitleDotMenu-${id}-${index}`}
-            active={selectedOptionIndex === index}
-          />
-        );
-      })}
+    {new Array(optionsCount).fill(0).map((_, index) => {
+      return (
+        <StyledSubtitleDot
+          key={`subtitleDotMenu-${id}-${index}`}
+          active={selectedOptionIndex === index}
+        />
+      );
+    })}
   </StyledSubtitleDotMenu>
 );
 

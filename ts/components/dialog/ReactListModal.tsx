@@ -16,7 +16,7 @@ import {
   useSelectedWeAreAdmin,
   useSelectedWeAreModerator,
 } from '../../state/selectors/selectedConversation';
-import { SortedReactionList } from '../../types/Reaction';
+import type { SortedReactionList } from '../../types/Reaction';
 import { nativeEmojiData } from '../../util/emoji';
 import { Reactions } from '../../util/reactions';
 import { Avatar, AvatarSize } from '../avatar/Avatar';

@@ -1,10 +1,10 @@
 import { isTestIntegration } from '../shared/env_vars';
 import { hexColorToRGB } from '../util/hexColorToRGB';
 import { COLORS } from './constants/colors';
-import { ThemeColorVariables } from './variableColors';
+import type { ThemeColorVariables } from './variableColors';
 
 function setDuration(duration: number | string) {
-  return `${!isTestIntegration() ? duration : typeof duration === 'string' ? '0s' : '0'}`;
+  return `${isTestIntegration() ? (typeof duration === 'string' ? '0s' : '0') : duration}`;
 }
 
 export function pxValueToNumber(value: string) {

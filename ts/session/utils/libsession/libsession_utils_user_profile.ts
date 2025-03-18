@@ -37,7 +37,10 @@ async function insertUserProfileIntoWrapper(convoId: string) {
   await UserConfigWrapperActions.setNameTruncated(dbName);
   await UserConfigWrapperActions.setPriority(priority);
   if (dbProfileUrl && !isEmpty(dbProfileKey) && dbProfileKey.length === 32) {
-    await UserConfigWrapperActions.setProfilePic({ key: dbProfileKey, url: dbProfileUrl });
+    await UserConfigWrapperActions.setProfilePic({
+      key: dbProfileKey,
+      url: dbProfileUrl,
+    });
   } else {
     await UserConfigWrapperActions.setProfilePic({ key: null, url: null });
   }
@@ -59,7 +62,7 @@ function isUserProfileToStoreInWrapper(convoId: string) {
   try {
     const us = UserUtils.getOurPubKeyStrFromCache();
     return convoId === us;
-  } catch (e) {
+  } catch (_e) {
     return false;
   }
 }

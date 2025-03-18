@@ -1,5 +1,5 @@
-import { PubkeyType } from 'libsession_util_nodejs';
-import { Snode } from '../../data/types';
+import type { PubkeyType } from 'libsession_util_nodejs';
+import type { Snode } from '../../data/types';
 
 export type WithMessageHash = { messageHash: string };
 export type WithMessageHashOrNull = { messageHash: string | null };

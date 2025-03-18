@@ -1,5 +1,5 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { ThemeStateType } from '../../themes/constants/colors';
+import { type PayloadAction, createSlice } from '@reduxjs/toolkit';
+import type { ThemeStateType } from '../../themes/constants/colors';
 
 // TODO Move primary color into this slice
 export const initialThemeState: ThemeStateType = 'classic-dark' as ThemeStateType;

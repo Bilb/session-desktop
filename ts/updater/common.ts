@@ -1,4 +1,4 @@
-import { BrowserWindow, dialog } from 'electron';
+import { type BrowserWindow, dialog } from 'electron';
 import type { SetupI18nReturnType } from '../types/localizer';
 
 export type MessagesType = {

@@ -3,15 +3,15 @@ import { SignalService } from '../../../protobuf';
 import { UserSyncJobDone } from '../../../shims/events';
 import { ReleasedFeatures } from '../../../util/releaseFeature';
 
-import { DisappearingMessageUpdate } from '../../disappearing_messages/types';
+import type { DisappearingMessageUpdate } from '../../disappearing_messages/types';
 import { DataMessage } from '../../messages/outgoing';
 import { ExpirationTimerUpdateMessage } from '../../messages/outgoing/controlMessage/ExpirationTimerUpdateMessage';
-import { MessageRequestResponse } from '../../messages/outgoing/controlMessage/MessageRequestResponse';
-import { UnsendMessage } from '../../messages/outgoing/controlMessage/UnsendMessage';
+import type { MessageRequestResponse } from '../../messages/outgoing/controlMessage/MessageRequestResponse';
+import type { UnsendMessage } from '../../messages/outgoing/controlMessage/UnsendMessage';
 import {
-  AttachmentPointerWithUrl,
-  PreviewWithAttachmentUrl,
-  Quote,
+  type AttachmentPointerWithUrl,
+  type PreviewWithAttachmentUrl,
+  type Quote,
   VisibleMessage,
 } from '../../messages/outgoing/visibleMessage/VisibleMessage';
 import { UserSync } from '../job_runners/jobs/UserSyncJob';

@@ -1,15 +1,15 @@
 import chai, { expect } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
-import { PubkeyType } from 'libsession_util_nodejs';
+import type { PubkeyType } from 'libsession_util_nodejs';
 import Sinon from 'sinon';
-import { UpdateExpiryOnNodeUserSubRequest } from '../../../../session/apis/snode_api/SnodeRequestTypes';
+import type { UpdateExpiryOnNodeUserSubRequest } from '../../../../session/apis/snode_api/SnodeRequestTypes';
 import {
-  ExpireMessageWithExpiryOnSnodeProps,
-  ExpireRequestResponseResults,
+  type ExpireMessageWithExpiryOnSnodeProps,
+  type ExpireRequestResponseResults,
   buildExpireRequestSingleExpiry,
   processExpireRequestResponse,
   verifyExpireMsgsResponseSignature,
-  verifyExpireMsgsResponseSignatureProps,
+  type verifyExpireMsgsResponseSignatureProps,
 } from '../../../../session/apis/snode_api/expireRequest';
 import { UserUtils } from '../../../../session/utils';
 import { isValidUnixTimestamp } from '../../../../session/utils/Timestamps';
@@ -52,7 +52,7 @@ describe('ExpireRequest', () => {
       expect(request, 'should not return null').to.not.be.null;
       expect(request, 'should not return undefined').to.not.be.undefined;
       if (!request) {
-        throw Error('nothing was returned when building the request');
+        throw new Error('nothing was returned when building the request');
       }
 
       const signedReq = await request.build();
@@ -81,7 +81,7 @@ describe('ExpireRequest', () => {
       expect(request, 'should not return null').to.not.be.null;
       expect(request, 'should not return undefined').to.not.be.undefined;
       if (!request) {
-        throw Error('nothing was returned when building the request');
+        throw new Error('nothing was returned when building the request');
       }
       const signedReq = await request.build();
 
@@ -109,7 +109,7 @@ describe('ExpireRequest', () => {
       expect(request, 'should not return null').to.not.be.null;
       expect(request, 'should not return undefined').to.not.be.undefined;
       if (!request) {
-        throw Error('nothing was returned when building the request');
+        throw new Error('nothing was returned when building the request');
       }
       const signedReq = await request.build();
 
@@ -146,19 +146,31 @@ describe('ExpireRequest', () => {
     });
     it('returns false if the signature is invalid', async () => {
       // use a different pubkey to invalidate the signature
-      const isValid = await verifyExpireMsgsResponseSignature({ ...props, pubkey: ourNumber });
+      const isValid = await verifyExpireMsgsResponseSignature({
+        ...props,
+        pubkey: ourNumber,
+      });
       expect(isValid, 'should return false').to.be.false;
     });
     it('returns false if response is missing the expiry timestamp', async () => {
-      const isValid = await verifyExpireMsgsResponseSignature({ ...props, expiry: 0 });
+      const isValid = await verifyExpireMsgsResponseSignature({
+        ...props,
+        expiry: 0,
+      });
       expect(isValid, 'should return false').to.be.false;
     });
     it('returns false if response is missing the messageHashes', async () => {
-      const isValid = await verifyExpireMsgsResponseSignature({ ...props, messageHashes: [] });
+      const isValid = await verifyExpireMsgsResponseSignature({
+        ...props,
+        messageHashes: [],
+      });
       expect(isValid, 'should return false').to.be.false;
     });
     it('returns false if response is missing the signature', async () => {
-      const isValid = await verifyExpireMsgsResponseSignature({ ...props, signature: '' });
+      const isValid = await verifyExpireMsgsResponseSignature({
+        ...props,
+        signature: '',
+      });
       expect(isValid, 'should return false').to.be.false;
     });
   });

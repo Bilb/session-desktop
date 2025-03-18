@@ -1,7 +1,7 @@
 /* eslint-disable no-restricted-syntax */
 import { chunk, compact, difference, flatten, isArray, isEmpty, isNumber, uniqBy } from 'lodash';
 import pRetry from 'p-retry';
-import { Snode } from '../../../data/types';
+import type { Snode } from '../../../data/types';
 import { getSodiumRenderer } from '../../crypto';
 import { StringUtils, UserUtils } from '../../utils';
 import { fromBase64ToArray, fromHexToArray } from '../../utils/String';
@@ -9,8 +9,8 @@ import { SeedNodeAPI } from '../seed_node_api';
 import { MAX_SUBREQUESTS_COUNT, UpdateExpiryOnNodeUserSubRequest } from './SnodeRequestTypes';
 import { BatchRequests } from './batchRequest';
 import { SnodePool } from './snodePool';
-import { ExpireMessageResultItem, ExpireMessagesResultsContent } from './types';
-import { WithShortenOrExtend } from '../../types/with';
+import type { ExpireMessageResultItem, ExpireMessagesResultsContent } from './types';
+import type { WithShortenOrExtend } from '../../types/with';
 import { DURATION } from '../../constants';
 
 export type verifyExpireMsgsResponseSignatureProps = ExpireMessageResultItem & {
@@ -67,7 +67,11 @@ export async function verifyExpireMsgsResponseSignature({
 
 export type ExpireRequestResponseResults = Record<
   string,
-  { hashes: Array<string>; expiry: number; unchangedHashes: Record<string, number> }
+  {
+    hashes: Array<string>;
+    expiry: number;
+    unchangedHashes: Record<string, number>;
+  }
 >;
 
 export async function processExpireRequestResponse(
@@ -77,7 +81,7 @@ export async function processExpireRequestResponse(
   messageHashes: Array<string>
 ): Promise<ExpireRequestResponseResults> {
   if (isEmpty(swarm)) {
-    throw Error(`[processExpireRequestResponse] Swarm is missing! ${messageHashes}`);
+    throw new Error(`[processExpireRequestResponse] Swarm is missing! ${messageHashes}`);
   }
 
   const results: ExpireRequestResponseResults = {};
@@ -128,13 +132,20 @@ export async function processExpireRequestResponse(
       );
       continue;
     }
-    results[nodeKey] = { hashes: updatedHashes, expiry, unchangedHashes: unchangedHashes ?? {} };
+    results[nodeKey] = {
+      hashes: updatedHashes,
+      expiry,
+      unchangedHashes: unchangedHashes ?? {},
+    };
   }
 
   return results;
 }
 
-type UpdatedExpiryWithHashes = { messageHashes: Array<string>; updatedExpiryMs: number };
+type UpdatedExpiryWithHashes = {
+  messageHashes: Array<string>;
+  updatedExpiryMs: number;
+};
 type UpdatedExpiryWithHash = { messageHash: string; updatedExpiryMs: number };
 
 async function updateExpiryOnNodesNoRetries(
@@ -157,7 +168,7 @@ async function updateExpiryOnNodesNoRetries(
       window.log.error(
         `There was an issue with the results. updateExpiryOnNodes ${targetNode.ip}:${targetNode.port}. expected length or results ${expireRequests.length} but got ${result.length}`
       );
-      throw Error(
+      throw new Error(
         `There was an issue with the results. updateExpiryOnNodes ${targetNode.ip}:${targetNode.port}`
       );
     }
@@ -167,7 +178,7 @@ async function updateExpiryOnNodesNoRetries(
     const firstResult = result[0];
 
     if (firstResult.code !== 200) {
-      throw Error(`result is not 200 but ${firstResult.code}`);
+      throw new Error(`result is not 200 but ${firstResult.code}`);
     }
 
     // Note: expirationResults is an array of `Map<snode pubkeys, {msgHashes,expiry}>` changed/unchanged which have a valid signature
@@ -237,7 +248,10 @@ async function updateExpiryOnNodesNoRetries(
 
     const expiryWithIndividualHash: Array<UpdatedExpiryWithHash> = flatten(
       changesValid.map(change =>
-        change.messageHashes.map(h => ({ messageHash: h, updatedExpiryMs: change.updatedExpiryMs }))
+        change.messageHashes.map(h => ({
+          messageHash: h,
+          updatedExpiryMs: change.updatedExpiryMs,
+        }))
       )
     );
     window.log.debug('update expiry expiryWithIndividualHash: ', expiryWithIndividualHash);
@@ -245,7 +259,7 @@ async function updateExpiryOnNodesNoRetries(
   } catch (err) {
     // NOTE batch requests have their own retry logic which includes abort errors that will break our retry logic so we need to catch them and throw regular errors
     if (err instanceof pRetry.AbortError) {
-      throw Error(err.message);
+      throw new Error(err.message);
     }
 
     throw err;
@@ -310,7 +324,7 @@ function getBatchExpiryChunk({
   expiryChunk: Array<string>;
 } & WithShortenOrExtend & { groupedBySameExpiry: GroupedBySameExpiry }) {
   const expiryDetails: Array<ExpireMessageWithExpiryOnSnodeProps> = expiryChunk.map(expiryStr => {
-    const expiryMs = parseInt(expiryStr, 10);
+    const expiryMs = Number.parseInt(expiryStr, 10);
     const msgHashesForThisExpiry = groupedBySameExpiry[expiryStr];
 
     return {

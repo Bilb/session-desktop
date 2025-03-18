@@ -61,11 +61,11 @@ export const useRecoveryProgressEffect = () => {
       case AccountRestoration.Finished:
         interval = setInterval(() => {
           clearInterval(interval);
-          if (!isEmpty(displayName)) {
-            dispatch(setAccountRestorationStep(AccountRestoration.Complete));
-          } else {
+          if (isEmpty(displayName)) {
             // if we didn't get the display name in time, we need to enter it manually
             dispatch(setAccountRestorationStep(AccountRestoration.DisplayName));
+          } else {
+            dispatch(setAccountRestorationStep(AccountRestoration.Complete));
           }
         }, ONBOARDING_TIMES.RECOVERY_FINISHED);
         break;

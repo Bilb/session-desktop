@@ -4,26 +4,26 @@ import { isEmpty, noop, omit, toNumber } from 'lodash';
 import { SignalService } from '../protobuf';
 import { IncomingMessageCache } from './cache';
 import { getEnvelopeId } from './common';
-import { EnvelopePlus } from './types';
+import type { EnvelopePlus } from './types';
 
 import { Data } from '../data/data';
-import { ConversationModel } from '../models/conversation';
+import type { ConversationModel } from '../models/conversation';
 import { ConvoHub } from '../session/conversations';
 import { PubKey } from '../session/types';
 import { StringUtils, UserUtils } from '../session/utils';
 import { handleLegacyClosedGroupControlMessage } from './closedGroups';
 import { handleMessageJob, toRegularMessage } from './queuedJob';
 
-import { MessageModel } from '../models/message';
+import type { MessageModel } from '../models/message';
 import {
   createSwarmMessageSentFromNotUs,
   createSwarmMessageSentFromUs,
 } from '../models/messageFactory';
 import { DisappearingMessages } from '../session/disappearing_messages';
-import { WithDisappearingMessageUpdate } from '../session/disappearing_messages/types';
+import type { WithDisappearingMessageUpdate } from '../session/disappearing_messages/types';
 import { ProfileManager } from '../session/profile_manager/ProfileManager';
 import { isUsFromCache } from '../session/utils/User';
-import { Action, Reaction } from '../types/Reaction';
+import { Action, type Reaction } from '../types/Reaction';
 import { toLogFormat } from '../types/attachments/Errors';
 import { Reactions } from '../util/reactions';
 import { GroupV2Receiver } from './groupv2/handleGroupV2Message';

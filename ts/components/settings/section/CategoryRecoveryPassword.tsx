@@ -16,7 +16,7 @@ import { useIsDarkTheme } from '../../../state/selectors/theme';
 import { THEME_GLOBALS } from '../../../themes/globals';
 import { prepareQRCodeForLightBox } from '../../../util/qrCodes';
 import { getCurrentRecoveryPhrase } from '../../../util/storage';
-import { QRCodeLogoProps, SessionQRCode } from '../../SessionQRCode';
+import { type QRCodeLogoProps, SessionQRCode } from '../../SessionQRCode';
 import { AnimatedFlex } from '../../basic/Flex';
 import { Localizer } from '../../basic/Localizer';
 import { SessionButtonColor } from '../../basic/SessionButton';
@@ -178,7 +178,7 @@ export const SettingsCategoryRecoveryPassword = () => {
           {isQRVisible ? window.i18n('recoveryPasswordView') : window.i18n('qrView')}
         </SessionIconButton>
       </SessionSettingsItemWrapper>
-      {!hideRecoveryPassword ? (
+      {hideRecoveryPassword ? null : (
         <SessionSettingButtonItem
           title={window.i18n('recoveryPasswordHideRecoveryPassword')}
           description={window.i18n('recoveryPasswordHideRecoveryPasswordDescription')}
@@ -189,7 +189,7 @@ export const SettingsCategoryRecoveryPassword = () => {
           buttonColor={SessionButtonColor.Danger}
           dataTestId={'hide-recovery-password-button'}
         />
-      ) : null}
+      )}
     </StyledSettingsItemContainer>
   );
 };

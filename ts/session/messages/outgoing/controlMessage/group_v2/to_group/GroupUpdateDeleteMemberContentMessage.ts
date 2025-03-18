@@ -1,13 +1,13 @@
-import { PubkeyType } from 'libsession_util_nodejs';
+import type { PubkeyType } from 'libsession_util_nodejs';
 import _, { isEmpty } from 'lodash';
 import { SignalService } from '../../../../../../protobuf';
 import { SnodeNamespaces } from '../../../../../apis/snode_api/namespaces';
 import { stringToUint8Array } from '../../../../../utils/String';
 import { Preconditions } from '../../../preconditions';
 import {
-  AdminSigDetails,
+  type AdminSigDetails,
   GroupUpdateMessage,
-  GroupUpdateMessageParams,
+  type GroupUpdateMessageParams,
 } from '../GroupUpdateMessage';
 
 // Note: `Partial<AdminSigDetails>` because that message can also be sent as a non-admin and we always give sodium but not always the secretKey

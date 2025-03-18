@@ -1,9 +1,12 @@
 import { defaults } from 'lodash';
-import { DisappearingMessageConversationModeType } from '../session/disappearing_messages/types';
+import type { DisappearingMessageConversationModeType } from '../session/disappearing_messages/types';
 
 import { ConversationTypeEnum, CONVERSATION_PRIORITIES } from './types';
-import { ConversationInteractionType, ConversationInteractionStatus } from '../interactions/types';
-import { LastMessageStatusType } from '../state/ducks/types';
+import type {
+  ConversationInteractionType,
+  ConversationInteractionStatus,
+} from '../interactions/types';
+import type { LastMessageStatusType } from '../state/ducks/types';
 
 export function isOpenOrClosedGroup(conversationType: ConversationTypeEnum) {
   return (

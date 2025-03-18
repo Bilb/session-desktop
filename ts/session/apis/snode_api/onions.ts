@@ -2,10 +2,10 @@ import https from 'https';
 import ByteBuffer from 'bytebuffer';
 import { to_string } from 'libsodium-wrappers-sumo';
 import { cloneDeep, isEmpty, isString, omit } from 'lodash';
-import insecureNodeFetch, { RequestInit, Response } from 'node-fetch';
+import insecureNodeFetch, { type RequestInit, type Response } from 'node-fetch';
 import pRetry from 'p-retry';
 // eslint-disable-next-line import/no-unresolved
-import { AbortSignal as AbortSignalNode } from 'node-fetch/externals';
+import type { AbortSignal as AbortSignalNode } from 'node-fetch/externals';
 
 import { SnodePool } from './snodePool';
 
@@ -13,15 +13,15 @@ import { OnionPaths } from '../../onions';
 import { incrementBadPathCountOrDrop } from '../../onions/onionPath';
 import { ed25519Str, toHex } from '../../utils/String';
 
-import { Snode } from '../../../data/types';
+import type { Snode } from '../../../data/types';
 import { callUtilsWorker } from '../../../webworker/workers/browser/util_worker_interface';
 import { encodeV4Request } from '../../onions/onionv4';
 import { SnodeResponseError } from '../../utils/errors';
 import { fileServerHost } from '../file_server_api/FileServerApi';
 import { hrefPnServerProd } from '../push_notification_api/PnServer';
 import { ERROR_CODE_NO_CONNECT } from './SNodeAPI';
-import { MergedAbortSignal, WithAbortSignal, WithTimeoutMs } from './requestWith';
-import {
+import type { MergedAbortSignal, WithAbortSignal, WithTimeoutMs } from './requestWith';
+import type {
   WithAllow401s,
   WithAssociatedWith,
   WithDestinationEd25519,
@@ -386,7 +386,10 @@ async function processAnyOtherErrorOnPath(
       const nodeNotFound = ciphertext.substr(NEXT_NODE_NOT_FOUND_PREFIX.length);
       // we are checking errors on the path, a nodeNotFound on the path should trigger a rebuild
 
-      await handleNodeNotFound({ ed25519NotFound: nodeNotFound, associatedWith });
+      await handleNodeNotFound({
+        ed25519NotFound: nodeNotFound,
+        associatedWith,
+      });
     } else {
       // Otherwise we increment the whole path failure count
 
@@ -445,13 +448,13 @@ async function processOnionRequestErrorOnPath(
   destinationEd25519Key?: string,
   associatedWith?: string
 ) {
-  let cipherAsString: string = '';
+  let cipherAsString = '';
   if (isString(ciphertext)) {
     cipherAsString = ciphertext;
   } else {
     try {
       cipherAsString = to_string(new Uint8Array(ciphertext));
-    } catch (e) {
+    } catch (_e) {
       // we might actually end up often in this case here often (for all calls to a non snode, so with onionv4 we
       // will get binary data, and the to_string above won't work as it has a custom onion v4 encoding)
       cipherAsString = '';
@@ -495,7 +498,7 @@ async function decodeOnionResult(
   try {
     const jsonRes = JSON.parse(ciphertext);
     parsedCiphertext = jsonRes.result;
-  } catch (e) {
+  } catch (_e) {
     // just try to get a json object from what is inside (for PN requests), if it fails, continue ()
   }
   const ciphertextBuffer = await callUtilsWorker('fromBase64ToArrayBuffer', parsedCiphertext);

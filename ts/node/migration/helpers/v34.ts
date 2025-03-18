@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
-import * as BetterSqlite3 from '@signalapp/better-sqlite3';
-import {
+import type * as BetterSqlite3 from '@signalapp/better-sqlite3';
+import type {
   ContactInfoSet,
   ContactsConfigWrapperNode,
   DisappearingMessageConversationModeType,
@@ -10,11 +10,11 @@ import {
 } from 'libsession_util_nodejs';
 import { from_hex } from 'libsodium-wrappers-sumo';
 import { isEmpty, isEqual } from 'lodash';
-import { HexKeyPair } from '../../../receiver/keypairs';
+import type { HexKeyPair } from '../../../receiver/keypairs';
 import { fromHexToArray } from '../../../session/utils/String';
 import {
   CONFIG_DUMP_TABLE,
-  ConfigDumpRow,
+  type ConfigDumpRow,
   maybeArrayJSONtoArray,
 } from '../../../types/sqlSharedTypes';
 import { sqlNode } from '../../sql';
@@ -235,8 +235,8 @@ function getLegacyGroupInfoFromDBValues({
     name: displayNameInProfile || '',
     priority: priority || 0,
     members: wrappedMembers,
-    encPubkey: !isEmpty(encPubkeyHex) ? from_hex(encPubkeyHex) : new Uint8Array(),
-    encSeckey: !isEmpty(encSeckeyHex) ? from_hex(encSeckeyHex) : new Uint8Array(),
+    encPubkey: isEmpty(encPubkeyHex) ? new Uint8Array() : from_hex(encPubkeyHex),
+    encSeckey: isEmpty(encSeckeyHex) ? new Uint8Array() : from_hex(encSeckeyHex),
     joinedAtSeconds: Math.floor(lastJoinedTimestamp / 1000),
   };
 

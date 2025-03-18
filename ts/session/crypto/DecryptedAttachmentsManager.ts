@@ -113,6 +113,7 @@ const getDecryptedMediaUrl = async (
 
     urlToDecryptingPromise.set(
       url,
+      // biome-ignore lint/suspicious/noAsyncPromiseExecutor: We need to fix this one
       new Promise(async (resolve, reject) => {
         // window.log.debug('about to read and decrypt file :', url, path.isAbsolute(url));
         try {

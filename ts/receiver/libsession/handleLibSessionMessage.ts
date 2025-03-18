@@ -1,7 +1,7 @@
-import { EncryptionDomain, GroupPubkeyType, PubkeyType } from 'libsession_util_nodejs';
+import type { EncryptionDomain, GroupPubkeyType, PubkeyType } from 'libsession_util_nodejs';
 import { isNumber, toNumber } from 'lodash';
 import { ConvoHub } from '../../session/conversations';
-import { LibSodiumWrappers, WithLibSodiumWrappers } from '../../session/crypto';
+import type { LibSodiumWrappers, WithLibSodiumWrappers } from '../../session/crypto';
 import { PubKey } from '../../session/types';
 import { DecryptionFailed, InvalidMessage } from '../../session/utils/errors';
 import { assertUnreachable } from '../../types/sqlSharedTypes';

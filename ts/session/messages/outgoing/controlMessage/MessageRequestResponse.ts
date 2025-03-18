@@ -1,7 +1,7 @@
 import { SignalService } from '../../../../protobuf';
-import { LokiProfile } from '../../../../types/message';
+import type { LokiProfile } from '../../../../types/message';
 import { ContentMessage } from '../ContentMessage';
-import { MessageParams } from '../Message';
+import type { MessageParams } from '../Message';
 import { buildProfileForOutgoingMessage } from '../visibleMessage/VisibleMessage';
 
 // Note: a MessageRequestResponse message should not expire at all on the recipient side/nor our side.

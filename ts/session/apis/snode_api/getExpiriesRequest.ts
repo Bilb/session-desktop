@@ -1,15 +1,15 @@
 /* eslint-disable no-restricted-syntax */
-import { PubkeyType } from 'libsession_util_nodejs';
-import { isFinite, isNil, isNumber } from 'lodash';
+import type { PubkeyType } from 'libsession_util_nodejs';
+import { isNil, isNumber, isFinite as isFiniteL } from 'lodash';
 import pRetry from 'p-retry';
-import { Snode } from '../../../data/types';
+import type { Snode } from '../../../data/types';
 import { UserUtils } from '../../utils';
 import { SeedNodeAPI } from '../seed_node_api';
 import { GetExpiriesFromNodeSubRequest } from './SnodeRequestTypes';
 import { BatchRequests } from './batchRequest';
 import { SnodePool } from './snodePool';
-import { GetExpiriesResultsContent } from './types';
-import { WithMessagesHashes } from '../../types/with';
+import type { GetExpiriesResultsContent } from './types';
+import type { WithMessagesHashes } from '../../types/with';
 import { DURATION } from '../../constants';
 import { NetworkTime } from '../../../util/NetworkTime';
 
@@ -21,7 +21,7 @@ export async function processGetExpiriesRequestResponse(
   messageHashes: Array<string>
 ): Promise<GetExpiriesRequestResponseResults> {
   if (isNil(expiries)) {
-    throw Error(
+    throw new Error(
       `[processGetExpiriesRequestResponse] Expiries are nul/undefined! ${JSON.stringify(
         messageHashes
       )}`
@@ -34,7 +34,7 @@ export async function processGetExpiriesRequestResponse(
   for (const messageHash of messageHashes) {
     const expiryMs = expiries[messageHash];
 
-    if (expiries[messageHash] && isNumber(expiryMs) && isFinite(expiryMs)) {
+    if (expiries[messageHash] && isNumber(expiryMs) && isFiniteL(expiryMs)) {
       results[messageHash] = expiryMs;
     } // not adding the Date.now() fallback here as it is done in the caller of this function
   }
@@ -63,7 +63,7 @@ async function getExpiriesFromNodesNoRetries(
     });
 
     if (!result || result.length !== 1) {
-      throw Error(
+      throw new Error(
         `There was an issue with the results. sessionRpc ${targetNode.ip}:${
           targetNode.port
         } expireRequest ${JSON.stringify(expireRequest)}`
@@ -75,7 +75,7 @@ async function getExpiriesFromNodesNoRetries(
     const firstResult = result[0];
 
     if (firstResult.code !== 200) {
-      throw Error(`getExpiriesFromNodesNoRetries result is not 200 but ${firstResult.code}`);
+      throw new Error(`getExpiriesFromNodesNoRetries result is not 200 but ${firstResult.code}`);
     }
 
     // expirationResults is a record of {messageHash: currentExpiry}
@@ -98,7 +98,7 @@ async function getExpiriesFromNodesNoRetries(
   } catch (err) {
     // NOTE batch requests have their own retry logic which includes abort errors that will break our retry logic so we need to catch them and throw regular errors
     if (err instanceof pRetry.AbortError) {
-      throw Error(err.message);
+      throw new Error(err.message);
     }
 
     throw err;

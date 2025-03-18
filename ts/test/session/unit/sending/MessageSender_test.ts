@@ -14,12 +14,12 @@ import { ConvoHub } from '../../../../session/conversations/ConversationControll
 import { OnionSending } from '../../../../session/onions/onionSend';
 import { OnionV4 } from '../../../../session/onions/onionv4';
 import { MessageSender } from '../../../../session/sending';
-import { OutgoingRawMessage, PubKey } from '../../../../session/types';
+import type { OutgoingRawMessage, PubKey } from '../../../../session/types';
 import { MessageUtils, UserUtils } from '../../../../session/utils';
 import { fromBase64ToArrayBuffer } from '../../../../session/utils/String';
 import { TestUtils } from '../../../test-utils';
 import {
-  TypedStub,
+  type TypedStub,
   expectAsyncToThrow,
   stubCreateObjectUrl,
   stubData,
@@ -384,7 +384,9 @@ describe('MessageSender', () => {
       });
       try {
         await MessageSender.sendToOpenGroupV2(message, roomInfos, false, []);
-      } catch (e) {}
+      } catch (_e) {
+        // empty on purpose
+      }
       // we made the fourth call success, but we should not get there. We should stop at 3 the retries (1+2)
       expect(decodeV4responseStub.calledThrice);
     });

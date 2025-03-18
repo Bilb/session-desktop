@@ -1,11 +1,11 @@
 import classNames from 'classnames';
 import { isNil } from 'lodash';
-import { MouseEvent, ReactNode, useCallback } from 'react';
+import { type MouseEvent, type ReactNode, useCallback } from 'react';
 import { contextMenu } from 'react-contexify';
 import { createPortal } from 'react-dom';
 import { useDispatch } from 'react-redux';
 
-import { CSSProperties } from 'styled-components';
+import type { CSSProperties } from 'styled-components';
 import { Avatar, AvatarSize } from '../../avatar/Avatar';
 
 import { openConversationWithMessages } from '../../../state/ducks/conversations';
@@ -122,12 +122,12 @@ export const ConversationListItem = (props: Props) => {
           <AvatarItem />
           <div className="module-conversation-list-item__content">
             <ConversationListItemHeaderItem />
-            {!isSearch ? (
+            {isSearch ? null : (
               <>
                 <SpacerXS />
                 <MessageItem />
               </>
-            ) : null}
+            )}
           </div>
         </div>
         <Portal>

@@ -1,12 +1,12 @@
-import { isEmpty, isFinite } from 'lodash';
+import { isEmpty, isFinite as isFiniteL } from 'lodash';
 import { SignalService } from '../../../../../../protobuf';
 import { SnodeNamespaces } from '../../../../../apis/snode_api/namespaces';
-import { LibSodiumWrappers } from '../../../../../crypto';
+import type { LibSodiumWrappers } from '../../../../../crypto';
 import { stringToUint8Array } from '../../../../../utils/String';
 import {
-  AdminSigDetails,
+  type AdminSigDetails,
   GroupUpdateMessage,
-  GroupUpdateMessageParams,
+  type GroupUpdateMessageParams,
 } from '../GroupUpdateMessage';
 
 type NameChangeParams = GroupUpdateMessageParams &
@@ -57,7 +57,7 @@ export class GroupUpdateInfoChangeMessage extends GroupUpdateMessage {
         // nothing to do for avatar
         break;
       case types.DISAPPEARING_MESSAGES: {
-        if (!isFinite(params.updatedExpirationSeconds) || params.updatedExpirationSeconds < 0) {
+        if (!isFiniteL(params.updatedExpirationSeconds) || params.updatedExpirationSeconds < 0) {
           throw new Error('Invalid disappearing message timer. Must be finite and >=0');
         }
         this.updatedExpirationSeconds = params.updatedExpirationSeconds;
@@ -90,7 +90,9 @@ export class GroupUpdateInfoChangeMessage extends GroupUpdateMessage {
         break;
     }
 
-    return new SignalService.DataMessage({ groupUpdateMessage: { infoChangeMessage } });
+    return new SignalService.DataMessage({
+      groupUpdateMessage: { infoChangeMessage },
+    });
   }
 
   public isForGroupSwarm(): boolean {

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
+import Draggable, { type DraggableData, type DraggableEvent } from 'react-draggable';
 import { useSelector } from 'react-redux';
 
 import styled from 'styled-components';

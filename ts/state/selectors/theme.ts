@@ -1,8 +1,8 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { useSelector } from 'react-redux';
-import { ThemeStateType } from '../../themes/constants/colors';
+import type { ThemeStateType } from '../../themes/constants/colors';
 import { checkDarkTheme, checkLightTheme } from '../../util/theme';
-import { StateType } from '../reducer';
+import type { StateType } from '../reducer';
 
 export const getTheme = (state: StateType): ThemeStateType => state.theme;
 

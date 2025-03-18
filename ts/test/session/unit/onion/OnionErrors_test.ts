@@ -3,13 +3,14 @@ import AbortController from 'abort-controller';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { describe } from 'mocha';
-import Sinon, * as sinon from 'sinon';
+import Sinon from 'sinon';
+import type * as sinon from 'sinon';
 
 import * as SnodeAPI from '../../../../session/apis/snode_api';
 import { TestUtils } from '../../../test-utils';
 
 import { SNODE_POOL_ITEM_ID } from '../../../../data/settings-key';
-import { Snode } from '../../../../data/types';
+import type { Snode } from '../../../../data/types';
 import { SeedNodeAPI } from '../../../../session/apis/seed_node_api';
 import { ServiceNodesList } from '../../../../session/apis/snode_api/getServiceNodesList';
 import {

@@ -1,14 +1,14 @@
 /* eslint-disable no-case-declarations */
-import { AbortSignal } from 'abort-controller';
+import type { AbortSignal } from 'abort-controller';
 import { flatten, isEmpty, isNumber, isObject } from 'lodash';
 import { OpenGroupData } from '../../../../data/opengroups';
 import { assertUnreachable, roomHasBlindEnabled } from '../../../../types/sqlSharedTypes';
 import { Reactions } from '../../../../util/reactions';
-import { OnionSending, OnionV4JSONSnodeResponse } from '../../../onions/onionSend';
-import { MethodBatchType } from '../../snode_api/SnodeRequestTypes';
+import { OnionSending, type OnionV4JSONSnodeResponse } from '../../../onions/onionSend';
+import type { MethodBatchType } from '../../snode_api/SnodeRequestTypes';
 import {
   OpenGroupPollingUtils,
-  OpenGroupRequestHeaders,
+  type OpenGroupRequestHeaders,
 } from '../opengroupV2/OpenGroupPollingUtils';
 import { addJsonContentTypeToHeaders } from './sogsV3SendMessage';
 
@@ -48,7 +48,11 @@ type BatchRequest = {
 
 export type BatchSogsResponse = {
   status_code: number;
-  body?: Array<{ body: object; code: number; headers?: Record<string, string> }>;
+  body?: Array<{
+    body: object;
+    code: number;
+    headers?: Record<string, string>;
+  }>;
 };
 
 export const sogsBatchSend = async (
@@ -294,7 +298,7 @@ const makeBatchRequestPayload = (
         path: `/room/${options.deleteMessage.roomId}/message/${options.deleteMessage.messageId}`,
       };
 
-    case 'addRemoveModerators':
+    case 'addRemoveModerators': {
       const isAddMod = Boolean(options.addRemoveModerators.type === 'add_mods');
       return options.addRemoveModerators.sessionIds.map(sessionId => ({
         method: 'POST',
@@ -311,7 +315,8 @@ const makeBatchRequestPayload = (
           moderator: isAddMod,
         },
       }));
-    case 'banUnbanUser':
+    }
+    case 'banUnbanUser': {
       const isBan = Boolean(options.banUnbanUser.type === 'ban');
       return {
         method: 'POST',
@@ -324,6 +329,7 @@ const makeBatchRequestPayload = (
           // timeout: null, // for now we do not support the timeout argument
         },
       };
+    }
     case 'deleteAllPosts':
       return {
         method: 'DELETE',

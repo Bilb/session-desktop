@@ -1,4 +1,4 @@
-import { bindActionCreators, Dispatch } from '@reduxjs/toolkit';
+import { bindActionCreators, type Dispatch } from '@reduxjs/toolkit';
 
 import { actions as conversations } from './ducks/conversations';
 import { groupInfoActions } from './ducks/metaGroups';

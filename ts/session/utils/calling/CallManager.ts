@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { MessageUtils, ToastUtils, UserUtils } from '..';
 import { SignalService } from '../../../protobuf';
 import {
-  CallStatusEnum,
+  type CallStatusEnum,
   answerCall,
   callConnected,
   callReconnecting,
@@ -28,12 +28,12 @@ import { PnServer } from '../../apis/push_notification_api';
 import { SnodeNamespaces } from '../../apis/snode_api/namespaces';
 import { DURATION } from '../../constants';
 import { DisappearingMessages } from '../../disappearing_messages';
-import { ReadyToDisappearMsgUpdate } from '../../disappearing_messages/types';
+import type { ReadyToDisappearMsgUpdate } from '../../disappearing_messages/types';
 import { MessageQueue, MessageSender } from '../../sending';
 import { getIsRinging } from '../RingingManager';
 import { getBlackSilenceMediaStream } from './Silence';
 import { ed25519Str } from '../String';
-import { WithMessageHash } from '../../types/with';
+import type { WithMessageHash } from '../../types/with';
 import { NetworkTime } from '../../../util/NetworkTime';
 import { sleepFor } from '../Promise';
 
@@ -41,7 +41,9 @@ export type InputItem = { deviceId: string; label: string };
 
 export const callTimeoutMs = 60000;
 
-export type WithOptExpireUpdate = { expireDetails: ReadyToDisappearMsgUpdate | undefined };
+export type WithOptExpireUpdate = {
+  expireDetails: ReadyToDisappearMsgUpdate | undefined;
+};
 
 /**
  * This uuid is set only once we accepted a call or started one.
@@ -67,7 +69,10 @@ export type CallManagerOptionsType = {
 };
 
 export type CallManagerListener = ((options: CallManagerOptionsType) => void) | null;
-const videoEventsListeners: Array<{ id: string; listener: CallManagerListener }> = [];
+const videoEventsListeners: Array<{
+  id: string;
+  listener: CallManagerListener;
+}> = [];
 
 function callVideoListeners() {
   if (videoEventsListeners.length) {
@@ -133,7 +138,7 @@ export const DEVICE_DISABLED_DEVICE_ID = 'off';
 let makingOffer = false;
 let ignoreOffer = false;
 let isSettingRemoteAnswerPending = false;
-let lastOutgoingOfferTimestamp = -Infinity;
+let lastOutgoingOfferTimestamp = Number.NEGATIVE_INFINITY;
 
 /**
  * This array holds all of the ice servers Session can contact.
@@ -423,7 +428,7 @@ async function createOfferAndSendIt(recipient: string, msgIdentifier: string | n
       let overridenSdps = lines.join('\n');
       overridenSdps = overridenSdps.replace(
         // eslint-disable-next-line prefer-regex-literals
-        new RegExp('.+urn:ietf:params:rtp-hdrext:ssrc-audio-level.*\\r?\\n'),
+        /.+urn:ietf:params:rtp-hdrext:ssrc-audio-level.*\r?\n/,
         ''
       );
 
@@ -735,7 +740,7 @@ function closeVideoCall() {
   makingOffer = false;
   ignoreOffer = false;
   isSettingRemoteAnswerPending = false;
-  lastOutgoingOfferTimestamp = -Infinity;
+  lastOutgoingOfferTimestamp = Number.NEGATIVE_INFINITY;
   callVideoListeners();
 }
 
@@ -766,7 +771,7 @@ function onDataChannelReceivedMessage(ev: MessageEvent<string>) {
     if (parsed.video !== undefined) {
       remoteVideoStreamIsMuted = !parsed.video;
     }
-  } catch (e) {
+  } catch (_e) {
     window.log.warn('onDataChannelReceivedMessage Could not parse data in event', ev);
   }
   callVideoListeners();
@@ -782,7 +787,10 @@ function createOrGetPeerConnection(withPubkey: string) {
   }
   remoteStream = new MediaStream();
   const sampleOfICeServers = _.sampleSize(iceServersFullArray, 2);
-  peerConnection = new RTCPeerConnection({ ...configuration, iceServers: sampleOfICeServers });
+  peerConnection = new RTCPeerConnection({
+    ...configuration,
+    iceServers: sampleOfICeServers,
+  });
   dataChannel = peerConnection.createDataChannel('session-datachannel', {
     ordered: true,
     negotiated: true,
@@ -1483,7 +1491,11 @@ async function addIceCandidateToExistingPeerConnection(callMessage: SignalServic
 
       const sdpMLineIndex = callMessage.sdpMLineIndexes[index];
       const sdpMid = callMessage.sdpMids[index];
-      const candicate = new RTCIceCandidate({ sdpMid, sdpMLineIndex, candidate: sdp });
+      const candicate = new RTCIceCandidate({
+        sdpMid,
+        sdpMLineIndex,
+        candidate: sdp,
+      });
 
       try {
         // eslint-disable-next-line no-await-in-loop

@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { clearSearch } from '../../state/ducks/search';
 import {
-  LeftOverlayMode,
+  type LeftOverlayMode,
   SectionType,
   setLeftOverlayMode,
   showLeftPaneSection,

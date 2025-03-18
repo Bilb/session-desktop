@@ -3,14 +3,14 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useIsDetailMessageView } from '../../../../contexts/isDetailViewContext';
 import { useMessageReactsPropsById } from '../../../../hooks/useParamSelector';
-import { MessageRenderingProps } from '../../../../models/messageType';
+import type { MessageRenderingProps } from '../../../../models/messageType';
 import { REACT_LIMIT } from '../../../../session/constants';
 import { useSelectedIsGroupOrCommunity } from '../../../../state/selectors/selectedConversation';
-import { SortedReactionList } from '../../../../types/Reaction';
+import type { SortedReactionList } from '../../../../types/Reaction';
 import { nativeEmojiData } from '../../../../util/emoji';
 import { Flex } from '../../../basic/Flex';
 import { SessionIcon } from '../../../icon';
-import { Reaction, ReactionProps } from '../reactions/Reaction';
+import { Reaction, type ReactionProps } from '../reactions/Reaction';
 import { StyledPopupContainer } from '../reactions/ReactionPopup';
 import { Localizer } from '../../../basic/Localizer';
 
@@ -206,10 +206,10 @@ export const MessageReactions = (props: Props) => {
     inGroup,
     handlePopupX: setPopupX,
     handlePopupY: setPopupY,
-    onClick: !isDetailView ? onClick : undefined,
+    onClick: isDetailView ? undefined : onClick,
     popupReaction,
     onSelected,
-    handlePopupReaction: !isDetailView ? setPopupReaction : undefined,
+    handlePopupReaction: isDetailView ? undefined : setPopupReaction,
     handlePopupClick: onPopupClick,
   };
 

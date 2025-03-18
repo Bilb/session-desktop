@@ -1,4 +1,4 @@
-import { MouseEvent, ReactNode } from 'react';
+import type { MouseEvent, ReactNode } from 'react';
 import { contextMenu } from 'react-contexify';
 import { createPortal } from 'react-dom';
 import { useSelector } from 'react-redux';
@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { getUnreadConversationRequests } from '../../state/selectors/conversations';
 import { useIsSearching } from '../../state/selectors/search';
 import { getHideMessageRequestBanner } from '../../state/selectors/userConfig';
-import { SessionIcon, SessionIconSize, SessionIconType } from '../icon';
+import { SessionIcon, type SessionIconSize, type SessionIconType } from '../icon';
 import { MessageRequestBannerContextMenu } from '../menu/MessageRequestBannerContextMenu';
 import { Localizer } from '../basic/Localizer';
 

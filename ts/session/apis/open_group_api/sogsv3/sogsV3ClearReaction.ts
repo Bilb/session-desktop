@@ -1,21 +1,21 @@
 import AbortController from 'abort-controller';
-import { OpenGroupReactionResponse } from '../../../../types/Reaction';
+import type { OpenGroupReactionResponse } from '../../../../types/Reaction';
 import { Reactions } from '../../../../util/reactions';
 import { getOpenGroupV2ConversationId } from '../utils/OpenGroupUtils';
 import {
   batchFirstSubIsSuccess,
   batchGlobalIsSuccess,
-  OpenGroupBatchRow,
+  type OpenGroupBatchRow,
   sogsBatchSend,
 } from './sogsV3BatchPoll';
 import {
   addToMutationCache,
   ChangeType,
-  SogsV3Mutation,
+  type SogsV3Mutation,
   updateMutationCache,
 } from './sogsV3MutationCache';
 import { hasReactionSupport } from './sogsV3SendReaction';
-import { OpenGroupRequestCommonType } from '../../../../data/types';
+import type { OpenGroupRequestCommonType } from '../../../../data/types';
 import { DURATION } from '../../../constants';
 
 /**
@@ -90,7 +90,7 @@ export const clearSogsReactionByServerId = async (
       return true;
     }
     return false;
-  } catch (e) {
+  } catch (_e) {
     window?.log?.error("clearSogsReactionByServerId Can't decode JSON body");
   }
   return false;

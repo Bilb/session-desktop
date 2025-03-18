@@ -1,11 +1,11 @@
 import { createSelector } from '@reduxjs/toolkit';
 
-import { PubkeyType } from 'libsession_util_nodejs';
+import type { PubkeyType } from 'libsession_util_nodejs';
 import { useSelector } from 'react-redux';
-import { LocalizerType } from '../../types/Util';
+import type { LocalizerType } from '../../types/Util';
 
-import { UserStateType } from '../ducks/user';
-import { StateType } from '../reducer';
+import type { UserStateType } from '../ducks/user';
+import type { StateType } from '../reducer';
 
 export const getUser = (state: StateType): UserStateType => state.user;
 

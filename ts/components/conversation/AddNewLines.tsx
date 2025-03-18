@@ -1,4 +1,4 @@
-import { RenderTextCallbackType } from '../../types/Util';
+import type { RenderTextCallbackType } from '../../types/Util';
 
 type Props = {
   text: string;

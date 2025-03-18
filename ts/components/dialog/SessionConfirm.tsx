@@ -7,7 +7,7 @@ import { ConversationInteractionStatus } from '../../interactions/types';
 import { updateConfirmModal } from '../../state/ducks/modalDialog';
 import { SessionWrapperModal } from '../SessionWrapperModal';
 import { SessionButton, SessionButtonColor, SessionButtonType } from '../basic/SessionButton';
-import { SessionRadioGroup, SessionRadioItems } from '../basic/SessionRadioGroup';
+import { SessionRadioGroup, type SessionRadioItems } from '../basic/SessionRadioGroup';
 import { SpacerLG } from '../basic/Text';
 import { SessionSpinner } from '../loading';
 import type { LocalizerComponentPropsObject } from '../../localization/localeTools';
@@ -160,7 +160,7 @@ export const SessionConfirm = (props: SessionConfirmDialogProps) => {
         {!hideCancel && (
           <SessionButton
             text={cancelText}
-            buttonColor={!okTheme ? closeTheme : undefined}
+            buttonColor={okTheme ? undefined : closeTheme}
             buttonType={SessionButtonType.Simple}
             onClick={onClickCancelHandler}
             dataTestId="session-confirm-cancel-button"

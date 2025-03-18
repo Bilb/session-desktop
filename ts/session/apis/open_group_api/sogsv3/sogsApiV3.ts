@@ -1,17 +1,17 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-await-in-loop */
 import { base64_variants, from_base64 } from 'libsodium-wrappers-sumo';
-import { compact, isArray, isEmpty, isFinite, isNumber, isObject, pick } from 'lodash';
+import { compact, isArray, isEmpty, isNumber, isObject, pick, isFinite as isFiniteL } from 'lodash';
 import { v4 } from 'uuid';
 
 import { OpenGroupData } from '../../../../data/opengroups';
-import { ConversationModel } from '../../../../models/conversation';
+import type { ConversationModel } from '../../../../models/conversation';
 import { handleOpenGroupV4Message } from '../../../../receiver/opengroup';
 import { callUtilsWorker } from '../../../../webworker/workers/browser/util_worker_interface';
 import { ConvoHub } from '../../../conversations';
 import { PubKey } from '../../../types';
 import {
-  OpenGroupMessageV4,
+  type OpenGroupMessageV4,
   getRoomAndUpdateLastFetchTimestamp,
 } from '../opengroupV2/OpenGroupServerPoller';
 import { filterDuplicatesFromDbAndIncomingV4 } from '../opengroupV2/SogsFilterDuplicate';
@@ -25,14 +25,18 @@ import {
 } from './knownBlindedkeys';
 import { SogsBlinding } from './sogsBlinding';
 import { handleCapabilities } from './sogsCapabilities';
-import { BatchSogsResponse, OpenGroupBatchRow, SubRequestMessagesType } from './sogsV3BatchPoll';
+import type {
+  BatchSogsResponse,
+  OpenGroupBatchRow,
+  SubRequestMessagesType,
+} from './sogsV3BatchPoll';
 
 import { Data } from '../../../../data/data';
 import { createSwarmMessageSentFromUs } from '../../../../models/messageFactory';
 import { SignalService } from '../../../../protobuf';
 import { innerHandleSwarmContentMessage } from '../../../../receiver/contentMessage';
 import { handleOutboxMessageModel } from '../../../../receiver/dataMessage';
-import { EnvelopePlus } from '../../../../receiver/types';
+import type { EnvelopePlus } from '../../../../receiver/types';
 import { assertUnreachable } from '../../../../types/sqlSharedTypes';
 import { getSodiumRenderer } from '../../../crypto';
 import { removeMessagePadding } from '../../../crypto/BufferPadding';
@@ -40,7 +44,7 @@ import { DisappearingMessages } from '../../../disappearing_messages';
 import { UserUtils } from '../../../utils';
 import { sogsRollingDeletions } from './sogsRollingDeletions';
 import { processMessagesUsingCache } from './sogsV3MutationCache';
-import { OpenGroupRequestCommonType } from '../../../../data/types';
+import type { OpenGroupRequestCommonType } from '../../../../data/types';
 import { ConversationTypeEnum } from '../../../../models/types';
 import { shouldProcessContentMessage } from '../../../../receiver/common';
 
@@ -283,7 +287,7 @@ const handleMessagesResponseV4 = async (
         }
         messagesWithResolvedBlindedIdsIfFound.push(newMessage);
       } else {
-        throw Error('session_id is missing so we cannot resolve the blinded id');
+        throw new Error('session_id is missing so we cannot resolve the blinded id');
       }
     }
 
@@ -310,7 +314,7 @@ const handleMessagesResponseV4 = async (
     }
 
     // we need to update the timestamp even if we don't have a new MaxMessageServerId
-    if (isNumber(maxNewMessageSeqNo) && isFinite(maxNewMessageSeqNo)) {
+    if (isNumber(maxNewMessageSeqNo) && isFiniteL(maxNewMessageSeqNo)) {
       roomInfosRefreshed.maxMessageFetchedSeqNo = maxNewMessageSeqNo;
     }
     roomInfosRefreshed.lastFetchTimestamp = Date.now();
@@ -475,7 +479,7 @@ async function handleInboxOutboxMessages(
             serverPublicKey: serverPubkey,
           });
           await findCachedBlindedMatchOrLookItUp(sender, serverPubkey, sodium);
-        } catch (e) {
+        } catch (_e) {
           window.log.warn('tryMatchBlindWithStandardKey could not verify');
         }
 

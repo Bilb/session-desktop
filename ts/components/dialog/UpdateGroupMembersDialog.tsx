@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import useKey from 'react-use/lib/useKey';
 import styled from 'styled-components';
 
-import { PubkeyType } from 'libsession_util_nodejs';
+import type { PubkeyType } from 'libsession_util_nodejs';
 import { ToastUtils, UserUtils } from '../../session/utils';
 
 import { updateGroupMembersModal } from '../../state/ducks/modalDialog';

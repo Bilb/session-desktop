@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { SessionDataTestId } from 'react';
+import type { SessionDataTestId } from 'react';
 import { Localizer } from './Localizer';
 import type { LocalizerComponentPropsObject } from '../../localization/localeTools';
 

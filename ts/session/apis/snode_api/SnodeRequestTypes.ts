@@ -1,8 +1,8 @@
 import ByteBuffer from 'bytebuffer';
-import { GroupPubkeyType, PubkeyType, WithGroupPubkey } from 'libsession_util_nodejs';
+import type { GroupPubkeyType, PubkeyType, WithGroupPubkey } from 'libsession_util_nodejs';
 import { from_hex } from 'libsodium-wrappers-sumo';
 import { isEmpty, isString } from 'lodash';
-import { AwaitedReturn, assertUnreachable } from '../../../types/sqlSharedTypes';
+import { type AwaitedReturn, assertUnreachable } from '../../../types/sqlSharedTypes';
 import { concatUInt8Array } from '../../crypto';
 import { PubKey } from '../../types';
 import { StringUtils, UserUtils } from '../../utils';
@@ -10,14 +10,17 @@ import { ed25519Str } from '../../utils/String';
 import {
   SnodeNamespace,
   SnodeNamespaces,
-  SnodeNamespacesGroup,
-  SnodeNamespacesGroupConfig,
-  SnodeNamespacesUser,
-  SnodeNamespacesUserConfig,
+  type SnodeNamespacesGroup,
+  type SnodeNamespacesGroupConfig,
+  type SnodeNamespacesUser,
+  type SnodeNamespacesUserConfig,
 } from './namespaces';
-import { GroupDetailsNeededForSignature, SnodeGroupSignature } from './signature/groupSignature';
-import { SnodeSignature } from './signature/snodeSignatures';
 import {
+  type GroupDetailsNeededForSignature,
+  SnodeGroupSignature,
+} from './signature/groupSignature';
+import { SnodeSignature } from './signature/snodeSignatures';
+import type {
   WithMessagesHashes,
   ShortenOrExtend,
   WithShortenOrExtend,

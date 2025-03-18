@@ -19,7 +19,11 @@ import { displayPasswordModal } from '../SessionSettings';
 import { ConversationTypeEnum } from '../../../models/types';
 
 async function toggleLinkPreviews(isToggleOn: boolean, forceUpdate: () => void) {
-  if (!isToggleOn) {
+  if (isToggleOn) {
+    await window.setSettingValue(SettingsKey.settingsLinkPreview, false);
+    await Storage.put(SettingsKey.hasLinkPreviewPopupBeenDisplayed, false);
+    forceUpdate();
+  } else {
     window.inboxStore?.dispatch(
       updateConfirmModal({
         title: window.i18n('linkPreviewsSend'),
@@ -35,10 +39,6 @@ async function toggleLinkPreviews(isToggleOn: boolean, forceUpdate: () => void) 
         },
       })
     );
-  } else {
-    await window.setSettingValue(SettingsKey.settingsLinkPreview, false);
-    await Storage.put(SettingsKey.hasLinkPreviewPopupBeenDisplayed, false);
-    forceUpdate();
   }
 }
 
@@ -105,18 +105,7 @@ export const SettingsCategoryPrivacy = (props: {
         active={areBlindedRequestsEnabled}
       />
 
-      {!props.hasPassword ? (
-        <SessionSettingButtonItem
-          title={window.i18n('lockApp')}
-          description={window.i18n('passwordDescription')}
-          onClick={() => {
-            displayPasswordModal('set', props.onPasswordUpdated);
-            forceUpdate();
-          }}
-          buttonText={window.i18n('passwordSet')}
-          dataTestId={'set-password-button'}
-        />
-      ) : (
+      {props.hasPassword ? (
         <>
           {/* We have a password, let's show the 'change' and 'remove' password buttons */}
           <SessionSettingButtonItem
@@ -141,6 +130,17 @@ export const SettingsCategoryPrivacy = (props: {
             dataTestId="remove-password-settings-button"
           />
         </>
+      ) : (
+        <SessionSettingButtonItem
+          title={window.i18n('lockApp')}
+          description={window.i18n('passwordDescription')}
+          onClick={() => {
+            displayPasswordModal('set', props.onPasswordUpdated);
+            forceUpdate();
+          }}
+          buttonText={window.i18n('passwordSet')}
+          dataTestId={'set-password-button'}
+        />
       )}
     </>
   );

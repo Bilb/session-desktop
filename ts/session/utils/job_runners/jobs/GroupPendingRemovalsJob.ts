@@ -1,5 +1,5 @@
 /* eslint-disable no-await-in-loop */
-import { WithGroupPubkey } from 'libsession_util_nodejs';
+import type { WithGroupPubkey } from 'libsession_util_nodejs';
 import { compact, isEmpty, isNumber } from 'lodash';
 import { v4 } from 'uuid';
 import AbortController from 'abort-controller';
@@ -12,25 +12,25 @@ import {
   UserGroupsWrapperActions,
 } from '../../../../webworker/workers/browser/libsession_worker_interface';
 import {
-  StoreGroupMessageSubRequest,
+  type StoreGroupMessageSubRequest,
   StoreGroupRevokedRetrievableSubRequest,
 } from '../../../apis/snode_api/SnodeRequestTypes';
 import { StoreGroupRequestFactory } from '../../../apis/snode_api/factories/StoreGroupRequestFactory';
-import { RevokeChanges, SnodeAPIRevoke } from '../../../apis/snode_api/revokeSubaccount';
+import { type RevokeChanges, SnodeAPIRevoke } from '../../../apis/snode_api/revokeSubaccount';
 import { concatUInt8Array, getSodiumRenderer } from '../../../crypto';
 import { GroupUpdateDeleteMemberContentMessage } from '../../../messages/outgoing/controlMessage/group_v2/to_group/GroupUpdateDeleteMemberContentMessage';
 import { MessageSender } from '../../../sending';
 import { fromHexToArray } from '../../String';
 import { runners } from '../JobRunner';
 import {
-  AddJobCheckReturn,
-  GroupPendingRemovalsPersistedData,
+  type AddJobCheckReturn,
+  type GroupPendingRemovalsPersistedData,
   PersistedJob,
   RunJobResult,
 } from '../PersistedJob';
 import { GroupSync } from './GroupSyncJob';
 import { NetworkTime } from '../../../../util/NetworkTime';
-import {
+import type {
   WithAddWithHistoryMembers,
   WithAddWithoutHistoryMembers,
   WithRemoveMembers,

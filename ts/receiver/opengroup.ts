@@ -4,7 +4,7 @@ import {
   createPublicMessageSentFromUs,
 } from '../models/messageFactory';
 import { SignalService } from '../protobuf';
-import { OpenGroupMessageV4 } from '../session/apis/open_group_api/opengroupV2/OpenGroupServerPoller';
+import type { OpenGroupMessageV4 } from '../session/apis/open_group_api/opengroupV2/OpenGroupServerPoller';
 import { isUsAnySogsFromCache } from '../session/apis/open_group_api/sogsv3/knownBlindedkeys';
 import { getOpenGroupV2ConversationId } from '../session/apis/open_group_api/utils/OpenGroupUtils';
 import { ConvoHub } from '../session/conversations';
@@ -13,7 +13,7 @@ import { perfEnd, perfStart } from '../session/utils/Performance';
 import { fromBase64ToArray } from '../session/utils/String';
 import { cleanIncomingDataMessage, messageHasVisibleContent } from './dataMessage';
 import { handleMessageJob, toRegularMessage } from './queuedJob';
-import { OpenGroupRequestCommonType } from '../data/types';
+import type { OpenGroupRequestCommonType } from '../data/types';
 import { shouldProcessContentMessage } from './common';
 
 export const handleOpenGroupV4Message = async (
@@ -24,7 +24,7 @@ export const handleOpenGroupV4Message = async (
   if (data && posted && session_id) {
     await handleOpenGroupMessage(roomInfos, data, posted, session_id, id);
   } else {
-    throw Error('Missing data passed to handleOpenGroupV4Message.');
+    throw new Error('Missing data passed to handleOpenGroupV4Message.');
   }
 };
 
@@ -93,7 +93,11 @@ const handleOpenGroupMessage = async (
     const isMe = isUsAnySogsFromCache(sender);
 
     // this timestamp has already been forced to ms by the handleMessagesResponseV4() function
-    const commonAttributes = { serverTimestamp: sentTimestamp, serverId, conversationId };
+    const commonAttributes = {
+      serverTimestamp: sentTimestamp,
+      serverId,
+      conversationId,
+    };
     const attributesForNotUs = { ...commonAttributes, sender };
     // those lines just create an empty message only in-memory with some basic stuff set.
     // the whole decoding of data is happening in handleMessageJob()

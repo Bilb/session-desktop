@@ -7,25 +7,25 @@ import { PubKey } from '../session/types';
 import { toHex } from '../session/utils/String';
 import { BlockedNumberController } from '../util';
 import { decryptWithSessionProtocol } from './contentMessage';
-import { EnvelopePlus } from './types';
+import type { EnvelopePlus } from './types';
 
-import { ConversationModel } from '../models/conversation';
+import type { ConversationModel } from '../models/conversation';
 
 import { getSwarmPollingInstance } from '../session/apis/snode_api';
 import { SnodeNamespaces } from '../session/apis/snode_api/namespaces';
-import { DisappearingMessageUpdate } from '../session/disappearing_messages/types';
+import type { DisappearingMessageUpdate } from '../session/disappearing_messages/types';
 import { ClosedGroupEncryptionPairReplyMessage } from '../session/messages/outgoing/controlMessage/group/ClosedGroupEncryptionPairReplyMessage';
 import { UserUtils } from '../session/utils';
 import { perfEnd, perfStart } from '../session/utils/Performance';
 import { ReleasedFeatures } from '../util/releaseFeature';
 import { Storage } from '../util/storage';
 // eslint-disable-next-line import/no-unresolved, import/extensions
-import { ConfigWrapperUser } from '../webworker/workers/browser/libsession_worker_functions';
+import type { ConfigWrapperUser } from '../webworker/workers/browser/libsession_worker_functions';
 
-import { ClosedGroup, GroupDiff, GroupInfo } from '../session/group/closed-group';
+import { ClosedGroup, type GroupDiff, type GroupInfo } from '../session/group/closed-group';
 import { IncomingMessageCache } from './cache';
 import { getSettingsKeyFromLibsessionWrapper } from './configMessage';
-import { ECKeyPair, HexKeyPair } from './keypairs';
+import { ECKeyPair, type HexKeyPair } from './keypairs';
 import { queueAllCachedFromSource } from './receiver';
 import { ConversationTypeEnum } from '../models/types';
 import { NetworkTime } from '../util/NetworkTime';
@@ -487,7 +487,7 @@ async function handleClosedGroupEncryptionKeyPair(
     if (!proto || proto.privateKey.length === 0 || proto.publicKey.length === 0) {
       throw new Error();
     }
-  } catch (e) {
+  } catch (_e) {
     window?.log?.warn("Couldn't parse closed group encryption key pair.");
     await IncomingMessageCache.removeFromCache(envelope);
     return;
@@ -496,7 +496,7 @@ async function handleClosedGroupEncryptionKeyPair(
   let keyPair: ECKeyPair;
   try {
     keyPair = new ECKeyPair(proto.publicKey, proto.privateKey);
-  } catch (e) {
+  } catch (_e) {
     window?.log?.warn("Couldn't parse closed group encryption key pair.");
     await IncomingMessageCache.removeFromCache(envelope);
     return;

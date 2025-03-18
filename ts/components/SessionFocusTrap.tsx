@@ -1,5 +1,5 @@
 import FocusTrap from 'focus-trap-react';
-import { ReactNode, useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import useMount from 'react-use/lib/useMount';
 
 /**

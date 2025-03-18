@@ -97,7 +97,7 @@ export const DebugActions = () => {
           }}
         >
           <SessionSpinner loading={loadingLatestRelease} color={'var(--text-primary-color)'} />
-          {!loadingLatestRelease ? 'Check latest release' : null}
+          {loadingLatestRelease ? null : 'Check latest release'}
         </SessionButton>
       </Flex>
     </>

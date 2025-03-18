@@ -3,8 +3,8 @@ import { map, toNumber } from 'lodash';
 import { Data } from '../data/data';
 import { PubKey } from '../session/types';
 import { StringUtils } from '../session/utils';
-import { UnprocessedParameter } from '../types/sqlSharedTypes';
-import { EnvelopePlus } from './types';
+import type { UnprocessedParameter } from '../types/sqlSharedTypes';
+import type { EnvelopePlus } from './types';
 
 async function removeFromCache(envelope: Pick<EnvelopePlus, 'id'>) {
   return Data.removeUnprocessed(envelope.id);

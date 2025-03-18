@@ -1,4 +1,4 @@
-import { GroupPubkeyType, PubkeyType } from 'libsession_util_nodejs';
+import type { GroupPubkeyType, PubkeyType } from 'libsession_util_nodejs';
 import { debounce, difference, isNumber } from 'lodash';
 import { v4 } from 'uuid';
 import AbortController from 'abort-controller';
@@ -13,8 +13,8 @@ import { SnodeGroupSignature } from '../../../apis/snode_api/signature/groupSign
 import { PubKey } from '../../../types';
 import { runners } from '../JobRunner';
 import {
-  AddJobCheckReturn,
-  GroupInvitePersistedData,
+  type AddJobCheckReturn,
+  type GroupInvitePersistedData,
   PersistedJob,
   RunJobResult,
 } from '../PersistedJob';

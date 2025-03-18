@@ -1,46 +1,46 @@
 import { AbortController } from 'abort-controller';
 
-import { PubkeyType } from 'libsession_util_nodejs';
+import type { PubkeyType } from 'libsession_util_nodejs';
 import { MessageSender } from '.';
 import { ClosedGroupMessage } from '../messages/outgoing/controlMessage/group/ClosedGroupMessage';
-import { ClosedGroupNameChangeMessage } from '../messages/outgoing/controlMessage/group/ClosedGroupNameChangeMessage';
-import { OutgoingRawMessage, PubKey } from '../types';
+import type { ClosedGroupNameChangeMessage } from '../messages/outgoing/controlMessage/group/ClosedGroupNameChangeMessage';
+import { type OutgoingRawMessage, PubKey } from '../types';
 import { JobQueue, MessageUtils, UserUtils } from '../utils';
 import { PendingMessageCache } from './PendingMessageCache';
 
-import { ContentMessage } from '../messages/outgoing';
+import type { ContentMessage } from '../messages/outgoing';
 import { ExpirationTimerUpdateMessage } from '../messages/outgoing/controlMessage/ExpirationTimerUpdateMessage';
-import { ClosedGroupAddedMembersMessage } from '../messages/outgoing/controlMessage/group/ClosedGroupAddedMembersMessage';
-import { ClosedGroupEncryptionPairMessage } from '../messages/outgoing/controlMessage/group/ClosedGroupEncryptionPairMessage';
-import { ClosedGroupMemberLeftMessage } from '../messages/outgoing/controlMessage/group/ClosedGroupMemberLeftMessage';
-import { ClosedGroupRemovedMembersMessage } from '../messages/outgoing/controlMessage/group/ClosedGroupRemovedMembersMessage';
-import {
+import type { ClosedGroupAddedMembersMessage } from '../messages/outgoing/controlMessage/group/ClosedGroupAddedMembersMessage';
+import type { ClosedGroupEncryptionPairMessage } from '../messages/outgoing/controlMessage/group/ClosedGroupEncryptionPairMessage';
+import type { ClosedGroupMemberLeftMessage } from '../messages/outgoing/controlMessage/group/ClosedGroupMemberLeftMessage';
+import type { ClosedGroupRemovedMembersMessage } from '../messages/outgoing/controlMessage/group/ClosedGroupRemovedMembersMessage';
+import type {
   ClosedGroupV2VisibleMessage,
   ClosedGroupVisibleMessage,
 } from '../messages/outgoing/visibleMessage/ClosedGroupVisibleMessage';
-import { SyncMessageType } from '../utils/sync/syncUtils';
+import type { SyncMessageType } from '../utils/sync/syncUtils';
 import { MessageSentHandler } from './MessageSentHandler';
 
-import { OpenGroupMessageV2 } from '../apis/open_group_api/opengroupV2/OpenGroupMessageV2';
+import type { OpenGroupMessageV2 } from '../apis/open_group_api/opengroupV2/OpenGroupMessageV2';
 import { sendSogsReactionOnionV4 } from '../apis/open_group_api/sogsv3/sogsV3SendReaction';
-import {
+import type {
   SnodeNamespaces,
   SnodeNamespacesLegacyGroup,
   SnodeNamespacesUser,
 } from '../apis/snode_api/namespaces';
-import { CallMessage } from '../messages/outgoing/controlMessage/CallMessage';
-import { DataExtractionNotificationMessage } from '../messages/outgoing/controlMessage/DataExtractionNotificationMessage';
-import { TypingMessage } from '../messages/outgoing/controlMessage/TypingMessage';
+import type { CallMessage } from '../messages/outgoing/controlMessage/CallMessage';
+import type { DataExtractionNotificationMessage } from '../messages/outgoing/controlMessage/DataExtractionNotificationMessage';
+import type { TypingMessage } from '../messages/outgoing/controlMessage/TypingMessage';
 import { UnsendMessage } from '../messages/outgoing/controlMessage/UnsendMessage';
-import { ClosedGroupNewMessage } from '../messages/outgoing/controlMessage/group/ClosedGroupNewMessage';
-import { GroupUpdateDeleteMemberContentMessage } from '../messages/outgoing/controlMessage/group_v2/to_group/GroupUpdateDeleteMemberContentMessage';
-import { GroupUpdateInfoChangeMessage } from '../messages/outgoing/controlMessage/group_v2/to_group/GroupUpdateInfoChangeMessage';
-import { GroupUpdateMemberChangeMessage } from '../messages/outgoing/controlMessage/group_v2/to_group/GroupUpdateMemberChangeMessage';
-import { GroupUpdateMemberLeftMessage } from '../messages/outgoing/controlMessage/group_v2/to_group/GroupUpdateMemberLeftMessage';
-import { GroupUpdateInviteMessage } from '../messages/outgoing/controlMessage/group_v2/to_user/GroupUpdateInviteMessage';
-import { GroupUpdatePromoteMessage } from '../messages/outgoing/controlMessage/group_v2/to_user/GroupUpdatePromoteMessage';
-import { OpenGroupVisibleMessage } from '../messages/outgoing/visibleMessage/OpenGroupVisibleMessage';
-import { OpenGroupRequestCommonType } from '../../data/types';
+import type { ClosedGroupNewMessage } from '../messages/outgoing/controlMessage/group/ClosedGroupNewMessage';
+import type { GroupUpdateDeleteMemberContentMessage } from '../messages/outgoing/controlMessage/group_v2/to_group/GroupUpdateDeleteMemberContentMessage';
+import type { GroupUpdateInfoChangeMessage } from '../messages/outgoing/controlMessage/group_v2/to_group/GroupUpdateInfoChangeMessage';
+import type { GroupUpdateMemberChangeMessage } from '../messages/outgoing/controlMessage/group_v2/to_group/GroupUpdateMemberChangeMessage';
+import type { GroupUpdateMemberLeftMessage } from '../messages/outgoing/controlMessage/group_v2/to_group/GroupUpdateMemberLeftMessage';
+import type { GroupUpdateInviteMessage } from '../messages/outgoing/controlMessage/group_v2/to_user/GroupUpdateInviteMessage';
+import type { GroupUpdatePromoteMessage } from '../messages/outgoing/controlMessage/group_v2/to_user/GroupUpdatePromoteMessage';
+import type { OpenGroupVisibleMessage } from '../messages/outgoing/visibleMessage/OpenGroupVisibleMessage';
+import type { OpenGroupRequestCommonType } from '../../data/types';
 
 // ClosedGroupEncryptionPairReplyMessage must be sent to a user pubkey. Not a group.
 
@@ -382,7 +382,7 @@ export class MessageQueueCl {
    * processes pending jobs in the message sending queue.
    * @param device - target device to send to
    */
-  public async processPending(device: PubKey, isSyncMessage: boolean = false) {
+  public async processPending(device: PubKey, isSyncMessage = false) {
     const messages = await this.pendingMessageCache.getForDevice(device);
 
     const jobQueue = this.getJobQueue(device);

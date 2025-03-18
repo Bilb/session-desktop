@@ -5,7 +5,7 @@ import {
   getLeftGroupUpdateChangeStr,
   getPromotedGroupUpdateChangeStr,
 } from '../../../../models/groupUpdate';
-import { PropsForGroupUpdateType } from '../../../../state/ducks/conversations';
+import type { PropsForGroupUpdateType } from '../../../../state/ducks/conversations';
 import {
   useSelectedIsGroupV2,
   useSelectedNicknameOrProfileNameOrShortenedPubkey,

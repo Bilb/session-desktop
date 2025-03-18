@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import { SessionDataTestId } from 'react';
+import type { SessionDataTestId } from 'react';
 import { SessionRadio } from '../basic/SessionRadio';
-import { PanelButton, PanelButtonProps, PanelButtonText, StyledContent } from './PanelButton';
+import { PanelButton, type PanelButtonProps, PanelButtonText, StyledContent } from './PanelButton';
 
 const StyledPanelButton = styled(PanelButton)`
   padding-top: var(--margins-lg);

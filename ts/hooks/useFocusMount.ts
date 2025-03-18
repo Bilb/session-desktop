@@ -1,4 +1,4 @@
-import { RefObject } from 'react';
+import type { RefObject } from 'react';
 import useMount from 'react-use/lib/useMount';
 
 export function useFocusMount(ref: RefObject<any>, isEditable?: boolean) {

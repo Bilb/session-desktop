@@ -2,7 +2,7 @@ import _, { isEmpty, sample, shuffle } from 'lodash';
 import pRetry from 'p-retry';
 
 import { Data } from '../../../data/data';
-import { Snode } from '../../../data/types';
+import type { Snode } from '../../../data/types';
 
 import { OnionPaths } from '../../onions';
 import { SeedNodeAPI } from '../seed_node_api';

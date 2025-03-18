@@ -2,8 +2,8 @@ import { union } from 'lodash';
 import { Data } from '../../data/data';
 import { SignalService } from '../../protobuf';
 import { DisappearingMessages } from '../disappearing_messages';
-import { OpenGroupVisibleMessage } from '../messages/outgoing/visibleMessage/OpenGroupVisibleMessage';
-import { OutgoingRawMessage, PubKey } from '../types';
+import type { OpenGroupVisibleMessage } from '../messages/outgoing/visibleMessage/OpenGroupVisibleMessage';
+import { type OutgoingRawMessage, PubKey } from '../types';
 import { UserUtils } from '../utils';
 
 async function handlePublicMessageSentSuccess(
@@ -35,7 +35,7 @@ async function handlePublicMessageSentSuccess(
     });
     await foundMessage.commit();
     foundMessage.getConversation()?.updateLastMessage();
-  } catch (e) {
+  } catch (_e) {
     window?.log?.error('Error setting public on message');
   }
 }
@@ -125,7 +125,7 @@ async function handleSwarmMessageSentSuccess(
           window?.log?.warn('Got an error while trying to sendSyncMessage():', e);
         }
       }
-    } catch (e) {
+    } catch (_e) {
       window.log.info(
         'failed to decode content (expected except if message was for a 1o1 as we need it to send the sync message'
       );

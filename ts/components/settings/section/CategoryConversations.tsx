@@ -6,7 +6,7 @@ import { ToastUtils } from '../../../session/utils';
 import { toggleAudioAutoplay } from '../../../state/ducks/userConfig';
 import { useHasEnterSendEnabled } from '../../../state/selectors/settings';
 import { getAudioAutoplay } from '../../../state/selectors/userConfig';
-import { SessionRadioGroup, SessionRadioItems } from '../../basic/SessionRadioGroup';
+import { SessionRadioGroup, type SessionRadioItems } from '../../basic/SessionRadioGroup';
 import { BlockedContactsList } from '../BlockedList';
 import {
   SessionSettingsItemWrapper,

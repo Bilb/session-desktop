@@ -2,7 +2,7 @@ import { compact, intersectionWith, sampleSize } from 'lodash';
 import { BatchRequests } from './batchRequest';
 import { GetNetworkTime } from './getNetworkTime';
 import { SnodePool } from './snodePool';
-import { Snode } from '../../../data/types';
+import type { Snode } from '../../../data/types';
 import { GetServiceNodesSubRequest } from './SnodeRequestTypes';
 import { SnodePoolConstants } from './snodePoolConstants';
 import { DURATION } from '../../constants';
@@ -53,7 +53,7 @@ async function getSnodePoolFromSnode(targetNode: Snode): Promise<Array<Snode>> {
 
     // we the return list by the snode is already made of uniq snodes
     return compact(snodes);
-  } catch (e) {
+  } catch (_e) {
     window?.log?.error('Invalid json response');
     return [];
   }

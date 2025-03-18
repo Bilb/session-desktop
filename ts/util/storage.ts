@@ -1,5 +1,5 @@
 import { isBoolean } from 'lodash';
-import { SessionKeyPair } from '../receiver/keypairs';
+import type { SessionKeyPair } from '../receiver/keypairs';
 import { DEFAULT_RECENT_REACTS } from '../session/constants';
 import { deleteSettingsBoolValue, updateSettingsBoolValue } from '../state/ducks/settings';
 import { ReleasedFeatures } from './releaseFeature';

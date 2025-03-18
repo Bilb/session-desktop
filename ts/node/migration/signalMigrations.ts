@@ -16,9 +16,8 @@ import {
 import { getAppRootPath } from '../getRootPath';
 import { updateSessionSchema } from './sessionMigrations';
 
-// eslint:disable: quotemark non-literal-fs-path one-variable-per-declaration
 const openDbOptions = {
-  // eslint-disable-next-line no-constant-condition
+  // biome-ignore lint/correctness/noConstantCondition: <explanation>
   verbose: false ? console.log : undefined,
 
   nativeBinding: path.join(
@@ -558,8 +557,7 @@ function migrateSchemaVersion(db: BetterSqlite3.Database) {
 
   const newUserVersion = schemaVersion > 18 ? 16 : schemaVersion;
   console.log(
-    'migrateSchemaVersion: Migrating from schema_version ' +
-      `${schemaVersion} to user_version ${newUserVersion}`
+    `migrateSchemaVersion: Migrating from schema_version ${schemaVersion} to user_version ${newUserVersion}`
   );
 
   setUserVersion(db, newUserVersion);
@@ -642,7 +640,7 @@ export function openAndMigrateDatabase(filePath: string, key: string) {
     if (db2) {
       db2.close();
     }
-    console.log('migrateDatabase: switchToWAL failed');
+    console.log(`migrateDatabase: switchToWAL failed with: "${error.message}"`);
     return null;
   }
 }

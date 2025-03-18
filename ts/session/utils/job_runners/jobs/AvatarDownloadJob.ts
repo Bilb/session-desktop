@@ -10,8 +10,8 @@ import { ConvoHub } from '../../../conversations';
 import { fromHexToArray } from '../../String';
 import { runners } from '../JobRunner';
 import {
-  AddJobCheckReturn,
-  AvatarDownloadPersistedData,
+  type AddJobCheckReturn,
+  type AvatarDownloadPersistedData,
   PersistedJob,
   RunJobResult,
 } from '../PersistedJob';
@@ -23,7 +23,11 @@ const defaultMaxAttempts = 3;
  * Returns true if the provided conversationId is a private chat and that we should add an Avatar Download Job to the list of jobs to run.
  * Before calling this function, you have to update the related conversation profileKey and avatarPointer fields with the urls which should be downloaded, or reset them if you wanted them reset.
  */
-export function shouldAddAvatarDownloadJob({ conversationId }: { conversationId: string }) {
+export function shouldAddAvatarDownloadJob({
+  conversationId,
+}: {
+  conversationId: string;
+}) {
   const conversation = ConvoHub.use().get(conversationId);
   if (!conversation) {
     // return true so we do not retry this task.
@@ -46,7 +50,11 @@ export function shouldAddAvatarDownloadJob({ conversationId }: { conversationId:
   return true;
 }
 
-async function addAvatarDownloadJob({ conversationId }: { conversationId: string }) {
+async function addAvatarDownloadJob({
+  conversationId,
+}: {
+  conversationId: string;
+}) {
   if (shouldAddAvatarDownloadJob({ conversationId })) {
     const avatarDownloadJob = new AvatarDownloadJob({
       conversationId,
@@ -138,7 +146,7 @@ class AvatarDownloadJob extends PersistedJob<AvatarDownloadPersistedData> {
           let decryptedData: ArrayBuffer;
           try {
             decryptedData = await decryptProfile(downloaded.data, profileKeyArrayBuffer);
-          } catch (decryptError) {
+          } catch (_decryptError) {
             window.log.info(
               `[profileupdate] failed to decrypt downloaded data ${conversation.id} with provided profileKey`
             );
