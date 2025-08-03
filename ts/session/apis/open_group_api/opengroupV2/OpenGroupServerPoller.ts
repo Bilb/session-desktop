@@ -24,10 +24,9 @@ import {
   openConversationWithMessages,
 } from '../../../../state/ducks/conversations';
 import { roomHasBlindEnabled } from '../../../../types/sqlSharedTypes';
-import { Storage } from '../../../../util/storage';
-import { SettingsKey } from '../../../../data/settings-key';
 import { OpenGroupRequestCommonType } from '../../../../data/types';
 import { ReduxOnionSelectors } from '../../../../state/selectors/onions';
+import { LibsessionUtilUserWasm } from '../../../../libsession/user/userWrappers';
 
 export type OpenGroupMessageV4 = {
   /** AFAIK: indicates the number of the message in the group. e.g. 2nd message will be 1 or 2 */
@@ -247,7 +246,7 @@ export class OpenGroupServerPoller {
         if (roomHasBlindEnabled(rooms[0])) {
           const maxInboxId = Math.max(...rooms.map(r => r.lastInboxIdFetched || 0));
 
-          if (Storage.get(SettingsKey.hasBlindedMsgRequestsEnabled)) {
+          if (LibsessionUtilUserWasm.getUserProfile().getBlindedMsgRequests()) {
             // This only works for servers with blinding capabilities
             // adding inbox subrequest info
             subrequestOptions.push({

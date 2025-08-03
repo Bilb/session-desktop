@@ -5,7 +5,6 @@ const hasShiftSendEnabled = 'hasShiftSendEnabled';
 const settingsMenuBar = 'hide-menu-bar';
 const settingsSpellCheck = 'spell-check';
 const settingsLinkPreview = 'link-preview-setting';
-const hasBlindedMsgRequestsEnabled = 'hasBlindedMsgRequestsEnabled';
 const settingsStartInTray = 'start-in-tray-setting';
 const settingsOpengroupPruning = 'prune-setting';
 const settingsNotification = 'notification-setting';
@@ -32,7 +31,6 @@ export const SettingsKey = {
   settingsLinkPreview,
   settingsStartInTray,
   settingsOpengroupPruning,
-  hasBlindedMsgRequestsEnabled,
   settingsNotification,
   settingsAudioNotification,
   hasSyncedInitialConfigurationItem,

@@ -1,6 +1,7 @@
 /* eslint-disable no-await-in-loop */
 import { ContactInfo, GroupPubkeyType, UserGroupsGet } from 'libsession_util_nodejs';
-import { compact, difference, isEmpty, isNil, isNumber } from 'lodash';
+import { from_hex } from 'libsodium-wrappers-sumo';
+import { compact, difference, isEmpty, isNumber } from 'lodash';
 import { ConfigDumpData } from '../data/configDump/configDump';
 import { SettingsKey } from '../data/settings-key';
 import { deleteAllMessagesByConvoIdNoConfirmation } from '../interactions/conversationInteractions';
@@ -47,11 +48,11 @@ import {
   ConvoInfoVolatileWrapperActions,
   UserGenericWrapperActions,
   MetaGroupWrapperActions,
-  UserConfigWrapperActions,
   UserGroupsWrapperActions,
 } from '../webworker/workers/browser/libsession_worker_interface';
 import { CONVERSATION } from '../session/constants';
 import { CONVERSATION_PRIORITIES, ConversationTypeEnum } from '../models/types';
+import { LibsessionUtilUserWasm, type UserConfigWasmType } from '../libsession/user/userWrappers';
 
 type IncomingUserResult = {
   needsPush: boolean;
@@ -82,7 +83,14 @@ function byUserNamespace(incomingConfigs: Array<RetrieveMessageItemWithNamespace
   return groupedByVariant;
 }
 
-async function printDumpForDebug(prefix: string, variant: ConfigWrapperObjectTypesMeta) {
+async function printDumpForDebug(
+  prefix: string,
+  variant: ConfigWrapperObjectTypesMeta | UserConfigWasmType
+) {
+  if (LibsessionUtilUserWasm.isWasmUserConfigWrapperType(variant)) {
+    window.log.info(prefix, LibsessionUtilUserWasm.wasmDumpHex(variant));
+    return;
+  }
   if (isStaticSessionWrapper(variant)) {
     return; // nothing to print for those static wrappers
   }
@@ -100,12 +108,12 @@ async function printDumpForDebug(prefix: string, variant: ConfigWrapperObjectTyp
 
 async function mergeUserConfigsWithIncomingUpdates(
   incomingConfigs: Array<RetrieveMessageItemWithNamespace>
-): Promise<Map<ConfigWrapperUser, IncomingUserResult>> {
+): Promise<Map<ConfigWrapperUser | UserConfigWasmType, IncomingUserResult>> {
   // first, group by namespaces so we do a single merge call
   // Note: this call throws if given a non user kind as this function should only handle user variants/kinds
   const groupedByNamespaces = byUserNamespace(incomingConfigs);
 
-  const groupedResults: Map<ConfigWrapperUser, IncomingUserResult> = new Map();
+  const groupedResults: Map<ConfigWrapperUser | UserConfigWasmType, IncomingUserResult> = new Map();
 
   const us = UserUtils.getOurPubKeyStrFromCache();
 
@@ -129,10 +137,17 @@ async function mergeUserConfigsWithIncomingUpdates(
           variant
         );
       }
-      const hashesMerged = await UserGenericWrapperActions.merge(variant, toMerge);
+      const hashesMerged = LibsessionUtilUserWasm.isWasmUserConfigWrapperType(variant)
+        ? LibsessionUtilUserWasm.wasmMergeHex(variant, toMerge)
+        : await UserGenericWrapperActions.merge(variant, toMerge);
 
-      const needsDump = await UserGenericWrapperActions.needsDump(variant);
-      const needsPush = await UserGenericWrapperActions.needsPush(variant);
+      const needsDump = LibsessionUtilUserWasm.isWasmUserConfigWrapperType(variant)
+        ? LibsessionUtilUserWasm.wasmNeedsDump(variant)
+        : await UserGenericWrapperActions.needsDump(variant);
+      const needsPush = LibsessionUtilUserWasm.isWasmUserConfigWrapperType(variant)
+        ? LibsessionUtilUserWasm.wasmNeedsPush(variant)
+        : await UserGenericWrapperActions.needsPush(variant);
+
       const mergedTimestamps = sameVariant
         .filter(m => hashesMerged.includes(m.hash))
         .map(m => m.storedAt);
@@ -163,16 +178,24 @@ async function mergeUserConfigsWithIncomingUpdates(
 }
 
 export function getSettingsKeyFromLibsessionWrapper(
-  wrapperType: ConfigWrapperObjectTypesMeta
+  wrapperType: ConfigWrapperObjectTypesMeta | UserConfigWasmType
 ): string | null {
+  if (LibsessionUtilUserWasm.isWasmUserConfigWrapperType(wrapperType)) {
+    if (wrapperType === 'UserConfig') {
+      return SettingsKey.latestUserProfileEnvelopeTimestamp;
+    }
+    assertUnreachable(
+      wrapperType,
+      `getSettingsKeyFromLibsessionWrapper unknown type: ${wrapperType}`
+    );
+  }
+
   if (!isUserConfigWrapperType(wrapperType)) {
     throw new Error(
       `getSettingsKeyFromLibsessionWrapper only cares about user variants but got ${wrapperType}`
     );
   }
   switch (wrapperType) {
-    case 'UserConfig':
-      return SettingsKey.latestUserProfileEnvelopeTimestamp;
     case 'ContactsConfig':
       return SettingsKey.latestUserContactsEnvelopeTimestamp;
     case 'UserGroupsConfig':
@@ -193,7 +216,7 @@ export function getSettingsKeyFromLibsessionWrapper(
 }
 
 async function updateLibsessionLatestProcessedUserTimestamp(
-  wrapperType: ConfigWrapperUser,
+  wrapperType: ConfigWrapperUser | UserConfigWasmType,
   latestEnvelopeTimestamp: number
 ) {
   const settingsKey = getSettingsKeyFromLibsessionWrapper(wrapperType);
@@ -216,66 +239,25 @@ async function updateLibsessionLatestProcessedUserTimestamp(
  * Instead you will need to updateOurProfileLegacyOrViaLibSession() to support them
  */
 async function handleUserProfileUpdate(result: IncomingUserResult): Promise<void> {
-  const profilePic = await UserConfigWrapperActions.getProfilePic();
-  const displayName = await UserConfigWrapperActions.getName();
-  const priority = await UserConfigWrapperActions.getPriority();
+  const profilePic = LibsessionUtilUserWasm.getUserProfile().getProfilePic();
   if (!profilePic || isEmpty(profilePic)) {
     return;
   }
 
-  const currentBlindedMsgRequest = Storage.get(SettingsKey.hasBlindedMsgRequestsEnabled);
-  const newBlindedMsgRequest = await UserConfigWrapperActions.getEnableBlindedMsgRequest();
-  if (!isNil(newBlindedMsgRequest) && newBlindedMsgRequest !== currentBlindedMsgRequest) {
-    await window.setSettingValue(SettingsKey.hasBlindedMsgRequestsEnabled, newBlindedMsgRequest); // this does the dispatch to redux
-  }
-
-  const picUpdate =
-    profilePic.key &&
-    !isEmpty(profilePic.key) &&
-    !isEmpty(profilePic.url) &&
-    profilePic.key.length === 32;
+  // const picUpdate =
+  //   profilePic.key &&
+  //   !isEmpty(profilePic.key) &&
+  //   !isEmpty(profilePic.url) &&
+  //   profilePic.key.length === 32;
 
   // NOTE: if you do any changes to the user's settings which are synced, it should be done above the `updateOurProfileViaLibSession` call
-  await updateOurProfileViaLibSession({
-    displayName: displayName || '',
-    profileUrl: picUpdate ? profilePic.url : null,
-    profileKey: picUpdate ? profilePic.key : null,
-    priority,
-  });
-
-  // NOTE: If we want to update the conversation in memory with changes from the updated user profile we need to wait until the profile has been updated to prevent multiple merge conflicts
-  const ourConvo = ConvoHub.use().get(UserUtils.getOurPubKeyStrFromCache());
-
-  if (ourConvo) {
-    let changes = false;
-
-    const expireTimer = ourConvo.getExpireTimer();
-
-    const wrapperNoteToSelfExpirySeconds = await UserConfigWrapperActions.getNoteToSelfExpiry();
-
-    if (wrapperNoteToSelfExpirySeconds !== expireTimer) {
-      const success = await ourConvo.updateExpireTimer({
-        providedDisappearingMode:
-          wrapperNoteToSelfExpirySeconds && wrapperNoteToSelfExpirySeconds > 0
-            ? 'deleteAfterSend'
-            : 'off',
-        providedExpireTimer: wrapperNoteToSelfExpirySeconds,
-        providedSource: ourConvo.id,
-        sentAt: result.latestEnvelopeTimestamp,
-        fromSync: true,
-        shouldCommitConvo: false,
-        fromCurrentDevice: false,
-        fromConfigMessage: true,
-        messageHash: null,
-      });
-      changes = success;
-    }
-
-    // make sure to write the changes to the database now as the `AvatarDownloadJob` triggered by updateOurProfileLegacyOrViaLibSession might take some time before getting run
-    if (changes) {
-      await ourConvo.commit();
-    }
-  }
+  // FIXME we need to find a way to detect that a profile change was done, and trigger an avatar download job with the new stuff (while the old one is still saved)
+  // await updateOurProfileViaLibSession({
+  //   displayName: displayName || '',
+  //   profileUrl: picUpdate ? profilePic.url : null,
+  //   profileKey: picUpdate ? profilePic.key : null,
+  //   priority,
+  // });
 
   const settingsKey = SettingsKey.latestUserProfileEnvelopeTimestamp;
   const currentLatestEnvelopeProcessed = Storage.get(settingsKey) || 0;
@@ -879,7 +861,9 @@ async function handleConvoInfoVolatileUpdate() {
   }
 }
 
-async function processUserMergingResults(results: Map<ConfigWrapperUser, IncomingUserResult>) {
+async function processUserMergingResults(
+  results: Map<ConfigWrapperUser | UserConfigWasmType, IncomingUserResult>
+) {
   if (!results || !results.size) {
     return;
   }
@@ -930,7 +914,9 @@ async function processUserMergingResults(results: Map<ConfigWrapperUser, Incomin
 
       if (incomingResult.needsDump) {
         // The config data had changes so regenerate the dump and save it
-        const dump = await UserGenericWrapperActions.dump(variant);
+        const dump = LibsessionUtilUserWasm.isWasmUserConfigWrapperType(variant)
+          ? from_hex(LibsessionUtilUserWasm.wasmDumpHex(variant))
+          : await UserGenericWrapperActions.dump(variant);
         await ConfigDumpData.saveConfigDump({
           data: dump,
           publicKey: incomingResult.publicKey,

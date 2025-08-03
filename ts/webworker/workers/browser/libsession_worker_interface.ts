@@ -17,7 +17,6 @@ import {
   PubkeyType,
   Uint8ArrayLen100,
   Uint8ArrayLen64,
-  UserConfigWrapperActionsCalls,
   UserGroupsGet,
   UserGroupsSet,
   UserGroupsWrapperActionsCalls,
@@ -126,7 +125,7 @@ export const UserGenericWrapperActions: UserGenericWrapperActionsCalls = {
 
 function createBaseActionsFor(wrapperType: ConfigWrapperUser) {
   return {
-    /* Reuse the UserConfigWrapperActions with the UserConfig argument */
+    /* Reuse the BaseWrapperActions with the UserConfig argument */
     init: async (ed25519Key: Uint8Array, dump: Uint8Array | null) =>
       UserGenericWrapperActions.init(wrapperType, ed25519Key, dump),
     free: async () => UserGenericWrapperActions.free(wrapperType),
@@ -144,61 +143,8 @@ function createBaseActionsFor(wrapperType: ConfigWrapperUser) {
   };
 }
 
-export const UserConfigWrapperActions: UserConfigWrapperActionsCalls = {
-  /* Reuse the UserConfigWrapperActions with the UserConfig argument */
-  ...createBaseActionsFor('UserConfig'),
-
-  /** UserConfig wrapper specific actions */
-  getPriority: async () =>
-    callLibSessionWorker(['UserConfig', 'getPriority']) as Promise<
-      ReturnType<UserConfigWrapperActionsCalls['getPriority']>
-    >,
-  getName: async () =>
-    callLibSessionWorker(['UserConfig', 'getName']) as Promise<
-      ReturnType<UserConfigWrapperActionsCalls['getName']>
-    >,
-  getProfilePic: async () =>
-    callLibSessionWorker(['UserConfig', 'getProfilePic']) as Promise<
-      ReturnType<UserConfigWrapperActionsCalls['getProfilePic']>
-    >,
-  setPriority: async (priority: number) =>
-    callLibSessionWorker(['UserConfig', 'setPriority', priority]) as Promise<
-      ReturnType<UserConfigWrapperActionsCalls['setPriority']>
-    >,
-  setName: async (name: string) =>
-    callLibSessionWorker(['UserConfig', 'setName', name]) as Promise<
-      ReturnType<UserConfigWrapperActionsCalls['setName']>
-    >,
-  setNameTruncated: async (name: string) =>
-    callLibSessionWorker(['UserConfig', 'setNameTruncated', name]) as Promise<
-      ReturnType<UserConfigWrapperActionsCalls['setNameTruncated']>
-    >,
-  setProfilePic: async (profilePic: ProfilePicture) =>
-    callLibSessionWorker(['UserConfig', 'setProfilePic', profilePic]) as Promise<
-      ReturnType<UserConfigWrapperActionsCalls['setProfilePic']>
-    >,
-  getEnableBlindedMsgRequest: async () =>
-    callLibSessionWorker(['UserConfig', 'getEnableBlindedMsgRequest']) as Promise<
-      ReturnType<UserConfigWrapperActionsCalls['getEnableBlindedMsgRequest']>
-    >,
-  setEnableBlindedMsgRequest: async (blindedMsgRequests: boolean) =>
-    callLibSessionWorker([
-      'UserConfig',
-      'setEnableBlindedMsgRequest',
-      blindedMsgRequests,
-    ]) as Promise<ReturnType<UserConfigWrapperActionsCalls['setEnableBlindedMsgRequest']>>,
-  getNoteToSelfExpiry: async () =>
-    callLibSessionWorker(['UserConfig', 'getNoteToSelfExpiry']) as Promise<
-      ReturnType<UserConfigWrapperActionsCalls['getNoteToSelfExpiry']>
-    >,
-  setNoteToSelfExpiry: async (expirySeconds: number) =>
-    callLibSessionWorker(['UserConfig', 'setNoteToSelfExpiry', expirySeconds]) as Promise<
-      ReturnType<UserConfigWrapperActionsCalls['setNoteToSelfExpiry']>
-    >,
-};
-
 export const ContactsWrapperActions: ContactsWrapperActionsCalls = {
-  /* Reuse the UserConfigWrapperActions with the ContactConfig argument */
+  /* Reuse the BaseWrapperActions with the ContactConfig argument */
   ...createBaseActionsFor('ContactsConfig'),
 
   /** ContactsConfig wrapper specific actions */
@@ -255,7 +201,7 @@ function dispatchCachedGroupToRedux(groupId: GroupPubkeyType) {
 export const UserGroupsWrapperActions: UserGroupsWrapperActionsCalls & {
   getCachedGroup: (pubkeyHex: GroupPubkeyType) => UserGroupsGet | undefined;
 } = {
-  /* Reuse the UserConfigWrapperActions with the UserGroupsConfig argument */
+  /* Reuse the BaseWrapperActions with the UserGroupsConfig argument */
   ...createBaseActionsFor('UserGroupsConfig'),
   // override the merge() as we need to refresh the cached groups
   merge: async (toMerge: Array<MergeSingle>) => {
@@ -428,7 +374,7 @@ export const UserGroupsWrapperActions: UserGroupsWrapperActionsCalls & {
 };
 
 export const ConvoInfoVolatileWrapperActions: ConvoInfoVolatileWrapperActionsCalls = {
-  /* Reuse the UserConfigWrapperActions with the ConvoInfoVolatileConfig argument */
+  /* Reuse the BaseWrapperActions with the ConvoInfoVolatileConfig argument */
   ...createBaseActionsFor('ConvoInfoVolatileConfig'),
 
   /** ConvoInfoVolatile wrapper specific actions */
@@ -800,9 +746,6 @@ export const MetaGroupWrapperActions: MetaGroupWrapperActionsCalls = {
 };
 
 export const MultiEncryptWrapperActions: MultiEncryptActionsCalls = {
-  /* Reuse the UserConfigWrapperActions with the UserConfig argument */
-  ...createBaseActionsFor('UserConfig'),
-
   /** UserConfig wrapper specific actions */
   multiEncrypt: async args =>
     callLibSessionWorker(['MultiEncrypt', 'multiEncrypt', args]) as Promise<

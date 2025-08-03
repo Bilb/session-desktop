@@ -6,13 +6,11 @@ import type {
   GroupPubkeyType,
   MetaGroupActionsType,
   MultiEncryptActionsType,
-  UserConfigActionsType,
   UserGroupsConfigActionsType,
   UtilitiesActionsType,
 } from 'libsession_util_nodejs';
 
 // we can only have one of those wrapper for our current user (but we can have a few configs for it to be merged into one)
-export type UserConfig = 'UserConfig';
 export type ContactsConfig = 'ContactsConfig';
 export type UserGroupsConfig = 'UserGroupsConfig';
 export type ConvoInfoVolatileConfig = 'ConvoInfoVolatileConfig';
@@ -28,11 +26,7 @@ export type MultiEncryptConfig = typeof MultiEncryptConfigValue;
 export type BlindingConfig = typeof BlindedConfigValue;
 export type UtilitiesConfig = typeof UtilitiesValue;
 
-export type ConfigWrapperUser =
-  | UserConfig
-  | ContactsConfig
-  | UserGroupsConfig
-  | ConvoInfoVolatileConfig;
+export type ConfigWrapperUser = ContactsConfig | UserGroupsConfig | ConvoInfoVolatileConfig;
 
 export type ConfigWrapperGroup = MetaGroupConfig;
 
@@ -47,9 +41,6 @@ export type ConfigWrapperGroupDetailed = 'GroupInfo' | 'GroupMember' | 'GroupKey
 
 export type ConfigWrapperObjectTypesDetailed = ConfigWrapperUser | ConfigWrapperGroupDetailed;
 
-type UserConfigFunctions =
-  | [UserConfig, ...BaseConfigActions]
-  | [UserConfig, ...UserConfigActionsType];
 type ContactsConfigFunctions =
   | [ContactsConfig, ...BaseConfigActions]
   | [ContactsConfig, ...ContactsConfigActionsType];
@@ -68,7 +59,6 @@ type MetaGroupFunctions = [MetaGroupConfig, ...MetaGroupActionsType];
 type MultiEncryptFunctions = [MultiEncryptConfig, ...MultiEncryptActionsType];
 
 export type LibSessionWorkerFunctions =
-  | UserConfigFunctions
   | ContactsConfigFunctions
   | UserGroupsConfigFunctions
   | ConvoInfoVolatileConfigFunctions
@@ -77,20 +67,15 @@ export type LibSessionWorkerFunctions =
   | MultiEncryptFunctions
   | UtilitiesFunctions;
 
-export function isUserConfigWrapperType(
-  config: ConfigWrapperObjectTypesMeta
-): config is ConfigWrapperUser {
+export function isUserConfigWrapperType(config: string): config is ConfigWrapperUser {
   return (
     config === 'ContactsConfig' ||
-    config === 'UserConfig' ||
     config === 'ConvoInfoVolatileConfig' ||
     config === 'UserGroupsConfig'
   );
 }
 
-export function isMetaGroupWrapperType(
-  config: ConfigWrapperObjectTypesMeta
-): config is MetaGroupConfig {
+export function isMetaGroupWrapperType(config: string): config is MetaGroupConfig {
   return config.startsWith(MetaGroupConfigValue);
 }
 

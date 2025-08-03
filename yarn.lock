@@ -901,6 +901,10 @@
     "@noble/hashes" "~1.7.1"
     "@scure/base" "~1.2.4"
 
+"@session-foundation/libsession-wasm@file:../swarm_explorer/libsession-wasm/session-foundation-libsession-wasm-0.0.4.tgz":
+  version "0.0.4"
+  resolved "file:../swarm_explorer/libsession-wasm/session-foundation-libsession-wasm-0.0.4.tgz#7a6c73b0325f7986409d7833e18f590fdb20834a"
+
 "@signalapp/better-sqlite3@9.0.13":
   version "9.0.13"
   resolved "https://registry.yarnpkg.com/@signalapp/better-sqlite3/-/better-sqlite3-9.0.13.tgz#9617b4f45a6662fef6c9975e3e08dbef555bedc1"
@@ -1287,18 +1291,18 @@
     "@types/prop-types" "*"
     "@types/react" "*"
 
-"@types/react@*", "@types/react@18.3.18", "@types/react@^18":
-  version "18.3.18"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.3.18.tgz#9b382c4cd32e13e463f97df07c2ee3bbcd26904b"
-  integrity sha512-t4yC+vtgnkYjNSKlFx1jkAhH8LgTo2N/7Qvi83kdEaUtMDiwpbLAktKDaAMlRcJ5eSxZkH74eEGt1ky31d7kfQ==
+"@types/react@*", "@types/react@18.3.3", "@types/react@^18":
+  version "18.3.3"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.3.3.tgz#9679020895318b0915d7a3ab004d92d33375c45f"
+  integrity sha512-hti/R0pS0q1/xx+TsI73XIqk26eBsISZ2R0wUijXIngRK9R/e7Xw/cXVxQK7R5JjW+SV4zGcn5hXjudkN/pLIw==
   dependencies:
     "@types/prop-types" "*"
     csstype "^3.0.2"
 
-"@types/react@18.3.3":
-  version "18.3.3"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.3.3.tgz#9679020895318b0915d7a3ab004d92d33375c45f"
-  integrity sha512-hti/R0pS0q1/xx+TsI73XIqk26eBsISZ2R0wUijXIngRK9R/e7Xw/cXVxQK7R5JjW+SV4zGcn5hXjudkN/pLIw==
+"@types/react@18.3.18":
+  version "18.3.18"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.3.18.tgz#9b382c4cd32e13e463f97df07c2ee3bbcd26904b"
+  integrity sha512-t4yC+vtgnkYjNSKlFx1jkAhH8LgTo2N/7Qvi83kdEaUtMDiwpbLAktKDaAMlRcJ5eSxZkH74eEGt1ky31d7kfQ==
   dependencies:
     "@types/prop-types" "*"
     csstype "^3.0.2"

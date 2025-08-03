@@ -47,7 +47,7 @@ export type UpdateLastHashType = {
 };
 
 export type ConfigDumpRow = {
-  variant: ConfigWrapperObjectTypesMeta; // the variant this entry is about. (user pr, contacts, ...)
+  variant: ConfigWrapperObjectTypesMeta | 'UserConfig'; // the variant this entry is about. (user pr, contacts, ...)
   publicKey: string; // either our pubkey if a dump for our own swarm or the closed group pubkey
   data: Uint8Array; // the blob returned by libsession.dump() call
 };

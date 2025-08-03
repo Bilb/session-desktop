@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { GroupPubkeyType } from 'libsession_util_nodejs';
 import { z } from 'zod';
+import { to_hex } from 'libsodium-wrappers-sumo';
 
 import {
   compact,
@@ -32,7 +33,6 @@ import { assertUnreachable } from '../../../types/sqlSharedTypes';
 import {
   UserGenericWrapperActions,
   MetaGroupWrapperActions,
-  UserConfigWrapperActions,
   UserGroupsWrapperActions,
 } from '../../../webworker/workers/browser/libsession_worker_interface';
 import { DURATION, SWARM_POLLING_TIMEOUT } from '../../constants';
@@ -59,6 +59,9 @@ import {
 import { ConversationTypeEnum } from '../../../models/types';
 import { Snode } from '../../../data/types';
 import { ReduxOnionSelectors } from '../../../state/selectors/onions';
+import { libsessionReady } from '../../../libsession/libsession';
+import { buildUserMergeVector } from '../../../libsession/base/baseWrapper';
+import { LibsessionUtilUserWasm } from '../../../libsession/user/userWrappers';
 
 const minMsgCountShouldRetry = 95;
 /**
@@ -627,10 +630,12 @@ export class SwarmPolling {
   ): Promise<Array<string>> {
     if (type === ConversationTypeEnum.PRIVATE) {
       const configHashesToBump: Array<string> = [];
-      for (let index = 0; index < LibSessionUtil.requiredUserVariants.length; index++) {
-        const variant = LibSessionUtil.requiredUserVariants[index];
+      for (let index = 0; index < LibSessionUtil.requiredUserVariantsWithWasm.length; index++) {
+        const variant = LibSessionUtil.requiredUserVariantsWithWasm[index];
         try {
-          const toBump = await UserGenericWrapperActions.activeHashes(variant);
+          const toBump = LibsessionUtilUserWasm.isWasmUserConfigWrapperType(variant)
+            ? LibsessionUtilUserWasm.wasmActiveHashes(variant)
+            : await UserGenericWrapperActions.activeHashes(variant);
 
           if (toBump?.length) {
             configHashesToBump.push(...toBump);
@@ -1063,18 +1068,18 @@ export class SwarmPolling {
         hash: m.hash,
       }));
 
-      await UserConfigWrapperActions.init(privateKeyEd25519, null);
-      await UserConfigWrapperActions.merge(incomingConfigMessages);
+      const libsession = await libsessionReady();
+      const userProfileWrapper = new libsession.UserProfileW(to_hex(privateKeyEd25519), undefined);
 
-      const foundName = await UserConfigWrapperActions.getName();
+      userProfileWrapper.mergeHex(buildUserMergeVector(incomingConfigMessages));
+
+      const foundName = userProfileWrapper.getName()?.toString();
       if (!foundName) {
         throw new Error('UserInfo not found or name is empty');
       }
       displayNameFound = foundName;
     } catch (e) {
       window.log.warn('LibSessionUtil.initializeLibSessionUtilWrappers failed with', e.message);
-    } finally {
-      await UserConfigWrapperActions.free();
     }
 
     if (!displayNameFound || isEmpty(displayNameFound)) {

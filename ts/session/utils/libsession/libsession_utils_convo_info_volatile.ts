@@ -14,7 +14,7 @@ import { ConvoHub } from '../../conversations';
 import { PubKey } from '../../types';
 import { SessionUtilContact } from './libsession_utils_contacts';
 import { SessionUtilUserGroups } from './libsession_utils_user_groups';
-import { SessionUtilUserProfile } from './libsession_utils_user_profile';
+import { UserUtils } from '..';
 
 /**
  * The key of this map is the convoId as stored in the database.
@@ -47,14 +47,14 @@ function isConvoToStoreInWrapper(convo: ConversationModel): boolean {
   return (
     SessionUtilUserGroups.isUserGroupToStoreInWrapper(convo) || // this checks for community & legacy group
     SessionUtilContact.isContactToStoreInWrapper(convo) || // this checks for contacts
-    SessionUtilUserProfile.isUserProfileToStoreInWrapper(convo.id) // this checks for our own pubkey, as we want to keep track of the read state for the Note To Self
+    convo.id === UserUtils.getOurPubKeyStrFromCache() // this checks for our own pubkey, as we want to keep track of the read state for the Note To Self
   );
 }
 
 function getConvoType(convo: ConversationModel): ConvoVolatileType {
   const convoType: ConvoVolatileType =
     SessionUtilContact.isContactToStoreInWrapper(convo) ||
-    SessionUtilUserProfile.isUserProfileToStoreInWrapper(convo.id)
+    convo.id === UserUtils.getOurPubKeyStrFromCache()
       ? '1o1'
       : SessionUtilUserGroups.isCommunityToStoreInWrapper(convo)
         ? 'Community'

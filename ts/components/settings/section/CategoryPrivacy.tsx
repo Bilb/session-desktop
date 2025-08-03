@@ -7,8 +7,6 @@ import { SessionButtonColor } from '../../basic/SessionButton';
 import { SpacerLG } from '../../basic/Text';
 import { TypingBubble } from '../../conversation/TypingBubble';
 
-import { UserUtils } from '../../../session/utils';
-import { SessionUtilUserProfile } from '../../../session/utils/libsession/libsession_utils_user_profile';
 import {
   useWeHaveBlindedMsgRequestsEnabled,
   useHasLinkPreviewEnabled,
@@ -18,6 +16,7 @@ import { SessionSettingButtonItem, SessionToggleWithDescription } from '../Sessi
 import { displayPasswordModal } from '../SessionSettings';
 import { ConversationTypeEnum } from '../../../models/types';
 import { tr } from '../../../localization/localeTools';
+import { LibsessionUtilUserWasm } from '../../../libsession/user/userWrappers';
 
 async function toggleLinkPreviews(isToggleOn: boolean, forceUpdate: () => void) {
   if (!isToggleOn) {
@@ -96,10 +95,7 @@ export const SettingsCategoryPrivacy = (props: {
       <SessionToggleWithDescription
         onClickToggle={async () => {
           const toggledValue = !weHaveBlindedRequestsEnabled;
-          await window.setSettingValue(SettingsKey.hasBlindedMsgRequestsEnabled, toggledValue);
-          await SessionUtilUserProfile.insertUserProfileIntoWrapper(
-            UserUtils.getOurPubKeyStrFromCache()
-          );
+          LibsessionUtilUserWasm.getUserProfile().setBlindedMsgRequests(toggledValue);
           forceUpdate();
         }}
         title={tr('messageRequestsCommunities')}

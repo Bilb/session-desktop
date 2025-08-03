@@ -6,7 +6,7 @@ const getLinkPreviewEnabled = (state: StateType) =>
   state.settings.settingsBools[SettingsKey.settingsLinkPreview];
 
 const getHasBlindedMsgRequestsEnabled = (state: StateType) =>
-  state.settings.settingsBools[SettingsKey.hasBlindedMsgRequestsEnabled];
+  state.settings.settingsBools.hasBlindedMsgRequestsEnabled;
 
 const getHasFollowSystemThemeEnabled = (state: StateType) =>
   state.settings.settingsBools[SettingsKey.hasFollowSystemThemeEnabled];

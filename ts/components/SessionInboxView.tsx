@@ -44,6 +44,7 @@ import type { UserGroupState } from '../state/ducks/userGroups';
 import { initialThemeState } from '../state/theme/ducks/theme';
 import { initialNetworkModalState } from '../state/ducks/networkModal';
 import { initialNetworkDataState } from '../state/ducks/networkData';
+import { LibsessionUtilUserWasm } from '../libsession/user/userWrappers';
 
 function makeLookup<T>(items: Array<T>, key: string): { [key: string]: T } {
   // Yep, we can't index into item without knowing what it is. True. But we want to.
@@ -109,10 +110,7 @@ async function setupLeftPane(forceUpdateInboxComponent: () => void) {
 
   window.inboxStore?.dispatch(
     updateAllOnStorageReady({
-      hasBlindedMsgRequestsEnabled: Storage.getBoolOr(
-        SettingsKey.hasBlindedMsgRequestsEnabled,
-        false
-      ),
+      hasBlindedMsgRequestsEnabled: LibsessionUtilUserWasm.getUserProfile().getBlindedMsgRequests(),
       settingsLinkPreview: Storage.getBoolOr(SettingsKey.settingsLinkPreview, false),
       hasFollowSystemThemeEnabled: Storage.getBoolOr(
         SettingsKey.hasFollowSystemThemeEnabled,

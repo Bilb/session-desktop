@@ -13,6 +13,7 @@ import {
 } from '../../../../webworker/workers/browser/libsession_worker_interface';
 import { TestUtils } from '../../../test-utils';
 import { NetworkTime } from '../../../../util/NetworkTime';
+import { LibsessionUtilUserWasm } from '../../../../libsession/user/userWrappers';
 
 describe('LibSessionUtil saveDumpsToDb', () => {
   describe('for group', () => {
@@ -299,16 +300,17 @@ describe('LibSessionUtil pendingChangesForUs', () => {
     needsPush.resolves(true);
 
     const push = Sinon.stub(UserGenericWrapperActions, 'push');
+    const pushWasm = Sinon.stub(LibsessionUtilUserWasm, 'wasmPush');
     push
       .throws()
       .withArgs('ContactsConfig')
       .resolves(pushContacts)
-      .withArgs('UserConfig')
-      .resolves(pushUser)
       .withArgs('UserGroupsConfig')
       .resolves(pushGroups)
       .withArgs('ConvoInfoVolatileConfig')
       .resolves(pushConvo);
+
+    pushWasm.throws().withArgs('UserConfig').resolves(pushUser);
 
     Sinon.stub(NetworkTime, 'now').returns(1234);
     const result = await LibSessionUtil.pendingChangesForUs();

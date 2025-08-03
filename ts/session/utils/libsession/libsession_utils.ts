@@ -29,12 +29,20 @@ import {
 import { PubKey } from '../../types';
 import { ed25519Str } from '../String';
 import type { WithMessageHash } from '../../types/with';
+import {
+  LibsessionUtilUserWasm,
+  type UserConfigWasmType,
+} from '../../../libsession/user/userWrappers';
 
 const requiredUserVariants: Array<ConfigWrapperUser> = [
-  'UserConfig',
   'ContactsConfig',
   'UserGroupsConfig',
   'ConvoInfoVolatileConfig',
+];
+
+const requiredUserVariantsWithWasm: Array<ConfigWrapperUser | UserConfigWasmType> = [
+  ...requiredUserVariants,
+  ...LibsessionUtilUserWasm.requiredWasmUserVariants,
 ];
 
 /**
@@ -56,6 +64,7 @@ async function initializeLibSessionUtilWrappers() {
   );
 
   const userVariantsBuildWithoutErrors = new Set<ConfigWrapperUser>();
+  await LibsessionUtilUserWasm.initUserWrapperWithDumps(privateKeyEd25519, dumps);
 
   // load the dumps retrieved from the database into their corresponding wrappers
   for (let index = 0; index < dumps.length; index++) {
@@ -64,6 +73,7 @@ async function initializeLibSessionUtilWrappers() {
     if (!isUserConfigWrapperType(variant)) {
       continue;
     }
+
     window.log.debug(
       `initializeLibSessionUtilWrappers initing from dump "${variant}", length: ${dump.data.length}: ${to_hex(dump.data)}`
     );
@@ -81,16 +91,16 @@ async function initializeLibSessionUtilWrappers() {
     }
   }
 
-  const missingRequiredVariants: Array<ConfigWrapperUser> = difference(
-    LibSessionUtil.requiredUserVariants,
-    [...userVariantsBuildWithoutErrors.values()]
-  );
+  const missingRequiredVariants: Array<ConfigWrapperUser> = difference(requiredUserVariants, [
+    ...userVariantsBuildWithoutErrors.values(),
+  ]);
 
   for (let index = 0; index < missingRequiredVariants.length; index++) {
     const missingVariant = missingRequiredVariants[index];
     window.log.warn(
       `initializeLibSessionUtilWrappers: missingRequiredVariants "${missingVariant}"`
     );
+
     await UserGenericWrapperActions.init(missingVariant, privateKeyEd25519, null);
     // save the newly created dump to the database even if it is empty, just so we do not need to recreate one next run
 
@@ -159,18 +169,24 @@ export type GroupSuccessfulChange = KeysGroupSuccessfulChange | NonKeysGroupSucc
  */
 async function pendingChangesForUs(): Promise<UserDestinationChanges> {
   const results: UserDestinationChanges = { messages: [], allOldHashes: new Set() };
-  const variantsNeedingPush = new Set<ConfigWrapperUser>();
-  const userVariants = LibSessionUtil.requiredUserVariants;
+  const variantsNeedingPush = new Set<ConfigWrapperUser | UserConfigWasmType>();
+  const userVariants = LibSessionUtil.requiredUserVariantsWithWasm;
 
   for (let index = 0; index < userVariants.length; index++) {
     const variant = userVariants[index];
 
-    const needsPush = await UserGenericWrapperActions.needsPush(variant);
+    const needsPush = LibsessionUtilUserWasm.isWasmUserConfigWrapperType(variant)
+      ? LibsessionUtilUserWasm.wasmNeedsPush(variant)
+      : await UserGenericWrapperActions.needsPush(variant);
     if (!needsPush) {
       continue;
     }
 
-    const { data, seqno, hashes, namespace } = await UserGenericWrapperActions.push(variant);
+    const { data, seqno, hashes, namespace } = LibsessionUtilUserWasm.isWasmUserConfigWrapperType(
+      variant
+    )
+      ? LibsessionUtilUserWasm.wasmPush(variant)
+      : await UserGenericWrapperActions.push(variant);
     variantsNeedingPush.add(variant);
     results.messages.push({
       ciphertexts: data,
@@ -586,14 +602,18 @@ async function saveDumpsToDb(pubkey: PubkeyType | GroupPubkeyType) {
     throw new Error('saveDumpsToDb only supports groupv2 and us pubkeys');
   }
 
-  for (let i = 0; i < LibSessionUtil.requiredUserVariants.length; i++) {
-    const variant = LibSessionUtil.requiredUserVariants[i];
-    const needsDump = await UserGenericWrapperActions.needsDump(variant);
+  for (let i = 0; i < LibSessionUtil.requiredUserVariantsWithWasm.length; i++) {
+    const variant = LibSessionUtil.requiredUserVariantsWithWasm[i];
+    const needsDump = LibsessionUtilUserWasm.isWasmUserConfigWrapperType(variant)
+      ? LibsessionUtilUserWasm.wasmNeedsDump(variant)
+      : await UserGenericWrapperActions.needsDump(variant);
 
     if (!needsDump) {
       continue;
     }
-    const dump = await UserGenericWrapperActions.dump(variant);
+    const dump = LibsessionUtilUserWasm.isWasmUserConfigWrapperType(variant)
+      ? from_hex(LibsessionUtilUserWasm.wasmDumpHex(variant))
+      : await UserGenericWrapperActions.dump(variant);
     await ConfigDumpData.saveConfigDump({
       data: dump,
       publicKey: pubkey,
@@ -637,7 +657,7 @@ async function createMemberAndSetDetails({
 export const LibSessionUtil = {
   initializeLibSessionUtilWrappers,
   userNamespaceToVariant,
-  requiredUserVariants,
+  requiredUserVariantsWithWasm,
   pendingChangesForUs,
   pendingChangesForGroup,
   saveDumpsToDb,

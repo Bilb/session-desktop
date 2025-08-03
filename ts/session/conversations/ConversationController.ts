@@ -45,6 +45,8 @@ import { CONVERSATION_PRIORITIES, ConversationTypeEnum } from '../../models/type
 import { NetworkTime } from '../../util/NetworkTime';
 import { timeoutWithAbort } from '../utils/Promise';
 import { DURATION } from '../constants';
+import { LibsessionUtilUserWasm } from '../../libsession/user/userWrappers';
+import { libsessionReady } from '../../libsession/libsession';
 
 let instance: ConvoController | null;
 
@@ -502,23 +504,40 @@ class ConvoController {
     if (this.conversations.length) {
       throw new Error('ConversationController: Already loaded!');
     }
-
+    await libsessionReady();
     const load = async () => {
       try {
         const startLoad = Date.now();
+
+        try {
+          const variantsWithData = await ConfigDumpData.getAllDumpsWithData();
+          const keypair = await UserUtils.getUserED25519KeyPairBytes();
+          if (!keypair || !keypair.privKeyBytes) {
+            throw new Error('edkeypair not found for current user');
+          }
+          const privateKeyEd25519 = keypair.privKeyBytes;
+
+          await LibsessionUtilUserWasm.initUserWrapperWithDumps(
+            privateKeyEd25519,
+            variantsWithData
+          );
+        } catch (e) {
+          window.log.warn('initUserWrapperWithDumps failed with', e.message);
+        }
 
         const convoModels = await Data.getAllConversations();
         this.conversations.push(...convoModels);
 
         const start = Date.now();
-        const numberOfVariants = LibSessionUtil.requiredUserVariants.length;
+        const numberOfVariants = LibSessionUtil.requiredUserVariantsWithWasm.length;
         for (let index = 0; index < convoModels.length; index++) {
           const convo = convoModels[index];
           for (let wrapperIndex = 0; wrapperIndex < numberOfVariants; wrapperIndex++) {
-            const variant = LibSessionUtil.requiredUserVariants[wrapperIndex];
+            const variant = LibSessionUtil.requiredUserVariantsWithWasm[wrapperIndex];
 
             switch (variant) {
               case 'UserConfig':
+                break;
               case 'UserGroupsConfig':
                 break;
               case 'ContactsConfig':

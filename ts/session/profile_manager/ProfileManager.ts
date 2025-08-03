@@ -1,11 +1,13 @@
+import { to_hex } from 'libsodium-wrappers-sumo';
 import { isEmpty, isNil } from 'lodash';
 import { ConvoHub } from '../conversations';
-import { UserConfigWrapperActions } from '../../webworker/workers/browser/libsession_worker_interface';
 import { SyncUtils, UserUtils } from '../utils';
 import { fromHexToArray, toHex, trimWhitespace } from '../utils/String';
 import { AvatarDownload } from '../utils/job_runners/jobs/AvatarDownloadJob';
 import { CONVERSATION_PRIORITIES, ConversationTypeEnum } from '../../models/types';
 import { RetrieveDisplayNameError } from '../utils/errors';
+import { getLibSessionInstance, libsessionReady } from '../../libsession/libsession';
+import { LibsessionUtilUserWasm } from '../../libsession/user/userWrappers';
 
 export type Profile = {
   displayName: string | undefined;
@@ -112,23 +114,20 @@ async function updateProfileOfContact(
  * @note Make sure the displayName has been trimmed and validated first.
  */
 async function updateOurProfileDisplayNameOnboarding(newName: string) {
-  try {
-    // create a temp user config wrapper to test the display name with libsession
-    const privKey = new Uint8Array(64);
-    crypto.getRandomValues(privKey);
-    await UserConfigWrapperActions.init(privKey, null);
-    // this throws if the name is too long
-    await UserConfigWrapperActions.setName(newName);
-    const appliedName = await UserConfigWrapperActions.getName();
+  // create a temp user config wrapper to test the display name with libsession
+  const privKey = new Uint8Array(64);
+  crypto.getRandomValues(privKey);
+  const libsession = await libsessionReady();
+  const userProfileWrapper = new libsession.UserProfileW(to_hex(privKey), undefined);
 
-    if (isNil(appliedName)) {
-      throw new RetrieveDisplayNameError();
-    }
-
-    return appliedName;
-  } finally {
-    await UserConfigWrapperActions.free();
+  // this throws if the name is too long
+  userProfileWrapper.setName(newName);
+  const appliedName = userProfileWrapper.getName()?.toString();
+  if (isNil(appliedName)) {
+    throw new RetrieveDisplayNameError();
   }
+
+  return appliedName;
 }
 
 async function updateOurProfileDisplayName(newName: string) {
@@ -145,17 +144,21 @@ async function updateOurProfileDisplayName(newName: string) {
   const dbPriority = conversation.get('priority') || CONVERSATION_PRIORITIES.default;
 
   // we don't want to throw if somehow our display name in the DB is too long here, so we use the truncated version.
-  await UserConfigWrapperActions.setNameTruncated(trimWhitespace(newName));
-  const truncatedName = await UserConfigWrapperActions.getName();
+  LibsessionUtilUserWasm.getUserProfile().setNameTruncated(trimWhitespace(newName));
+  const truncatedName = LibsessionUtilUserWasm.getUserProfile().getName()?.toString();
   if (isNil(truncatedName)) {
     throw new RetrieveDisplayNameError();
   }
-  await UserConfigWrapperActions.setPriority(dbPriority);
-  if (dbProfileUrl && !isEmpty(dbProfileKey)) {
-    await UserConfigWrapperActions.setProfilePic({ key: dbProfileKey, url: dbProfileUrl });
-  } else {
-    await UserConfigWrapperActions.setProfilePic({ key: null, url: null });
+  LibsessionUtilUserWasm.getUserProfile().setNtsPriority(dbPriority);
+  const libsession = getLibSessionInstance();
+  const profilePic = new libsession.ProfilePic();
+
+  if (dbProfileKey && dbProfileUrl && !isEmpty(dbProfileKey)) {
+    profilePic.key = to_hex(dbProfileKey);
+    profilePic.url = dbProfileUrl;
   }
+
+  LibsessionUtilUserWasm.getUserProfile().setProfilePic(profilePic);
 
   conversation.setSessionDisplayNameNoCommit(truncatedName);
 

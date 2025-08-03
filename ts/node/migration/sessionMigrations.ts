@@ -1619,12 +1619,6 @@ function updateToSessionSchemaVersion33(currentVersion: number, db: BetterSqlite
     }
     blindedReqEnabled = userProfileWrapper.getEnableBlindedMsgRequest();
 
-    // update the item stored in the DB with that value too
-    sqlNode.createOrUpdateItem(
-      { id: SettingsKey.hasBlindedMsgRequestsEnabled, value: blindedReqEnabled },
-      db
-    );
-
     writeSessionSchemaVersion(targetVersion, db);
   })();
 }

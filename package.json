@@ -49,12 +49,12 @@
     "prepare": "husky",
     "print-deps": "node -v  && python3 --version",
     "watch": "yarn clean && yarn update-git-info && concurrently -n PBJS,SASS,LOCALES,UTIL,LIBSESSION,IMAGE,TS -c yellow,green,red,blue,blue,blue,green \"yarn protobuf\" \"yarn sass --watch\" \"yarn build:locales-soft\" \"yarn worker:utils --watch\" \"yarn worker:libsession --watch\" \"yarn worker:image_processor --watch\" \"yarn tsc --watch\""
-
   },
   "dependencies": {
     "@emoji-mart/data": "^1.2.1",
     "@emoji-mart/react": "^1.1.1",
     "@reduxjs/toolkit": "^1.9.7",
+    "@session-foundation/libsession-wasm": "file:/home/audric/pro/contribs/swarm_explorer/libsession-wasm/session-foundation-libsession-wasm-0.0.4.tgz",
     "@signalapp/better-sqlite3": "9.0.13",
     "@types/react-test-renderer": "^18.3.1",
     "abort-controller": "3.0.0",

@@ -2,7 +2,7 @@
 import { PubkeyType } from 'libsession_util_nodejs';
 import { compact, flatten, isArray, isEmpty, isNumber, isString } from 'lodash';
 import { v4 } from 'uuid';
-import { to_hex } from 'libsodium-wrappers-sumo';
+import { from_hex, to_hex } from 'libsodium-wrappers-sumo';
 import AbortController from 'abort-controller';
 import { UserUtils } from '../..';
 import { ConfigDumpData } from '../../../../data/configDump/configDump';
@@ -28,6 +28,10 @@ import {
 import { NetworkTime } from '../../../../util/NetworkTime';
 import type { ConfigWrapperUser } from '../../../../webworker/workers/browser/libsession_worker_functions';
 import { objectEntries } from '../../../../shared/object_utils';
+import {
+  LibsessionUtilUserWasm,
+  type UserConfigWasmType,
+} from '../../../../libsession/user/userWrappers';
 
 const defaultMsBetweenRetries = 5 * DURATION.SECONDS; // a long time between retries, to avoid running multiple jobs at the same time, when one was postponed at the same time as one already planned (5s)
 const defaultMaxAttempts = 2;
@@ -43,7 +47,7 @@ async function confirmPushedAndDump(
   us: string
 ): Promise<void> {
   const toConfirmPushed: Record<
-    ConfigWrapperUser,
+    ConfigWrapperUser | UserConfigWasmType,
     Parameters<typeof UserGenericWrapperActions.confirmPushed>[1] | undefined
   > = {
     UserConfig: undefined,
@@ -75,22 +79,33 @@ async function confirmPushedAndDump(
     }
 
     if (toConfirmPushed) {
-      await UserGenericWrapperActions.confirmPushed(toConfirmPushedEntry[0], {
-        seqno: toConfirmPushedEntry[1].seqno,
-        hashes: toConfirmPushedEntry[1].hashes,
-      });
+      if (LibsessionUtilUserWasm.isWasmUserConfigWrapperType(toConfirmPushedEntry[0])) {
+        LibsessionUtilUserWasm.wasmConfirmPushed(toConfirmPushedEntry[0], {
+          seqno: toConfirmPushedEntry[1].seqno,
+          hashes: toConfirmPushedEntry[1].hashes,
+        });
+      } else {
+        await UserGenericWrapperActions.confirmPushed(toConfirmPushedEntry[0], {
+          seqno: toConfirmPushedEntry[1].seqno,
+          hashes: toConfirmPushedEntry[1].hashes,
+        });
+      }
     }
   }
 
-  const { requiredUserVariants } = LibSessionUtil;
-  for (let index = 0; index < requiredUserVariants.length; index++) {
-    const variant = requiredUserVariants[index];
-    const needsDump = await UserGenericWrapperActions.needsDump(variant);
+  const { requiredUserVariantsWithWasm } = LibSessionUtil;
+  for (let index = 0; index < requiredUserVariantsWithWasm.length; index++) {
+    const variant = requiredUserVariantsWithWasm[index];
+    const needsDump = LibsessionUtilUserWasm.isWasmUserConfigWrapperType(variant)
+      ? LibsessionUtilUserWasm.wasmNeedsDump(variant)
+      : await UserGenericWrapperActions.needsDump(variant);
 
     if (!needsDump) {
       continue;
     }
-    const dump = await UserGenericWrapperActions.dump(variant);
+    const dump = LibsessionUtilUserWasm.isWasmUserConfigWrapperType(variant)
+      ? from_hex(LibsessionUtilUserWasm.wasmDumpHex(variant))
+      : await UserGenericWrapperActions.dump(variant);
     await ConfigDumpData.saveConfigDump({
       data: dump,
       publicKey: us,
@@ -138,13 +153,12 @@ async function pushChangesToUserSwarmIfNeeded() {
   );
 
   if (window.sessionFeatureFlags.debug.debugLibsessionDumps) {
-    for (let index = 0; index < LibSessionUtil.requiredUserVariants.length; index++) {
-      const variant = LibSessionUtil.requiredUserVariants[index];
-
-      window.log.info(
-        `pushChangesToUserSwarmIfNeeded: current dumps: ${variant}:`,
-        to_hex(await UserGenericWrapperActions.makeDump(variant))
-      );
+    for (let index = 0; index < LibSessionUtil.requiredUserVariantsWithWasm.length; index++) {
+      const variant = LibSessionUtil.requiredUserVariantsWithWasm[index];
+      const dumpHex = LibsessionUtilUserWasm.isWasmUserConfigWrapperType(variant)
+        ? LibsessionUtilUserWasm.wasmMakeDumpHex(variant)
+        : to_hex(await UserGenericWrapperActions.makeDump(variant));
+      window.log.info(`pushChangesToUserSwarmIfNeeded: current dumps: ${variant}:`, dumpHex);
     }
   }
 

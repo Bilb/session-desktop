@@ -1,6 +1,5 @@
-import { SettingsKey } from '../../../../data/settings-key';
+import { LibsessionUtilUserWasm } from '../../../../libsession/user/userWrappers';
 import { SignalService } from '../../../../protobuf';
-import { Storage } from '../../../../util/storage';
 import { VisibleMessage, VisibleMessageParams } from './VisibleMessage';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -19,7 +18,8 @@ export class OpenGroupVisibleMessage extends VisibleMessage {
       expireTimer: 0,
     });
     // they are the opposite of each others
-    this.blocksCommunityMessageRequests = !Storage.get(SettingsKey.hasBlindedMsgRequestsEnabled);
+    this.blocksCommunityMessageRequests =
+      !LibsessionUtilUserWasm.getUserProfile().getBlindedMsgRequests();
   }
 
   public dataProto(): SignalService.DataMessage {

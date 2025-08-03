@@ -105,7 +105,6 @@ import {
 import { ReadReceiptMessage } from '../session/messages/outgoing/controlMessage/receipt/ReadReceiptMessage';
 import { PreConditionFailed } from '../session/utils/errors';
 import { LibSessionUtil } from '../session/utils/libsession/libsession_utils';
-import { SessionUtilUserProfile } from '../session/utils/libsession/libsession_utils_user_profile';
 import { ReduxSogsRoomInfos } from '../state/ducks/sogsRoomInfo';
 import {
   selectLibGroupAdminsOutsideRedux,
@@ -2726,15 +2725,12 @@ async function commitConversationAndRefreshWrapper(id: string) {
   await convo.refreshInMemoryDetails(savedDetails);
 
   // Performance impact on this is probably to be pretty bad. We might want to push for that DB refactor to be done sooner so we do not need to fetch info from the DB anymore
-  for (let index = 0; index < LibSessionUtil.requiredUserVariants.length; index++) {
-    const variant = LibSessionUtil.requiredUserVariants[index];
+  for (let index = 0; index < LibSessionUtil.requiredUserVariantsWithWasm.length; index++) {
+    const variant = LibSessionUtil.requiredUserVariantsWithWasm[index];
 
     switch (variant) {
       case 'UserConfig':
-        if (SessionUtilUserProfile.isUserProfileToStoreInWrapper(convo.id)) {
-          // eslint-disable-next-line no-await-in-loop
-          await SessionUtilUserProfile.insertUserProfileIntoWrapper(convo.id);
-        }
+        // hopefully nothing to do here
         break;
       case 'ContactsConfig':
         if (SessionUtilContact.isContactToStoreInWrapper(convo)) {

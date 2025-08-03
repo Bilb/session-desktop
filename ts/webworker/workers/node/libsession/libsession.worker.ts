@@ -43,7 +43,6 @@ function assertUnreachable(_x: never, message: string): never {
 }
 
 // we can only have one of those so don't worry about storing them in a map for now
-let userProfileWrapper: UserConfigWrapperNode | undefined;
 let contactsConfigWrapper: ContactsConfigWrapperNode | undefined;
 let userGroupsConfigWrapper: UserGroupsWrapperNode | undefined;
 let convoInfoVolatileConfigWrapper: ConvoInfoVolatileWrapperNode | undefined;
@@ -52,8 +51,6 @@ const metaGroupWrappers: Map<GroupPubkeyType, MetaGroupWrapperNode> = new Map();
 
 function getUserWrapper(type: ConfigWrapperUser): BaseConfigWrapperNode | undefined {
   switch (type) {
-    case 'UserConfig':
-      return userProfileWrapper;
     case 'ContactsConfig':
       return contactsConfigWrapper;
     case 'UserGroupsConfig':
@@ -84,7 +81,6 @@ function getGroupWrapper(type: ConfigWrapperGroup): MetaGroupWrapperNode | undef
 function getCorrespondingUserWrapper(wrapperType: ConfigWrapperUser): BaseConfigWrapperNode {
   if (isUserConfigWrapperType(wrapperType)) {
     switch (wrapperType) {
-      case 'UserConfig':
       case 'ContactsConfig':
       case 'UserGroupsConfig':
       case 'ConvoInfoVolatileConfig':
@@ -186,9 +182,6 @@ function initUserWrapper(options: Array<unknown>, wrapperType: ConfigWrapperUser
     throw new Error(`${wrapperType} init needs a valid dump`);
   }
   switch (userType) {
-    case 'UserConfig':
-      userProfileWrapper = new UserConfigWrapperNode(edSecretKey, dump);
-      break;
     case 'ContactsConfig':
       contactsConfigWrapper = new ContactsConfigWrapperNode(edSecretKey, dump);
       break;
@@ -214,9 +207,6 @@ function freeUserWrapper(wrapperType: ConfigWrapperObjectTypesMeta) {
   const userWrapperType = assertUserWrapperType(wrapperType);
 
   switch (userWrapperType) {
-    case 'UserConfig':
-      userProfileWrapper = undefined;
-      break;
     case 'ContactsConfig':
       contactsConfigWrapper = undefined;
       break;
@@ -290,7 +280,6 @@ function initGroupWrapper(options: Array<unknown>, wrapperType: ConfigWrapperGro
 }
 
 function freeAllWrappers() {
-  userProfileWrapper = undefined;
   contactsConfigWrapper = undefined;
   userGroupsConfigWrapper = undefined;
   convoInfoVolatileConfigWrapper = undefined;

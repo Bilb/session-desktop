@@ -5,6 +5,7 @@ import { Storage } from '../util/storage';
 import { ConfigWrapperUser } from '../webworker/workers/browser/libsession_worker_functions';
 
 import { getSettingsKeyFromLibsessionWrapper } from './configMessage';
+import type { UserConfigWasmType } from '../libsession/user/userWrappers';
 
 /**
  * If we merged a more recent wrapper, we must not apply the changes from some incoming messages as it would override a change already set in the wrapper.
@@ -17,7 +18,7 @@ import { getSettingsKeyFromLibsessionWrapper } from './configMessage';
  */
 export async function sentAtMoreRecentThanWrapper(
   envelopeSentAtMs: number,
-  variant: ConfigWrapperUser
+  variant: ConfigWrapperUser | UserConfigWasmType
 ): Promise<'unknown' | 'wrapper_more_recent' | 'envelope_more_recent'> {
   const settingsKey = getSettingsKeyFromLibsessionWrapper(variant);
   if (!settingsKey) {

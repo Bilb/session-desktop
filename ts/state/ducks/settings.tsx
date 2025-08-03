@@ -5,7 +5,7 @@ import { SettingsKey } from '../../data/settings-key';
 
 const SettingsBoolsKeyTrackedInRedux = [
   SettingsKey.settingsLinkPreview,
-  SettingsKey.hasBlindedMsgRequestsEnabled,
+  'hasBlindedMsgRequestsEnabled', // this comes from libsession now, but exported in this redux slice for convenience
   SettingsKey.hasFollowSystemThemeEnabled,
   SettingsKey.hasShiftSendEnabled,
   SettingsKey.hideRecoveryPassword,
