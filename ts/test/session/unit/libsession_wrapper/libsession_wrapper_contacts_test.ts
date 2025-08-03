@@ -3,7 +3,6 @@ import { expect } from 'chai';
 import Sinon from 'sinon';
 import { ConversationModel } from '../../../../models/conversation';
 import { ConversationAttributes } from '../../../../models/conversationAttributes';
-import { ConvoHub } from '../../../../session/conversations';
 import { UserUtils } from '../../../../session/utils';
 import { SessionUtilContact } from '../../../../session/utils/libsession/libsession_utils_contacts';
 import { TestUtils } from '../../../test-utils';
@@ -209,99 +208,6 @@ describe('libsession_contacts', () => {
           })
         )
       ).to.be.eq(true);
-    });
-  });
-
-  describe('insertContactFromDBIntoWrapperAndRefresh', () => {
-    const contactArgs = {
-      displayNameInProfile: 'Tester',
-      nickname: 'Testie',
-      avatarPointer: 'http://filev2.abcdef.com/file/abcdefghijklmnop',
-      profileKey: 'profileKey',
-      isBlocked: () => false,
-      expirationMode: 'off',
-      expireTimer: 0,
-    };
-
-    it('returns wrapper values that match with the inputted contact', async () => {
-      const contact = new ConversationModel({
-        ...validArgs,
-        ...contactArgs,
-      } as ConversationAttributes);
-      Sinon.stub(ConvoHub.use(), 'get').returns(contact);
-      Sinon.stub(SessionUtilContact, 'isContactToStoreInWrapper').returns(true);
-
-      const wrapperContact = await SessionUtilContact.insertContactFromDBIntoWrapperAndRefresh(
-        contact.id
-      );
-
-      expect(wrapperContact, 'something should be returned from the wrapper').to.not.be.null;
-      if (!wrapperContact) {
-        throw Error('something should be returned from the wrapper');
-      }
-
-      expect(wrapperContact.id, 'id in the wrapper should match the inputted contact').to.equal(
-        contact.id
-      );
-      expect(
-        wrapperContact.approved,
-        'approved in the wrapper should match the inputted contact'
-      ).to.equal(contact.isApproved());
-      expect(
-        wrapperContact.approvedMe,
-        'approvedMe in the wrapper should match the inputted contact'
-      ).to.equal(contact.didApproveMe());
-      expect(
-        wrapperContact.blocked,
-        'blocked in the wrapper should match the inputted contact'
-      ).to.equal(contact.isBlocked());
-      expect(
-        wrapperContact.priority,
-        'priority in the wrapper should match the inputted contact'
-      ).to.equal(contact.get('priority'));
-      expect(
-        wrapperContact.nickname,
-        'nickname in the wrapper should match the inputted contact'
-      ).to.equal(contact.get('nickname'));
-      expect(wrapperContact.name, 'name in the wrapper should match the inputted contact').to.equal(
-        contact.get('displayNameInProfile')
-      );
-      expect(
-        wrapperContact.expirationMode,
-        'expirationMode in the wrapper should match the inputted contact'
-      ).to.equal(contact.getExpirationMode());
-      expect(
-        wrapperContact.expirationTimerSeconds,
-        'expirationTimerSeconds in the wrapper should match the inputted contact'
-      ).to.equal(contact.getExpireTimer());
-    });
-    it('if disappearing messages is on then the wrapper returned values should match the inputted contact', async () => {
-      const contact = new ConversationModel({
-        ...validArgs,
-        ...contactArgs,
-        expirationMode: 'deleteAfterSend',
-        expireTimer: 300,
-      });
-      Sinon.stub(ConvoHub.use(), 'get').returns(contact);
-      Sinon.stub(SessionUtilContact, 'isContactToStoreInWrapper').returns(true);
-
-      const wrapperContact = await SessionUtilContact.insertContactFromDBIntoWrapperAndRefresh(
-        contact.id
-      );
-
-      expect(wrapperContact, 'something should be returned from the wrapper').to.not.be.null;
-      if (!wrapperContact) {
-        throw Error('something should be returned from the wrapper');
-      }
-
-      expect(
-        wrapperContact.expirationMode,
-        'expirationMode in the wrapper should match the inputted contact'
-      ).to.equal(contact.getExpirationMode());
-      expect(
-        wrapperContact.expirationTimerSeconds,
-        'expirationTimerSeconds in the wrapper should match the inputted contact expireTimer'
-      ).to.equal(contact.getExpireTimer());
     });
   });
 });

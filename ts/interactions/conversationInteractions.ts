@@ -191,6 +191,7 @@ export async function declineConversationWithoutConfirm({
 
   if (
     conversationToDecline.isPrivate() &&
+    PubKey.is05Pubkey(conversationToDecline.id) &&
     !SessionUtilContact.isContactToStoreInWrapper(conversationToDecline)
   ) {
     await SessionUtilContact.removeContactFromWrapper(conversationToDecline.id);

@@ -28,15 +28,13 @@ import { assertUnreachable } from '../types/sqlSharedTypes';
 import { BlockedNumberController } from '../util';
 import { ReadReceipts } from '../util/readReceipts';
 import { Storage } from '../util/storage';
-import {
-  ContactsWrapperActions,
-  MetaGroupWrapperActions,
-} from '../webworker/workers/browser/libsession_worker_interface';
+import { MetaGroupWrapperActions } from '../webworker/workers/browser/libsession_worker_interface';
 import { handleCallMessage } from './callMessage';
 import { sentAtMoreRecentThanWrapper } from './sentAtMoreRecent';
 import { ECKeyPair } from './keypairs';
 import { CONVERSATION_PRIORITIES, ConversationTypeEnum } from '../models/types';
 import { shouldProcessContentMessage } from './common';
+import { LibsessionUtilUserWasm } from '../libsession/user/userWrappers';
 
 export async function handleSwarmContentMessage(
   envelope: EnvelopePlus,
@@ -261,20 +259,21 @@ async function shouldDropIncomingPrivateMessage(
       }
 
       if (syncTargetOrSource.startsWith('05')) {
-        const privateConvoInWrapper = await ContactsWrapperActions.get(syncTargetOrSource);
+        const privateConvoInWrapper =
+          LibsessionUtilUserWasm.getUserContacts().get(syncTargetOrSource);
         if (
           !privateConvoInWrapper ||
           privateConvoInWrapper.priority <= CONVERSATION_PRIORITIES.hidden
         ) {
           // the wrapper is more recent that this message and there is no such private conversation. Just drop this incoming message.
           window.log.info(
-            `shouldDropIncomingPrivateMessage: received message on conversation ${syncTargetOrSource} which appears to be hidden/removed in our most recent libsession contactconfig, sentAt: ${sentAtTimestamp}. Dropping it`
+            `shouldDropIncomingPrivateMessage: received message on conversation ${syncTargetOrSource} which appears to be hidden/removed in our most recent libsession contactConfig, sentAt: ${sentAtTimestamp}. Dropping it`
           );
           return true;
         }
 
         window.log.info(
-          `shouldDropIncomingPrivateMessage: received message on conversation ${syncTargetOrSource} which appears to NOT be hidden/removed in our most recent libsession contactconfig, sentAt: ${sentAtTimestamp}. `
+          `shouldDropIncomingPrivateMessage: received message on conversation ${syncTargetOrSource} which appears to NOT be hidden/removed in our most recent libsession contactConfig, sentAt: ${sentAtTimestamp}. `
         );
       } else {
         window.log.info(

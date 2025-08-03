@@ -7,7 +7,6 @@ import {
   useNicknameOrProfileNameOrShortenedPubkey,
 } from '../../hooks/useParamSelector';
 import { PubKey } from '../../session/types';
-import { SessionUtilContact } from '../../session/utils/libsession/libsession_utils_contacts';
 import {
   hasSelectedConversationIncomingMessages,
   hasSelectedConversationOutgoingMessages,
@@ -35,6 +34,7 @@ import {
 } from '../../state/selectors/userGroups';
 import { Localizer, type LocalizerProps } from '../basic/Localizer';
 import { tr } from '../../localization/localeTools';
+import { LibsessionUtilUserWasm } from '../../libsession/user/userWrappers';
 
 const Container = styled.div<{ noExtraPadding: boolean }>`
   display: flex;
@@ -89,7 +89,8 @@ export const ConversationOutgoingRequestExplanation = () => {
   if (!showMsgRequestUI || hasIncomingMessages || !selectedIsPrivate) {
     return null;
   }
-  const contactFromLibsession = SessionUtilContact.getContactCached(selectedConversation);
+  const contactFromLibsession = LibsessionUtilUserWasm.getUserContacts().get(selectedConversation);
+
   // Note: we want to display this description when the conversation is private (or blinded) AND
   // - the conversation is brand new (and not saved yet in libsession: transient conversation),
   // - the conversation exists in libsession but we are not approved yet.

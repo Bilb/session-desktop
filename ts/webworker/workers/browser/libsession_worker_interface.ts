@@ -2,8 +2,6 @@
 /* eslint-disable import/no-unresolved */
 import {
   BlindingActionsCalls,
-  ContactInfoSet,
-  ContactsWrapperActionsCalls,
   ConvoInfoVolatileWrapperActionsCalls,
   GenericWrapperActionsCall as UserGenericWrapperActionsCall,
   GroupInfoSet,
@@ -142,31 +140,6 @@ function createBaseActionsFor(wrapperType: ConfigWrapperUser) {
     storageNamespace: async () => UserGenericWrapperActions.storageNamespace(wrapperType),
   };
 }
-
-export const ContactsWrapperActions: ContactsWrapperActionsCalls = {
-  /* Reuse the BaseWrapperActions with the ContactConfig argument */
-  ...createBaseActionsFor('ContactsConfig'),
-
-  /** ContactsConfig wrapper specific actions */
-  get: async (pubkeyHex: string) =>
-    callLibSessionWorker(['ContactsConfig', 'get', pubkeyHex]) as Promise<
-      ReturnType<ContactsWrapperActionsCalls['get']>
-    >,
-  getAll: async () =>
-    callLibSessionWorker(['ContactsConfig', 'getAll']) as Promise<
-      ReturnType<ContactsWrapperActionsCalls['getAll']>
-    >,
-
-  erase: async (pubkeyHex: string) =>
-    callLibSessionWorker(['ContactsConfig', 'erase', pubkeyHex]) as Promise<
-      ReturnType<ContactsWrapperActionsCalls['erase']>
-    >,
-
-  set: async (contact: ContactInfoSet) =>
-    callLibSessionWorker(['ContactsConfig', 'set', contact]) as Promise<
-      ReturnType<ContactsWrapperActionsCalls['set']>
-    >,
-};
 
 // this is a cache of the new groups only. Anytime we create, update, delete, or merge a group, we update this
 const groups: Map<GroupPubkeyType, UserGroupsGet> = new Map();

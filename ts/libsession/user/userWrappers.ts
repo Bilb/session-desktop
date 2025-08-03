@@ -1,6 +1,6 @@
-import type { PushConfigResult } from 'libsession_util_nodejs';
+import type { PushConfigResult, ContactInfo } from 'libsession_util_nodejs';
 /* eslint-disable no-console */
-import type { ConfigBase, EmbindModule } from '@session-foundation/libsession-wasm';
+import type { ConfigBase, EmbindModule, ProfilePic } from '@session-foundation/libsession-wasm';
 import { from_hex, to_hex } from 'libsodium-wrappers-sumo';
 import { assertUnreachable, type ConfigDumpRow } from '../../types/sqlSharedTypes';
 import { getLibSessionInstance, libsessionReady } from '../libsession';
@@ -9,17 +9,23 @@ import {
   stringArrayToWasmVector,
   wasmVectorToArray,
 } from '../base/baseWrapper';
+import { isEmpty } from 'lodash';
 
 let userProfile: InstanceType<EmbindModule['UserProfileW']> | null = null;
 let userContacts: InstanceType<EmbindModule['ContactsW']> | null = null;
 let convoVolatile: InstanceType<EmbindModule['ConvoInfoVolatileW']> | null = null;
 let userGroups: InstanceType<EmbindModule['UserGroupsW']> | null = null;
 
-export type UserConfigWasmType = 'UserConfig';
+export type UserConfigWasmType = 'UserConfig' | 'ContactsConfig';
+
+const requiredWasmUserVariants: Array<UserConfigWasmType> = ['UserConfig', 'ContactsConfig'];
 
 function getWrapperFromVariant(variant: UserConfigWasmType) {
   if (variant === 'UserConfig') {
     return getUserProfile();
+  }
+  if (variant === 'ContactsConfig') {
+    return getUserContacts();
   }
   assertUnreachable(variant, 'getWrapperFromVariant: unknown variant');
   throw new Error('assertUnreachable failed');
@@ -103,6 +109,7 @@ async function initUserWrapperWithDumps(
     to_hex(userPrivateEdKey),
     userContactsDump ? to_hex(userContactsDump) : undefined
   );
+
   console.warn('userContacts', userContacts);
   const contacts = userContacts.all();
   for (let index = 0; index < contacts.size(); index++) {
@@ -157,7 +164,57 @@ function getConvoVolatile() {
   return convoVolatile;
 }
 
-const requiredWasmUserVariants: Array<UserConfigWasmType> = ['UserConfig'];
+function mapWasmVector<T, R>(
+  vector: { size(): number; get(index: number): T },
+  callback: (item: T, index: number) => R
+): Array<R> {
+  const result: Array<R> = [];
+  const length = vector.size();
+
+  for (let i = 0; i < length; i++) {
+    const item = vector.get(i);
+    if (item !== undefined && item !== null) {
+      result.push(callback(item, i));
+    }
+  }
+  return result;
+}
+
+function wasmGetAllContacts(): Array<ContactInfo> {
+  const contacts = getUserContacts().all();
+
+  return mapWasmVector(contacts, (contact, index) => {
+    if (!contact) {
+      throw new Error(`wasmGetAllContacts: contact ${index} is null`);
+    }
+
+    const info: ContactInfo = {
+      id: contact.sessionId,
+      name: contact.name,
+      profilePicture: {
+        key: contact.profilePicture.key ? from_hex(contact.profilePicture.key) : null,
+        url: contact.profilePicture.url,
+      },
+      createdAtSeconds: contact.createdAtSeconds,
+      blocked: contact.blocked,
+      approved: contact.approved,
+      approvedMe: contact.approvedMe,
+      priority: contact.priority,
+    };
+    return info;
+  });
+}
+
+function getWasmProfilePic({ key, url }: { url?: string; key?: Uint8Array }): ProfilePic {
+  const libsession = getLibSessionInstance();
+  const profilePicture = new libsession.ProfilePic();
+
+  if (key && url && !isEmpty(key)) {
+    profilePicture.key = to_hex(key);
+    profilePicture.url = url;
+  }
+  return profilePicture;
+}
 
 export const LibsessionUtilUserWasm = {
   requiredWasmUserVariants,
@@ -175,4 +232,6 @@ export const LibsessionUtilUserWasm = {
   getUserGroups,
   getConvoVolatile,
   initUserWrapperWithDumps,
+  wasmGetAllContacts,
+  getWasmProfilePic
 };

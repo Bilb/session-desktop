@@ -66,7 +66,7 @@ export class BlockedNumberController {
         await Convo.commitConversationAndRefreshWrapper(user);
       } catch (e) {
         window.log.warn(
-          'failed to SessionUtilContact.insertContactFromDBIntoWrapperAndRefresh with: ',
+          'failed to Convo.commitConversationAndRefreshWrapper with: ',
           user
         );
       }

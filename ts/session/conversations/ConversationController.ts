@@ -479,7 +479,7 @@ class ConvoController {
       if (SessionUtilContact.isContactToStoreInWrapper(conversation)) {
         window.log.warn('isContactToStoreInWrapper still true for ', conversation.attributes);
       }
-      if (conversation.id.startsWith('05')) {
+      if (PubKey.is05Pubkey(conversation.id)) {
         // make sure to filter blinded contacts as it will throw otherwise
         await SessionUtilContact.removeContactFromWrapper(conversation.id); // then remove the entry altogether from the wrapper
         await SessionUtilConvoInfoVolatile.removeContactFromWrapper(conversation.id);
@@ -541,9 +541,6 @@ class ConvoController {
               case 'UserGroupsConfig':
                 break;
               case 'ContactsConfig':
-                if (SessionUtilContact.isContactToStoreInWrapper(convo)) {
-                  await SessionUtilContact.refreshMappedValue(convo.id, true);
-                }
                 break;
               case 'ConvoInfoVolatileConfig':
                 if (SessionUtilConvoInfoVolatile.isConvoToStoreInWrapper(convo)) {

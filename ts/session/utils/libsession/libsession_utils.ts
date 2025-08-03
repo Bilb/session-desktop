@@ -35,7 +35,6 @@ import {
 } from '../../../libsession/user/userWrappers';
 
 const requiredUserVariants: Array<ConfigWrapperUser> = [
-  'ContactsConfig',
   'UserGroupsConfig',
   'ConvoInfoVolatileConfig',
 ];

@@ -200,7 +200,6 @@ describe('formatRowOfConversation', () => {
         fillConvoAttributesWithDefaults({
           id: '123456',
           type: ConversationTypeEnum.GROUP,
-          nickname: 'nickname',
           displayNameInProfile: 'displayNameInProfile',
           profileKey: '',
           avatarPointer: 'avatarPointer',
@@ -218,7 +217,6 @@ describe('formatRowOfConversation', () => {
         fillConvoAttributesWithDefaults({
           id: '1234565',
           type: ConversationTypeEnum.GROUPV2,
-          nickname: 'nickname',
           displayNameInProfile: 'displayNameInProfile',
           profileKey: '',
           avatarPointer: 'avatarPointer',
@@ -236,7 +234,6 @@ describe('formatRowOfConversation', () => {
         fillConvoAttributesWithDefaults({
           id: '1234565',
           type: ConversationTypeEnum.GROUPV2,
-          nickname: 'nickname',
           displayNameInProfile: 'displayNameInProfile',
           profileKey: '',
           avatarPointer: 'avatarPointer',
@@ -254,7 +251,6 @@ describe('formatRowOfConversation', () => {
         fillConvoAttributesWithDefaults({
           id: '1234565',
           type: ConversationTypeEnum.GROUPV2,
-          nickname: 'nickname',
           displayNameInProfile: 'displayNameInProfile',
           profileKey: '',
           avatarPointer: 'avatarPointer',

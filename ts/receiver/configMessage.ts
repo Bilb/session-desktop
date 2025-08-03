@@ -44,7 +44,6 @@ import { Data } from '../data/data';
 
 // eslint-disable-next-line import/no-unresolved
 import {
-  ContactsWrapperActions,
   ConvoInfoVolatileWrapperActions,
   UserGenericWrapperActions,
   MetaGroupWrapperActions,
@@ -184,6 +183,11 @@ export function getSettingsKeyFromLibsessionWrapper(
     if (wrapperType === 'UserConfig') {
       return SettingsKey.latestUserProfileEnvelopeTimestamp;
     }
+
+    if (wrapperType === 'ContactsConfig') {
+      return SettingsKey.latestUserContactsEnvelopeTimestamp;
+    }
+
     assertUnreachable(
       wrapperType,
       `getSettingsKeyFromLibsessionWrapper unknown type: ${wrapperType}`
@@ -196,8 +200,6 @@ export function getSettingsKeyFromLibsessionWrapper(
     );
   }
   switch (wrapperType) {
-    case 'ContactsConfig':
-      return SettingsKey.latestUserContactsEnvelopeTimestamp;
     case 'UserGroupsConfig':
       return SettingsKey.latestUserGroupEnvelopeTimestamp;
     case 'ConvoInfoVolatileConfig':
@@ -335,7 +337,7 @@ async function deleteContactsFromDB(contactsToRemove: Array<string>) {
 async function handleContactsUpdate(result: IncomingUserResult) {
   const us = UserUtils.getOurPubKeyStrFromCache();
 
-  const allContactsInWrapper = await ContactsWrapperActions.getAll();
+  const allContactsInWrapper = LibsessionUtilUserWasm.wasmGetAllContacts();
   const contactsToRemoveFromDB = getContactsToRemoveFromDB(allContactsInWrapper);
   await deleteContactsFromDB(contactsToRemoveFromDB);
 

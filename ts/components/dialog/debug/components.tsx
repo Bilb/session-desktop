@@ -29,12 +29,12 @@ import { Errors } from '../../../types/Errors';
 import { PubKey } from '../../../session/types';
 import { ConvoHub } from '../../../session/conversations';
 import { ConversationTypeEnum } from '../../../models/types';
-import { ContactsWrapperActions } from '../../../webworker/workers/browser/libsession_worker_interface';
 import { usePolling } from '../../../hooks/usePolling';
 import { releasedFeaturesActions } from '../../../state/ducks/releasedFeatures';
 import { networkDataActions } from '../../../state/ducks/networkData';
 import { DEBUG_MENU_PAGE, type DebugMenuPageProps } from './DebugMenuModal';
 import { SimpleSessionInput } from '../../inputs/SessionInput';
+import { LibsessionUtilUserWasm } from '../../../libsession/user/userWrappers';
 
 const hexRef = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'];
 
@@ -401,7 +401,7 @@ export const ExperimentalActions = ({ forceUpdate }: { forceUpdate: () => void }
 };
 
 async function fetchContactsCountAndUpdate() {
-  const count = (await ContactsWrapperActions.getAll()).length;
+  const count = LibsessionUtilUserWasm.getUserContacts().all().size();
   if (count && Number.isFinite(count)) {
     return count;
   }

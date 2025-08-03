@@ -91,7 +91,6 @@ export interface ConversationAttributes {
   // Note: If we do remove them, we also need to add some logic to the wrappers. For instance, we can currently search by nickname or display name and that works through the DB.
 
   displayNameInProfile?: string; // no matter the type of conversation, this is the real name as set by the user/name of the open or closed group
-  nickname?: string; // this is the name WE gave to that user (only applicable to private chats, not closed group neither opengroups)
   profileKey?: string; // Consider this being a hex string if it is set
   triggerNotificationsFor: ConversationNotificationSettingType;
 

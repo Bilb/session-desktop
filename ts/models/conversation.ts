@@ -73,7 +73,6 @@ import {
   MessageRequestResponse,
   MessageRequestResponseParams,
 } from '../session/messages/outgoing/controlMessage/MessageRequestResponse';
-import { SessionUtilContact } from '../session/utils/libsession/libsession_utils_contacts';
 import { SessionUtilConvoInfoVolatile } from '../session/utils/libsession/libsession_utils_convo_info_volatile';
 import { SessionUtilUserGroups } from '../session/utils/libsession/libsession_utils_user_groups';
 import { getOurProfile } from '../session/utils/User';
@@ -141,6 +140,7 @@ import LIBSESSION_CONSTANTS from '../session/utils/libsession/libsession_constan
 import { ReduxOnionSelectors } from '../state/selectors/onions';
 import { tr, tStripped } from '../localization/localeTools';
 import { getFeatureFlag } from '../state/ducks/types/releasedFeaturesReduxTypes';
+import { LibsessionUtilUserWasm } from '../libsession/user/userWrappers';
 
 type InMemoryConvoInfos = {
   mentionedUs: boolean;
@@ -307,7 +307,7 @@ export class ConversationModel extends Model<ConversationAttributes> {
     if (PubKey.is05Pubkey(this.id) && this.isPrivate()) {
       // TODO once we have a libsession state, we can make this used across the app without repeating as much
       // if a private chat, trust the value from the Libsession wrapper cached first
-      const contact = SessionUtilContact.getContactCached(this.id);
+      const contact = LibsessionUtilUserWasm.getUserContacts().get(this.id);
       if (contact) {
         return contact.priority;
       }
@@ -356,7 +356,7 @@ export class ConversationModel extends Model<ConversationAttributes> {
         toRet.isMe = true;
       }
 
-      const foundContact = SessionUtilContact.getContactCached(this.id);
+      const foundContact = LibsessionUtilUserWasm.getUserContacts().get(this.id);
 
       if (!toRet.activeAt && foundContact && isFinite(foundContact.createdAtSeconds)) {
         toRet.activeAt = foundContact.createdAtSeconds * 1000; // active at is in ms
@@ -1294,19 +1294,21 @@ export class ConversationModel extends Model<ConversationAttributes> {
   }
 
   public async setNickname(nickname: string | null, shouldCommit = false) {
-    if (!this.isPrivate()) {
+    if (!this.isPrivate() || !PubKey.is05Pubkey(this.id)) {
       window.log.info('cannot setNickname to a non private conversation.');
       return;
     }
     const trimmed = nickname && nickname.trim();
     const truncatedNickname = trimmed?.slice(0, LIBSESSION_CONSTANTS.CONTACT_MAX_NAME_LENGTH);
 
-    if (this.get('nickname') === truncatedNickname) {
+    if (LibsessionUtilUserWasm.getUserContacts().get(this.id)?.nickname === truncatedNickname) {
       return;
     }
 
+    // empty string will effectively remove the nickname
+    LibsessionUtilUserWasm.getUserContacts().setNickname(this.id, truncatedNickname || '');
+
     this.set({
-      nickname: truncatedNickname || undefined,
       displayNameInProfile: this.getRealSessionUsername(),
     });
 
@@ -1389,7 +1391,9 @@ export class ConversationModel extends Model<ConversationAttributes> {
    * @returns `nickname` so the nickname we forced for that user. For a group, this returns `undefined`
    */
   public getNickname(): string | undefined {
-    return this.isPrivate() ? this.get('nickname') || undefined : undefined;
+    return this.isPrivate()
+      ? LibsessionUtilUserWasm.getUserContacts().get(this.id)?.nickname || undefined
+      : undefined;
   }
 
   public getProfileKey(): string | undefined {
@@ -1792,8 +1796,10 @@ export class ConversationModel extends Model<ConversationAttributes> {
   public didApproveMe() {
     if (PubKey.is05Pubkey(this.id) && this.isPrivate()) {
       // if a private chat, trust the value from the Libsession wrapper cached first
-      // TODO once we have a libsession state, we can make this used across the app without repeating as much
-      return SessionUtilContact.getContactCached(this.id)?.approvedMe ?? !!this.get('didApproveMe');
+      return (
+        LibsessionUtilUserWasm.getUserContacts().get(this.id)?.approvedMe ??
+        !!this.get('didApproveMe')
+      );
     }
     return !!this.get('didApproveMe');
   }
@@ -1801,7 +1807,9 @@ export class ConversationModel extends Model<ConversationAttributes> {
   public isApproved() {
     if (PubKey.is05Pubkey(this.id) && this.isPrivate()) {
       // if a private chat, trust the value from the Libsession wrapper cached first
-      return SessionUtilContact.getContactCached(this.id)?.approved ?? !!this.get('isApproved');
+      return (
+        LibsessionUtilUserWasm.getUserContacts().get(this.id)?.approved ?? !!this.get('isApproved')
+      );
     }
     return !!this.get('isApproved');
   }
@@ -2730,13 +2738,10 @@ async function commitConversationAndRefreshWrapper(id: string) {
 
     switch (variant) {
       case 'UserConfig':
-        // hopefully nothing to do here
+        // hopefully nothing to do soon here
         break;
       case 'ContactsConfig':
-        if (SessionUtilContact.isContactToStoreInWrapper(convo)) {
-          // eslint-disable-next-line no-await-in-loop
-          await SessionUtilContact.insertContactFromDBIntoWrapperAndRefresh(convo.id);
-        }
+        // hopefully nothing to do soon here
         break;
       case 'UserGroupsConfig':
         if (SessionUtilUserGroups.isUserGroupToStoreInWrapper(convo)) {
