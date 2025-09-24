@@ -680,10 +680,12 @@ async function leaveClosedGroup(groupPk: GroupPubkeyType, fromSyncMessage: boole
 
   let members: Array<string> = [];
   let admins: Array<string> = [];
+  const groupFromWrapper = LibsessionUtilUserWasm.getUserGroups().getGroup(groupPk);
 
   // if we are the admin, the group must be destroyed for every members
   if (isCurrentUserAdmin) {
     window?.log?.info('Admin left a closed group. We need to destroy it');
+
     convo.set({ left: true });
     members = [];
     admins = [];

@@ -2,20 +2,16 @@
 /* eslint-disable import/extensions */
 /* eslint-disable import/no-unresolved */
 import { GroupPubkeyType, PubkeyType } from 'libsession_util_nodejs';
-import { from_hex, to_hex } from 'libsodium-wrappers-sumo';
-import { compact, difference, flatten, isEmpty, isNil, isString, omit } from 'lodash';
+import { from_hex } from 'libsodium-wrappers-sumo';
+import { compact, flatten, isEmpty, isNil, isString, omit } from 'lodash';
 import Long from 'long';
 import { UserUtils } from '..';
 import { ConfigDumpData } from '../../../data/configDump/configDump';
 import { assertUnreachable } from '../../../types/sqlSharedTypes';
-import {
-  ConfigWrapperUser,
-  isUserConfigWrapperType,
-} from '../../../webworker/workers/browser/libsession_worker_functions';
+
 import {
   UserGenericWrapperActions,
   MetaGroupWrapperActions,
-  UtilitiesActions,
 } from '../../../webworker/workers/browser/libsession_worker_interface';
 import {
   SnodeNamespace,
@@ -34,88 +30,9 @@ import {
   type UserConfigWasmType,
 } from '../../../libsession/user/userWrappers';
 
-const requiredUserVariants: Array<ConfigWrapperUser> = [
-  'UserGroupsConfig',
-  'ConvoInfoVolatileConfig',
-];
-
-const requiredUserVariantsWithWasm: Array<ConfigWrapperUser | UserConfigWasmType> = [
-  ...requiredUserVariants,
+const requiredUserVariantsWithWasm: Array<UserConfigWasmType> = [
   ...LibsessionUtilUserWasm.requiredWasmUserVariants,
 ];
-
-/**
- * Initializes the libsession wrappers for the required user variants if the dumps are not already in the database. It will use an empty dump if the dump is not found.
- */
-async function initializeLibSessionUtilWrappers() {
-  const keypair = await UserUtils.getUserED25519KeyPairBytes();
-  if (!keypair || !keypair.privKeyBytes) {
-    throw new Error('edkeypair not found for current user');
-  }
-  const privateKeyEd25519 = keypair.privKeyBytes;
-  await UtilitiesActions.freeAllWrappers();
-
-  // fetch the dumps we already have from the database
-  const dumps = await ConfigDumpData.getAllDumpsWithData();
-  window.log.info(
-    'initializeLibSessionUtilWrappers alldumpsInDB already: ',
-    JSON.stringify(dumps.map(m => omit(m, 'data')))
-  );
-
-  const userVariantsBuildWithoutErrors = new Set<ConfigWrapperUser>();
-  await LibsessionUtilUserWasm.initUserWrapperWithDumps(privateKeyEd25519, dumps);
-
-  // load the dumps retrieved from the database into their corresponding wrappers
-  for (let index = 0; index < dumps.length; index++) {
-    const dump = dumps[index];
-    const variant = dump.variant;
-    if (!isUserConfigWrapperType(variant)) {
-      continue;
-    }
-
-    window.log.debug(
-      `initializeLibSessionUtilWrappers initing from dump "${variant}", length: ${dump.data.length}: ${to_hex(dump.data)}`
-    );
-    try {
-      await UserGenericWrapperActions.init(
-        variant,
-        privateKeyEd25519,
-        dump.data.length ? dump.data : null
-      );
-
-      userVariantsBuildWithoutErrors.add(variant);
-    } catch (e) {
-      window.log.warn(`init of UserConfig failed with ${e.message} `);
-      throw new Error(`initializeLibSessionUtilWrappers failed with ${e.message}`);
-    }
-  }
-
-  const missingRequiredVariants: Array<ConfigWrapperUser> = difference(requiredUserVariants, [
-    ...userVariantsBuildWithoutErrors.values(),
-  ]);
-
-  for (let index = 0; index < missingRequiredVariants.length; index++) {
-    const missingVariant = missingRequiredVariants[index];
-    window.log.warn(
-      `initializeLibSessionUtilWrappers: missingRequiredVariants "${missingVariant}"`
-    );
-
-    await UserGenericWrapperActions.init(missingVariant, privateKeyEd25519, null);
-    // save the newly created dump to the database even if it is empty, just so we do not need to recreate one next run
-
-    const dump = await UserGenericWrapperActions.dump(missingVariant);
-    await ConfigDumpData.saveConfigDump({
-      data: dump,
-      publicKey: UserUtils.getOurPubKeyStrFromCache(),
-      variant: missingVariant,
-    });
-    window.log.debug(
-      `initializeLibSessionUtilWrappers: missingRequiredVariants "${missingVariant}" created`
-    );
-  }
-
-  // No need to load the meta group wrapper here. We will load them once the SessionInbox is loaded with a redux action
-}
 
 type PendingChangesShared = {
   ciphertexts: Array<Uint8Array>;
@@ -168,24 +85,19 @@ export type GroupSuccessfulChange = KeysGroupSuccessfulChange | NonKeysGroupSucc
  */
 async function pendingChangesForUs(): Promise<UserDestinationChanges> {
   const results: UserDestinationChanges = { messages: [], allOldHashes: new Set() };
-  const variantsNeedingPush = new Set<ConfigWrapperUser | UserConfigWasmType>();
+  const variantsNeedingPush = new Set<UserConfigWasmType>();
   const userVariants = LibSessionUtil.requiredUserVariantsWithWasm;
 
   for (let index = 0; index < userVariants.length; index++) {
     const variant = userVariants[index];
 
-    const needsPush = LibsessionUtilUserWasm.isWasmUserConfigWrapperType(variant)
-      ? LibsessionUtilUserWasm.wasmNeedsPush(variant)
-      : await UserGenericWrapperActions.needsPush(variant);
+    const needsPush = LibsessionUtilUserWasm.wasmNeedsPush(variant);
+
     if (!needsPush) {
       continue;
     }
 
-    const { data, seqno, hashes, namespace } = LibsessionUtilUserWasm.isWasmUserConfigWrapperType(
-      variant
-    )
-      ? LibsessionUtilUserWasm.wasmPush(variant)
-      : await UserGenericWrapperActions.push(variant);
+    const { data, seqno, hashes, namespace } = LibsessionUtilUserWasm.wasmPush(variant);
     variantsNeedingPush.add(variant);
     results.messages.push({
       ciphertexts: data,
@@ -654,7 +566,6 @@ async function createMemberAndSetDetails({
 }
 
 export const LibSessionUtil = {
-  initializeLibSessionUtilWrappers,
   userNamespaceToVariant,
   requiredUserVariantsWithWasm,
   pendingChangesForUs,

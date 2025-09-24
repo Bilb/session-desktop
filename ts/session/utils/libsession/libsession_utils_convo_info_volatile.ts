@@ -108,18 +108,7 @@ async function insertConvoFromDBIntoWrapperAndRefresh(convoId: string): Promise<
       }
       break;
     case 'LegacyGroup':
-      try {
-        await ConvoInfoVolatileWrapperActions.setLegacyGroup(
-          convoId,
-          lastReadMessageTimestamp,
-          isForcedUnread
-        );
-        await refreshConvoVolatileCached(convoId, true, false);
-      } catch (e) {
-        window.log.warn(
-          `ConvoInfoVolatileWrapperActions.setLegacyGroup of ${convoId} failed with ${e.message}`
-        );
-      }
+      // Note: legacy group are deprecated
       break;
     case 'Group':
       try {

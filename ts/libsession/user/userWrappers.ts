@@ -1,3 +1,4 @@
+import { isEmpty } from 'lodash';
 import type { PushConfigResult, ContactInfo } from 'libsession_util_nodejs';
 /* eslint-disable no-console */
 import type { ConfigBase, EmbindModule, ProfilePic } from '@session-foundation/libsession-wasm';
@@ -9,16 +10,43 @@ import {
   stringArrayToWasmVector,
   wasmVectorToArray,
 } from '../base/baseWrapper';
-import { isEmpty } from 'lodash';
 
 let userProfile: InstanceType<EmbindModule['UserProfileW']> | null = null;
 let userContacts: InstanceType<EmbindModule['ContactsW']> | null = null;
 let convoVolatile: InstanceType<EmbindModule['ConvoInfoVolatileW']> | null = null;
 let userGroups: InstanceType<EmbindModule['UserGroupsW']> | null = null;
 
-export type UserConfigWasmType = 'UserConfig' | 'ContactsConfig';
+function freeAllWasmWrappers() {
+  if (userProfile) {
+    userProfile.delete();
+    userProfile = null;
+  }
+  if (userContacts) {
+    userContacts.delete();
+    userContacts = null;
+  }
+  if (convoVolatile) {
+    convoVolatile.delete();
+    convoVolatile = null;
+  }
+  if (userGroups) {
+    userGroups.delete();
+    userGroups = null;
+  }
+}
 
-const requiredWasmUserVariants: Array<UserConfigWasmType> = ['UserConfig', 'ContactsConfig'];
+export type UserConfigWasmType =
+  | 'UserConfig'
+  | 'ContactsConfig'
+  | 'UserGroupsConfig'
+  | 'ConvoInfoVolatileConfig';
+
+const requiredWasmUserVariants: Array<UserConfigWasmType> = [
+  'UserConfig',
+  'ContactsConfig',
+  'UserGroupsConfig',
+  'ConvoInfoVolatileConfig',
+];
 
 function getWrapperFromVariant(variant: UserConfigWasmType) {
   if (variant === 'UserConfig') {
@@ -26,6 +54,12 @@ function getWrapperFromVariant(variant: UserConfigWasmType) {
   }
   if (variant === 'ContactsConfig') {
     return getUserContacts();
+  }
+  if (variant === 'UserGroupsConfig') {
+    return getUserContacts();
+  }
+  if (variant === 'ConvoInfoVolatileConfig') {
+    return getConvoVolatile();
   }
   assertUnreachable(variant, 'getWrapperFromVariant: unknown variant');
   throw new Error('assertUnreachable failed');
@@ -233,5 +267,6 @@ export const LibsessionUtilUserWasm = {
   getConvoVolatile,
   initUserWrapperWithDumps,
   wasmGetAllContacts,
-  getWasmProfilePic
+  getWasmProfilePic,
+  freeAllWasmWrappers
 };

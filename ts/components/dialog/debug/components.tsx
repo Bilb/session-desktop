@@ -58,7 +58,7 @@ async function generateOneRandomContact() {
   // but we still need to mark that conversation as active
   // for it to be inserted in the config
   created.setKey('active_at', Date.now());
-  created.setKey('isApproved', true);
+  await created.setIsApproved(true, false);
   created.setSessionDisplayNameNoCommit(id.slice(2, 8));
 
   await created.commit();

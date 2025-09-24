@@ -2,7 +2,6 @@ import { isNumber } from 'lodash';
 
 import { Storage } from '../util/storage';
 // eslint-disable-next-line import/no-unresolved, import/extensions
-import { ConfigWrapperUser } from '../webworker/workers/browser/libsession_worker_functions';
 
 import { getSettingsKeyFromLibsessionWrapper } from './configMessage';
 import type { UserConfigWasmType } from '../libsession/user/userWrappers';
@@ -18,7 +17,7 @@ import type { UserConfigWasmType } from '../libsession/user/userWrappers';
  */
 export async function sentAtMoreRecentThanWrapper(
   envelopeSentAtMs: number,
-  variant: ConfigWrapperUser | UserConfigWasmType
+  variant: UserConfigWasmType
 ): Promise<'unknown' | 'wrapper_more_recent' | 'envelope_more_recent'> {
   const settingsKey = getSettingsKeyFromLibsessionWrapper(variant);
   if (!settingsKey) {

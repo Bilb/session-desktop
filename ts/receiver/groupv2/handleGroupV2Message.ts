@@ -27,6 +27,7 @@ import {
   UserGroupsWrapperActions,
 } from '../../webworker/workers/browser/libsession_worker_interface';
 import { sendInviteResponseToGroup } from '../../session/sending/group/GroupInviteResponse';
+import { LibsessionUtilUserWasm } from '../../libsession/user/userWrappers';
 
 type WithSignatureTimestamp = { signatureTimestamp: number };
 type WithAuthor = { author: PubkeyType };
@@ -142,14 +143,15 @@ async function handleGroupUpdateInviteMessage({
   const convo = await ConvoHub.use().getOrCreateAndWait(groupPk, ConversationTypeEnum.GROUPV2);
   convo.set({
     active_at: signatureTimestamp,
-    didApproveMe: true,
     conversationIdOrigin: author,
   });
 
+  await convo.setDidApproveMe(true, false);
+
   if (inviteMessage.name && isEmpty(convo.getRealSessionUsername())) {
-    convo.set({
-      displayNameInProfile: inviteMessage.name,
-    });
+    const group = LibsessionUtilUserWasm.getUserGroups().getOrConstructGroup(groupPk);
+    group.name = inviteMessage.name;
+    LibsessionUtilUserWasm.getUserGroups().setGroup(group);
   }
   const userEd25519Secretkey = (await UserUtils.getUserED25519KeyPairBytes()).privKeyBytes;
 
@@ -575,14 +577,15 @@ async function handleGroupUpdatePromoteMessage({
   const convo = await ConvoHub.use().getOrCreateAndWait(groupPk, ConversationTypeEnum.GROUPV2);
   convo.set({
     active_at: signatureTimestamp,
-    didApproveMe: true,
     conversationIdOrigin: author,
   });
 
+  await convo.setDidApproveMe(true, false);
+
   if (change.name && isEmpty(convo.getRealSessionUsername())) {
-    convo.set({
-      displayNameInProfile: change.name,
-    });
+    const group = LibsessionUtilUserWasm.getUserGroups().getOrConstructGroup(groupPk);
+    group.name = change.name;
+    LibsessionUtilUserWasm.getUserGroups().setGroup(group);
   }
   const userEd25519Secretkey = (await UserUtils.getUserED25519KeyPairBytes()).privKeyBytes;
 

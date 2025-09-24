@@ -239,9 +239,10 @@ async function shouldDropIncomingPrivateMessage(
 
       // handle the `us` case first, as we will never find ourselves in the contacts wrapper. The NTS details are in the UserProfile wrapper.
       if (isUs) {
-        const us = ConvoHub.use().get(envelope.source);
-        const ourPriority = us?.get('priority') || CONVERSATION_PRIORITIES.default;
-        if (us && ourPriority <= CONVERSATION_PRIORITIES.hidden) {
+        const ourPriority =
+          LibsessionUtilUserWasm.getUserProfile().getNtsPriority() ||
+          CONVERSATION_PRIORITIES.default;
+        if (ourPriority <= CONVERSATION_PRIORITIES.hidden) {
           // if the wrapper data is more recent than this message and the NTS conversation is hidden, just drop this incoming message to avoid showing the NTS conversation again.
           window.log.info(
             `shouldDropIncomingPrivateMessage: received message in NTS which appears to be hidden in our most recent libsession userconfig, sentAt: ${sentAtTimestamp}. Dropping it`

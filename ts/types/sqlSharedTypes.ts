@@ -1,19 +1,13 @@
 /* eslint-disable import/extensions */
 /* eslint-disable import/no-unresolved */
 // eslint-disable-next-line camelcase
-import {
-  ContactInfoSet,
-  GroupPubkeyType,
-  LegacyGroupInfo,
-  LegacyGroupMemberInfo,
-  Uint8ArrayFixedLength,
-} from 'libsession_util_nodejs';
-import { from_hex } from 'libsodium-wrappers-sumo';
+import { ContactInfoSet, GroupPubkeyType, Uint8ArrayFixedLength } from 'libsession_util_nodejs';
 import { isArray, isEmpty, isEqual } from 'lodash';
 import { DisappearingMessageConversationModeType } from '../session/disappearing_messages/types';
 import { fromHexToArray, toHex } from '../session/utils/String';
 import { ConfigWrapperObjectTypesMeta } from '../webworker/workers/browser/libsession_worker_functions';
 import { OpenGroupRequestCommonType, OpenGroupV2Room } from '../data/types';
+import type { UserConfigWasmType } from '../libsession/user/userWrappers';
 
 /**
  * This wrapper can be used to make a function type not async, asynced.
@@ -47,7 +41,7 @@ export type UpdateLastHashType = {
 };
 
 export type ConfigDumpRow = {
-  variant: ConfigWrapperObjectTypesMeta | 'UserConfig'; // the variant this entry is about. (user pr, contacts, ...)
+  variant: ConfigWrapperObjectTypesMeta | UserConfigWasmType; // the variant this entry is about. (user pr, contacts, ...)
   publicKey: string; // either our pubkey if a dump for our own swarm or the closed group pubkey
   data: Uint8Array; // the blob returned by libsession.dump() call
 };
@@ -212,59 +206,6 @@ export function maybeArrayJSONtoArray(arr: string | Array<string>): Array<string
   } catch (e) {
     return [];
   }
-}
-
-/**
- * NOTE This code should always match the last known version of the same function used in a libsession migration (V34)
- */
-export function getLegacyGroupInfoFromDBValues({
-  id,
-  priority,
-  members: maybeMembers,
-  displayNameInProfile,
-  expirationMode,
-  expireTimer,
-  encPubkeyHex,
-  encSeckeyHex,
-  groupAdmins: maybeAdmins,
-  lastJoinedTimestamp,
-}: {
-  id: string;
-  priority: number;
-  displayNameInProfile: string | undefined;
-  expirationMode: DisappearingMessageConversationModeType | undefined;
-  expireTimer: number | undefined;
-  encPubkeyHex: string;
-  encSeckeyHex: string;
-  members: string | Array<string>;
-  groupAdmins: string | Array<string>;
-  lastJoinedTimestamp: number;
-}) {
-  const admins: Array<string> = maybeArrayJSONtoArray(maybeAdmins);
-  const members: Array<string> = maybeArrayJSONtoArray(maybeMembers);
-
-  const wrappedMembers: Array<LegacyGroupMemberInfo> = (members || []).map(m => {
-    return {
-      isAdmin: admins.includes(m),
-      pubkeyHex: m,
-    };
-  });
-
-  const legacyGroup: LegacyGroupInfo = {
-    pubkeyHex: id,
-    name: displayNameInProfile || '',
-    priority: priority || 0,
-    members: wrappedMembers,
-    disappearingTimerSeconds:
-      expirationMode && expirationMode !== 'off' && !!expireTimer && expireTimer > 0
-        ? expireTimer
-        : 0,
-    encPubkey: !isEmpty(encPubkeyHex) ? from_hex(encPubkeyHex) : new Uint8Array(),
-    encSeckey: !isEmpty(encSeckeyHex) ? from_hex(encSeckeyHex) : new Uint8Array(),
-    joinedAtSeconds: Math.floor(lastJoinedTimestamp / 1000),
-  };
-
-  return legacyGroup;
 }
 
 /**

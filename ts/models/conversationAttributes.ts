@@ -1,5 +1,4 @@
 import { defaults } from 'lodash';
-import { DisappearingMessageConversationModeType } from '../session/disappearing_messages/types';
 
 import { ConversationTypeEnum, CONVERSATION_PRIORITIES } from './types';
 import { ConversationInteractionType, ConversationInteractionStatus } from '../interactions/types';
@@ -54,7 +53,7 @@ export interface ConversationAttributes {
   lastMessageInteractionType: ConversationInteractionType | null;
   lastMessageInteractionStatus: ConversationInteractionStatus | null;
 
-  left: boolean; // legacy & groupv2, should eventually be removed to rely on libsession value directly
+  // left: boolean; // legacy & groupv2, should eventually be removed to rely on libsession value directly
 
   /**
    * We now require all avatars stored on desktop to have in additions of their normal avatars
@@ -82,7 +81,6 @@ export interface ConversationAttributes {
   conversationIdOrigin?: string; // The conversation from which this conversation originated from: blinded message request or 03-group admin who invited us
 
   // TODOLATER those two items are only used for legacy closed groups and will be removed when we get rid of the legacy closed groups support
-  lastJoinedTimestamp: number; // GroupV2: last time we were added to this group, should eventually be removed to rely on libsession value directly
 
   // ===========================================================================
   // All of the items below are duplicated one way or the other with libsession.
@@ -90,9 +88,8 @@ export interface ConversationAttributes {
   // for those so there is no need to keep them in sync, but just have them in the dumps.
   // Note: If we do remove them, we also need to add some logic to the wrappers. For instance, we can currently search by nickname or display name and that works through the DB.
 
-  displayNameInProfile?: string; // no matter the type of conversation, this is the real name as set by the user/name of the open or closed group
+  // displayNameInProfile?: string; // no matter the type of conversation, this is the real name as set by the user/name of the open or closed group
   profileKey?: string; // Consider this being a hex string if it is set
-  triggerNotificationsFor: ConversationNotificationSettingType;
 
   /**
    * This is the url of the avatar on the file server v2 or sogs server.
@@ -100,22 +97,23 @@ export interface ConversationAttributes {
    */
   avatarPointer?: string;
   /** in seconds, 0 means no expiration */
-  expireTimer: number;
+  // expireTimer: number;
+  triggerNotificationsFor: ConversationNotificationSettingType;
 
-  members: Array<string>; // groups only members are all members for this group (not used for communities)
+  // members: Array<string>; // groups only members are all members for this group (not used for communities)
   groupAdmins: Array<string>; // for sogs and closed group: the unique admins of that group
 
-  priority: number; // -1 = hidden (contact and NTS only), 0 = normal, 1 = pinned
+  // priority: number; // -1 = hidden (contact and NTS only), 0 = normal, 1 = pinned
 
-  isApproved: boolean; // if we sent a message request or sent a message to this contact, we approve them. If isApproved & didApproveMe, a message request becomes a contact
-  didApproveMe: boolean; // if our message request was approved already (or they've sent us a message request/message themselves). If isApproved & didApproveMe, a message request becomes a contact
+  // isApproved: boolean; // if we sent a message request or sent a message to this contact, we approve them. If isApproved & didApproveMe, a message request becomes a contact
+  // didApproveMe: boolean; // if our message request was approved already (or they've sent us a message request/message themselves). If isApproved & didApproveMe, a message request becomes a contact
 
-  markedAsUnread: boolean; // Force the conversation as unread even if all the messages are read. Used to highlight a conversation the user wants to check again later, synced.
+  // markedAsUnread: boolean; // Force the conversation as unread even if all the messages are read. Used to highlight a conversation the user wants to check again later, synced.
 
   blocksSogsMsgReqsTimestamp: number; // if the convo is blinded and the user has denied contact through sogs, this field be set to the user's latest message timestamp
 
   /** disappearing messages setting for this conversation */
-  expirationMode: DisappearingMessageConversationModeType;
+  // expirationMode: DisappearingMessageConversationModeType;
 
   /**
    * An 03-group is expired if an admin didn't come online for the last 30 days.
@@ -138,7 +136,6 @@ export const fillConvoAttributesWithDefaults = (
     members: [],
     groupAdmins: [],
 
-    lastJoinedTimestamp: 0,
     expirationMode: 'off',
     expireTimer: 0,
 

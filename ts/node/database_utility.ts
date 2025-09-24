@@ -4,7 +4,6 @@ import {
   ConversationAttributes,
   ConversationAttributesWithNotSavedOnes,
 } from '../models/conversationAttributes';
-import { CONVERSATION_PRIORITIES } from '../models/types';
 
 export const CONVERSATIONS_TABLE = 'conversations';
 export const MESSAGES_TABLE = 'messages';
@@ -60,7 +59,6 @@ const allowedKeysFormatRowOfConversation = [
   'lastMessageInteractionStatus',
   'triggerNotificationsFor',
   'unreadCount',
-  'lastJoinedTimestamp',
   'expireTimer',
   'active_at',
   'id',
@@ -107,28 +105,15 @@ export function formatRowOfConversation(
 
   const convo: ConversationAttributes = omit(row, 'json') as ConversationAttributes;
 
-  // if the stringified array of admins/moderators/members length is less than 5,
-  // we consider there is nothing to parse and just return []
-  const minLengthNoParsing = 5;
-
-  convo.groupAdmins =
-    row.groupAdmins?.length && row.groupAdmins.length > minLengthNoParsing
-      ? jsonToArray(row.groupAdmins)
-      : [];
-
-  convo.members =
-    row.members?.length && row.members.length > minLengthNoParsing ? jsonToArray(row.members) : [];
-
   // sqlite stores boolean as integer. to clean thing up we force the expected boolean fields to be boolean
   convo.isTrustedForAttachmentDownload = Boolean(convo.isTrustedForAttachmentDownload);
-  convo.isApproved = Boolean(convo.isApproved);
-  convo.didApproveMe = Boolean(convo.didApproveMe);
-  convo.left = Boolean(convo.left);
-  convo.markedAsUnread = Boolean(convo.markedAsUnread);
-  convo.priority = convo.priority || CONVERSATION_PRIORITIES.default;
 
   if (!convo.conversationIdOrigin) {
     convo.conversationIdOrigin = undefined;
+  }
+
+  if (!isNumber(convo.blocksSogsMsgReqsTimestamp)) {
+    convo.blocksSogsMsgReqsTimestamp = 0;
   }
 
   if (!convo.lastMessage) {
@@ -137,10 +122,6 @@ export function formatRowOfConversation(
 
   if (!convo.lastMessageStatus) {
     convo.lastMessageStatus = undefined;
-  }
-
-  if (!isNumber(convo.blocksSogsMsgReqsTimestamp)) {
-    convo.blocksSogsMsgReqsTimestamp = 0;
   }
 
   if (!convo.lastMessageInteractionType) {
@@ -153,14 +134,6 @@ export function formatRowOfConversation(
 
   if (!convo.triggerNotificationsFor) {
     convo.triggerNotificationsFor = 'all';
-  }
-
-  if (!convo.lastJoinedTimestamp) {
-    convo.lastJoinedTimestamp = 0;
-  }
-
-  if (!convo.expireTimer) {
-    convo.expireTimer = 0;
   }
 
   if (!convo.active_at) {
@@ -189,7 +162,6 @@ const allowedKeysOfConversationAttributes = [
   'lastMessageInteractionType',
   'lastMessageInteractionStatus',
   'triggerNotificationsFor',
-  'lastJoinedTimestamp',
   'expireTimer',
   'active_at',
   'id',

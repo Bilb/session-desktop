@@ -37,21 +37,6 @@ describe('fillConvoAttributesWithDefaults', () => {
     });
   });
 
-  describe('lastJoinedTimestamp', () => {
-    it('initialize lastJoinedTimestamp if not given', () => {
-      expect(fillConvoAttributesWithDefaults({} as ConversationAttributes)).to.have.deep.property(
-        'lastJoinedTimestamp',
-        0
-      );
-    });
-
-    it('do not override lastJoinedTimestamp if given', () => {
-      expect(
-        fillConvoAttributesWithDefaults({ lastJoinedTimestamp: 123 } as ConversationAttributes)
-      ).to.have.deep.property('lastJoinedTimestamp', 123);
-    });
-  });
-
   describe('expireTimer', () => {
     it('initialize expireTimer if not given', () => {
       expect(fillConvoAttributesWithDefaults({} as ConversationAttributes)).to.have.deep.property(

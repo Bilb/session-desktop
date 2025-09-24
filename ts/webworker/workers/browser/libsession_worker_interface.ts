@@ -3,7 +3,6 @@
 import {
   BlindingActionsCalls,
   ConvoInfoVolatileWrapperActionsCalls,
-  GenericWrapperActionsCall as UserGenericWrapperActionsCall,
   GroupInfoSet,
   GroupPubkeyType,
   GroupWrapperConstructor,
@@ -19,8 +18,6 @@ import {
   UserGroupsSet,
   UserGroupsWrapperActionsCalls,
   EncryptionDomain,
-  type ConfirmPush,
-  type UtilitiesWrapperActionsCalls,
 } from 'libsession_util_nodejs';
 // eslint-disable-next-line import/order
 import { join } from 'path';
@@ -28,7 +25,7 @@ import { join } from 'path';
 import { getAppRootPath } from '../../../node/getRootPath';
 import { userGroupsActions } from '../../../state/ducks/userGroups';
 import { WorkerInterface } from '../../worker_interface';
-import { ConfigWrapperUser, LibSessionWorkerFunctions } from './libsession_worker_functions';
+import { LibSessionWorkerFunctions } from './libsession_worker_functions';
 import { makeUserGroupGetRedux } from '../../../state/ducks/types/groupReduxTypes';
 
 let libsessionWorkerInterface: WorkerInterface | undefined;
@@ -55,91 +52,6 @@ const internalCallLibSessionWorker = async ([
 
   return result;
 };
-
-type UserGenericWrapperActionsCalls = {
-  init: (
-    wrapperId: ConfigWrapperUser,
-    ed25519Key: Uint8Array,
-    dump: Uint8Array | null
-  ) => Promise<void>;
-  free: (wrapperId: ConfigWrapperUser) => Promise<void>;
-  confirmPushed: UserGenericWrapperActionsCall<ConfigWrapperUser, 'confirmPushed'>;
-  dump: UserGenericWrapperActionsCall<ConfigWrapperUser, 'dump'>;
-  makeDump: UserGenericWrapperActionsCall<ConfigWrapperUser, 'makeDump'>;
-  merge: UserGenericWrapperActionsCall<ConfigWrapperUser, 'merge'>;
-  needsDump: UserGenericWrapperActionsCall<ConfigWrapperUser, 'needsDump'>;
-  needsPush: UserGenericWrapperActionsCall<ConfigWrapperUser, 'needsPush'>;
-  push: UserGenericWrapperActionsCall<ConfigWrapperUser, 'push'>;
-  activeHashes: UserGenericWrapperActionsCall<ConfigWrapperUser, 'activeHashes'>;
-  storageNamespace: UserGenericWrapperActionsCall<ConfigWrapperUser, 'storageNamespace'>;
-};
-
-export const UserGenericWrapperActions: UserGenericWrapperActionsCalls = {
-  /** base wrapper generic actions */
-
-  init: async (wrapperId: ConfigWrapperUser, ed25519Key: Uint8Array, dump: Uint8Array | null) =>
-    callLibSessionWorker([wrapperId, 'init', ed25519Key, dump]) as ReturnType<
-      UserGenericWrapperActionsCalls['init']
-    >,
-
-  /** This function is used to free wrappers from memory only.
-   *
-   * See freeUserWrapper() in libsession.worker.ts */
-  free: async (wrapperId: ConfigWrapperUser) =>
-    callLibSessionWorker([wrapperId, 'free']) as Promise<void>,
-  confirmPushed: async (wrapperId: ConfigWrapperUser, pushed: ConfirmPush) =>
-    callLibSessionWorker([wrapperId, 'confirmPushed', pushed]) as ReturnType<
-      UserGenericWrapperActionsCalls['confirmPushed']
-    >,
-  dump: async (wrapperId: ConfigWrapperUser) =>
-    callLibSessionWorker([wrapperId, 'dump']) as ReturnType<UserGenericWrapperActionsCalls['dump']>,
-  makeDump: async (wrapperId: ConfigWrapperUser) =>
-    callLibSessionWorker([wrapperId, 'makeDump']) as ReturnType<
-      UserGenericWrapperActionsCalls['makeDump']
-    >,
-  merge: async (wrapperId: ConfigWrapperUser, toMerge: Array<MergeSingle>) =>
-    callLibSessionWorker([wrapperId, 'merge', toMerge]) as ReturnType<
-      UserGenericWrapperActionsCalls['merge']
-    >,
-  needsDump: async (wrapperId: ConfigWrapperUser) =>
-    callLibSessionWorker([wrapperId, 'needsDump']) as ReturnType<
-      UserGenericWrapperActionsCalls['needsDump']
-    >,
-  needsPush: async (wrapperId: ConfigWrapperUser) =>
-    callLibSessionWorker([wrapperId, 'needsPush']) as ReturnType<
-      UserGenericWrapperActionsCalls['needsPush']
-    >,
-  push: async (wrapperId: ConfigWrapperUser) =>
-    callLibSessionWorker([wrapperId, 'push']) as ReturnType<UserGenericWrapperActionsCalls['push']>,
-  activeHashes: async (wrapperId: ConfigWrapperUser) =>
-    callLibSessionWorker([wrapperId, 'activeHashes']) as ReturnType<
-      UserGenericWrapperActionsCalls['activeHashes']
-    >,
-  storageNamespace: async (wrapperId: ConfigWrapperUser) =>
-    callLibSessionWorker([wrapperId, 'storageNamespace']) as ReturnType<
-      UserGenericWrapperActionsCalls['storageNamespace']
-    >,
-};
-
-function createBaseActionsFor(wrapperType: ConfigWrapperUser) {
-  return {
-    /* Reuse the BaseWrapperActions with the UserConfig argument */
-    init: async (ed25519Key: Uint8Array, dump: Uint8Array | null) =>
-      UserGenericWrapperActions.init(wrapperType, ed25519Key, dump),
-    free: async () => UserGenericWrapperActions.free(wrapperType),
-    confirmPushed: async (pushed: ConfirmPush) =>
-      UserGenericWrapperActions.confirmPushed(wrapperType, pushed),
-    dump: async () => UserGenericWrapperActions.dump(wrapperType),
-    makeDump: async () => UserGenericWrapperActions.makeDump(wrapperType),
-    needsDump: async () => UserGenericWrapperActions.needsDump(wrapperType),
-    needsPush: async () => UserGenericWrapperActions.needsPush(wrapperType),
-    push: async () => UserGenericWrapperActions.push(wrapperType),
-    activeHashes: async () => UserGenericWrapperActions.activeHashes(wrapperType),
-    merge: async (toMerge: Array<MergeSingle>) =>
-      UserGenericWrapperActions.merge(wrapperType, toMerge),
-    storageNamespace: async () => UserGenericWrapperActions.storageNamespace(wrapperType),
-  };
-}
 
 // this is a cache of the new groups only. Anytime we create, update, delete, or merge a group, we update this
 const groups: Map<GroupPubkeyType, UserGroupsGet> = new Map();
@@ -221,24 +133,6 @@ export const UserGroupsWrapperActions: UserGroupsWrapperActionsCalls & {
       pubkeyHex,
     ]) as Promise<ReturnType<UserGroupsWrapperActionsCalls['buildFullUrlFromDetails']>>,
 
-  getLegacyGroup: async (pubkeyHex: string) =>
-    callLibSessionWorker(['UserGroupsConfig', 'getLegacyGroup', pubkeyHex]) as Promise<
-      ReturnType<UserGroupsWrapperActionsCalls['getLegacyGroup']>
-    >,
-  getAllLegacyGroups: async () =>
-    callLibSessionWorker(['UserGroupsConfig', 'getAllLegacyGroups']) as Promise<
-      ReturnType<UserGroupsWrapperActionsCalls['getAllLegacyGroups']>
-    >,
-
-  setLegacyGroup: async (info: LegacyGroupInfo) =>
-    callLibSessionWorker(['UserGroupsConfig', 'setLegacyGroup', info]) as Promise<
-      ReturnType<UserGroupsWrapperActionsCalls['setLegacyGroup']>
-    >,
-
-  eraseLegacyGroup: async (pubkeyHex: string) =>
-    callLibSessionWorker(['UserGroupsConfig', 'eraseLegacyGroup', pubkeyHex]) as Promise<
-      ReturnType<UserGroupsWrapperActionsCalls['eraseLegacyGroup']>
-    >,
 
   createGroup: async () => {
     const group = (await callLibSessionWorker(['UserGroupsConfig', 'createGroup'])) as Awaited<
@@ -747,12 +641,6 @@ export const BlindingActions: BlindingActionsCalls = {
     callLibSessionWorker(['Blinding', 'blindVersionSignRequest', opts]) as Promise<
       ReturnType<BlindingActionsCalls['blindVersionSignRequest']>
     >,
-};
-
-export const UtilitiesActions: UtilitiesWrapperActionsCalls = {
-  freeAllWrappers: async () => {
-    await callLibSessionWorker(['Utilities', 'freeAllWrappers']);
-  },
 };
 
 export const callLibSessionWorker = async (

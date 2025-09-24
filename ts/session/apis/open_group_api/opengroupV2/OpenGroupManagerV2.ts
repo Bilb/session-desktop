@@ -212,11 +212,11 @@ export class OpenGroupManagerV2 {
       conversation.set({
         active_at: Date.now(),
         displayNameInProfile: updatedRoom.roomName,
-        isApproved: true,
-        didApproveMe: true,
         priority: CONVERSATION_PRIORITIES.default,
         isTrustedForAttachmentDownload: true, // we always trust attachments when sent to an opengroup
       });
+      await conversation.setIsApproved(true, false);
+      await conversation.setDidApproveMe(true, false);
       await conversation.commit();
 
       // start polling this room

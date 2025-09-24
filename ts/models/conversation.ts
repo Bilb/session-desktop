@@ -141,6 +141,7 @@ import { ReduxOnionSelectors } from '../state/selectors/onions';
 import { tr, tStripped } from '../localization/localeTools';
 import { getFeatureFlag } from '../state/ducks/types/releasedFeaturesReduxTypes';
 import { LibsessionUtilUserWasm } from '../libsession/user/userWrappers';
+import { getLibSessionInstance } from '../libsession/libsession';
 
 type InMemoryConvoInfos = {
   mentionedUs: boolean;
@@ -1529,9 +1530,36 @@ export class ConversationModel extends Model<ConversationAttributes> {
 
   public async markAsUnread(forcedValue: boolean, shouldCommit: boolean = true) {
     if (!!forcedValue !== this.isMarkedUnread()) {
-      this.set({
-        markedAsUnread: !!forcedValue,
-      });
+      if (this.isPrivate()) {
+        const details = LibsessionUtilUserWasm.getConvoVolatile().get1o1(this.id);
+        if (details) {
+          LibsessionUtilUserWasm.getConvoVolatile().set1o1(
+            details.sessionId,
+            details.lastReadMs,
+            false
+          );
+        }
+      }
+      if (this.isPublic()) {
+        const details = LibsessionUtilUserWasm.getConvoVolatile().getCommunity(this.id);
+        if (details) {
+          LibsessionUtilUserWasm.getConvoVolatile().setCommunityByFullUrl(
+            details.fullUrl(),
+            details.lastReadMs,
+            false
+          );
+        }
+      }
+      if (this.isClosedGroupV2()) {
+        const details = LibsessionUtilUserWasm.getConvoVolatile().getGroup(this.id);
+        if (details) {
+          LibsessionUtilUserWasm.getConvoVolatile().setGroup(
+            details.sessionId,
+            details.lastReadMs,
+            false
+          );
+        }
+      }
       if (shouldCommit) {
         await this.commit();
       }
@@ -1539,7 +1567,17 @@ export class ConversationModel extends Model<ConversationAttributes> {
   }
 
   public isMarkedUnread(): boolean {
-    return !!this.get('markedAsUnread');
+    if (this.isPrivate()) {
+      return LibsessionUtilUserWasm.getConvoVolatile().get1o1(this.id)?.forcedUnread || false;
+    }
+    if (this.isPublic()) {
+      return LibsessionUtilUserWasm.getConvoVolatile().getCommunity(this.id)?.forcedUnread || false;
+    }
+    if (this.isClosedGroupV2()) {
+      return LibsessionUtilUserWasm.getConvoVolatile().getGroup(this.id)?.forcedUnread || false;
+    }
+    // legacy group are deprecated
+    return false;
   }
 
   public async updateBlocksSogsMsgReqsTimestamp(
@@ -1581,9 +1619,19 @@ export class ConversationModel extends Model<ConversationAttributes> {
     if (!this.isPrivate() && !this.isClosedGroupV2()) {
       return;
     }
+    window?.log?.debug(`Setting ${ed25519Str(this.id)} isApproved to: ${value}`);
+
+    if (PubKey.is05Pubkey(this.id)) {
+      LibsessionUtilUserWasm.getUserContacts().setApproved(this.id, value);
+      if (shouldCommit) {
+        await this.commit();
+      } else {
+        this.triggerUIRefresh();
+      }
+      return;
+    }
 
     if (valueForced !== Boolean(this.isApproved())) {
-      window?.log?.debug(`Setting ${ed25519Str(this.id)} isApproved to: ${value}`);
       this.set({
         isApproved: valueForced,
       });
@@ -1599,9 +1647,27 @@ export class ConversationModel extends Model<ConversationAttributes> {
    * Does not do anything on non private chats.
    */
   public async setDidApproveMe(value: boolean, shouldCommit: boolean = true) {
+    if (PubKey.is03Pubkey(this.id) && this.isClosedGroupV2()) {
+      console.warn('setDidApproveMe is invite pending for groupv2 TODO');
+    }
+
     if (!this.isPrivate()) {
       return;
     }
+
+    window?.log?.debug(`Setting ${ed25519Str(this.id)} didApproveMe to: ${value}`);
+
+    if (PubKey.is05Pubkey(this.id)) {
+      // Note: blinded pubkeys can approve us, but they are not part of libsession yet
+      LibsessionUtilUserWasm.getUserContacts().setApprovedMe(this.id, value);
+      if (shouldCommit) {
+        await this.commit();
+      } else {
+        this.triggerUIRefresh();
+      }
+      return;
+    }
+
     const valueForced = Boolean(value);
     if (valueForced !== Boolean(this.didApproveMe())) {
       window?.log?.debug(`Setting ${ed25519Str(this.id)} didApproveMe to: ${value}`);
@@ -1795,18 +1861,31 @@ export class ConversationModel extends Model<ConversationAttributes> {
 
   public didApproveMe() {
     if (PubKey.is05Pubkey(this.id) && this.isPrivate()) {
-      // if a private chat, trust the value from the Libsession wrapper cached first
-      return (
-        LibsessionUtilUserWasm.getUserContacts().get(this.id)?.approvedMe ??
-        !!this.get('didApproveMe')
-      );
+      // if a private chat, trust the value from the Libsession config
+      return LibsessionUtilUserWasm.getUserContacts().get(this.id)?.approvedMe || false;
+    }
+    if (PubKey.is03Pubkey(this.id) && this.isClosedGroupV2()) {
+      console.warn('didApproveMe is invite pending for groupv2 TODO');
     }
     return !!this.get('didApproveMe');
   }
 
   public isApproved() {
+    if (this.isPublic()) {
+      return true;
+    }
+    if (this.isClosedGroup() && PubKey.is05Pubkey(this.id)) {
+      // legacy groups
+      return true;
+    }
+
+    if (this.isClosedGroupV2() && PubKey.is03Pubkey(this.id)) {
+      // closed groups
+      console.warn('isApproved for groupv2 should come from libsession invitePending');
+    }
     if (PubKey.is05Pubkey(this.id) && this.isPrivate()) {
       // if a private chat, trust the value from the Libsession wrapper cached first
+
       return (
         LibsessionUtilUserWasm.getUserContacts().get(this.id)?.approved ?? !!this.get('isApproved')
       );
@@ -2056,13 +2135,6 @@ export class ConversationModel extends Model<ConversationAttributes> {
     return this.get('active_at');
   }
 
-  public getLastJoinedTimestamp(): number {
-    if (this.isClosedGroup()) {
-      return this.get('lastJoinedTimestamp') || 0;
-    }
-    return 0;
-  }
-
   public getGroupMembers(): Array<string> {
     if (this.isClosedGroup()) {
       if (this.isClosedGroupV2()) {
@@ -2264,7 +2336,8 @@ export class ConversationModel extends Model<ConversationAttributes> {
       throw new Error('encryptBlindedMessage messageParams needs an identifier');
     }
 
-    this.set({ active_at: Date.now(), isApproved: true });
+    this.set({ active_at: Date.now() });
+    await this.setIsApproved(true, false);
     // TODO we need to add support for sending blinded25 message request in addition to the legacy blinded15
     await MessageQueue.use().sendToOpenGroupV2BlindedRequest({
       encryptedContent: encryptedMsg,
@@ -2706,11 +2779,42 @@ export class ConversationModel extends Model<ConversationAttributes> {
 
   // #region Start of getters
   public getExpirationMode() {
-    return this.get('expirationMode');
+    if (this.isMe()) {
+      const ntsTimer = LibsessionUtilUserWasm.getUserProfile().getNtsExpirySeconds() || 0;
+      return ntsTimer > 0 ? 'deleteAfterSend' : 'off';
+    }
+    if (this.isPrivate()) {
+      const contactExpirationMode = LibsessionUtilUserWasm.getUserContacts().get(
+        this.id
+      )?.expirationMode;
+      return contactExpirationMode === getLibSessionInstance().ExpirationMode.AfterRead
+        ? 'deleteAfterRead'
+        : contactExpirationMode === getLibSessionInstance().ExpirationMode.AfterSend
+          ? 'deleteAfterSend'
+          : 'off';
+    }
+    if (this.isClosedGroupV2()) {
+      console.warn('this must come from metagroup, or usergroup as a backup');
+      // return (LibsessionUtilUserWasm.getUserGroups().getGroup(this.id)?.expireTimerSeconds || 0) > 0
+      //   ? 'deleteAfterSend'
+      //   : 'off';
+    }
+    // legacy groups are deprecated
+    return 'off';
   }
 
   public getExpireTimer() {
-    return this.get('expireTimer');
+    if (this.isMe()) {
+      return LibsessionUtilUserWasm.getUserProfile().getNtsExpirySeconds() || 0;
+    }
+    if (this.isPrivate()) {
+      return LibsessionUtilUserWasm.getUserContacts().get(this.id)?.expireTimerSeconds || 0;
+    }
+    if (this.isClosedGroupV2()) {
+      return LibsessionUtilUserWasm.getUserGroups().get(this.id)?.expireTimerSeconds || 0;
+    }
+    // legacy groups are deprecated
+    return undefined;
   }
 
   public getIsExpired03Group() {

@@ -34,10 +34,8 @@ import { RetrieveMessageItemWithNamespace } from '../session/apis/snode_api/type
 import { groupInfoActions } from '../state/ducks/metaGroups';
 import {
   ConfigWrapperObjectTypesMeta,
-  ConfigWrapperUser,
   getGroupPubkeyFromWrapperType,
   isStaticSessionWrapper,
-  isUserConfigWrapperType,
 } from '../webworker/workers/browser/libsession_worker_functions';
 // eslint-disable-next-line import/no-unresolved, import/extensions
 import { Data } from '../data/data';
@@ -94,11 +92,6 @@ async function printDumpForDebug(
     return; // nothing to print for those static wrappers
   }
 
-  if (isUserConfigWrapperType(variant)) {
-    window.log.info(prefix, StringUtils.toHex(await UserGenericWrapperActions.makeDump(variant)));
-    return;
-  }
-
   const metaGroupDumps = await MetaGroupWrapperActions.metaMakeDump(
     getGroupPubkeyFromWrapperType(variant)
   );
@@ -107,12 +100,12 @@ async function printDumpForDebug(
 
 async function mergeUserConfigsWithIncomingUpdates(
   incomingConfigs: Array<RetrieveMessageItemWithNamespace>
-): Promise<Map<ConfigWrapperUser | UserConfigWasmType, IncomingUserResult>> {
+): Promise<Map<UserConfigWasmType, IncomingUserResult>> {
   // first, group by namespaces so we do a single merge call
   // Note: this call throws if given a non user kind as this function should only handle user variants/kinds
   const groupedByNamespaces = byUserNamespace(incomingConfigs);
 
-  const groupedResults: Map<ConfigWrapperUser | UserConfigWasmType, IncomingUserResult> = new Map();
+  const groupedResults: Map<UserConfigWasmType, IncomingUserResult> = new Map();
 
   const us = UserUtils.getOurPubKeyStrFromCache();
 
@@ -187,38 +180,23 @@ export function getSettingsKeyFromLibsessionWrapper(
     if (wrapperType === 'ContactsConfig') {
       return SettingsKey.latestUserContactsEnvelopeTimestamp;
     }
+    if (wrapperType === 'UserGroupsConfig') {
+      return SettingsKey.latestUserGroupEnvelopeTimestamp;
+    }
+    if (wrapperType === 'ConvoInfoVolatileConfig') {
+      return null;
+    }
 
     assertUnreachable(
       wrapperType,
       `getSettingsKeyFromLibsessionWrapper unknown type: ${wrapperType}`
     );
   }
-
-  if (!isUserConfigWrapperType(wrapperType)) {
-    throw new Error(
-      `getSettingsKeyFromLibsessionWrapper only cares about user variants but got ${wrapperType}`
-    );
-  }
-  switch (wrapperType) {
-    case 'UserGroupsConfig':
-      return SettingsKey.latestUserGroupEnvelopeTimestamp;
-    case 'ConvoInfoVolatileConfig':
-      return null; // we don't really care about the convo info volatile one
-    default:
-      try {
-        assertUnreachable(
-          wrapperType,
-          `getSettingsKeyFromLibsessionWrapper unknown type: ${wrapperType}`
-        );
-      } catch (e) {
-        window.log.warn('assertUnreachable:', e.message);
-      }
-      return null;
-  }
+  return null;
 }
 
 async function updateLibsessionLatestProcessedUserTimestamp(
-  wrapperType: ConfigWrapperUser | UserConfigWasmType,
+  wrapperType: UserConfigWasmType,
   latestEnvelopeTimestamp: number
 ) {
   const settingsKey = getSettingsKeyFromLibsessionWrapper(wrapperType);
@@ -430,7 +408,7 @@ async function handleContactsUpdate(result: IncomingUserResult) {
 async function handleCommunitiesUpdate() {
   // first let's check which communities needs to be joined or left by doing a diff of what is in the wrapper and what is in the DB
 
-  const allCommunitiesInWrapper = await UserGroupsWrapperActions.getAllCommunities();
+  const allCommunitiesInWrapper = await SessionUtilUserGroups.getAllCommunitiesNotCached();
   window.log.debug(
     'allCommunitiesInWrapper',
     allCommunitiesInWrapper.map(m => m.fullUrlWithPubkey)
@@ -523,67 +501,6 @@ async function handleCommunitiesUpdate() {
     }
   }
 }
-
-async function handleLegacyGroupUpdate() {
-  // first let's check which legacy groups needs left by doing a diff of what is in the wrapper and what is in the DB
-  const allLegacyGroupsInWrapper = await UserGroupsWrapperActions.getAllLegacyGroups();
-  const allLegacyGroupsInDb = ConvoHub.use()
-    .getConversations()
-    .filter(SessionUtilUserGroups.isLegacyGroupToRemoveFromDBIfNotInWrapper);
-
-  const allLegacyGroupsIdsInDB = allLegacyGroupsInDb.map(m => m.id);
-  const allLegacyGroupsIdsInWrapper = allLegacyGroupsInWrapper.map(m => m.pubkeyHex);
-
-  window.log.debug(`allLegacyGroupsInWrapper: ${allLegacyGroupsInWrapper.map(m => m.pubkeyHex)} `);
-  window.log.debug(`allLegacyGroupsIdsInDB: ${allLegacyGroupsIdsInDB} `);
-
-  const legacyGroupsToLeaveInDB = allLegacyGroupsInDb.filter(m => {
-    return !allLegacyGroupsIdsInWrapper.includes(m.id);
-  });
-
-  window.log.info(
-    `we have to leave ${legacyGroupsToLeaveInDB.length} legacy groups in DB compared to what is in the wrapper`
-  );
-
-  for (let index = 0; index < legacyGroupsToLeaveInDB.length; index++) {
-    const toLeave = legacyGroupsToLeaveInDB[index];
-    window.log.info(
-      'leaving legacy group from configuration sync message with convoId ',
-      toLeave.id
-    );
-    const toLeaveFromDb = ConvoHub.use().get(toLeave.id);
-    if (PubKey.is05Pubkey(toLeaveFromDb.id)) {
-      // the wrapper told us that this group is not tracked, so even if we left/got kicked from it, remove it from the DB completely
-      await ConvoHub.use().deleteLegacyGroup(toLeaveFromDb.id, {
-        fromSyncMessage: true,
-        sendLeaveMessage: false, // this comes from the wrapper, so we must have left/got kicked from that group already and our device already handled it.
-      });
-    }
-  }
-
-  for (let index = 0; index < allLegacyGroupsInWrapper.length; index++) {
-    const fromWrapper = allLegacyGroupsInWrapper[index];
-
-    const legacyGroupConvo = ConvoHub.use().get(fromWrapper.pubkeyHex);
-    if (!legacyGroupConvo) {
-      // this should not happen as we made sure to create them before
-      window.log.warn(
-        'could not find legacy group which should already be there:',
-        fromWrapper.pubkeyHex
-      );
-      continue;
-    }
-
-    // legacy groups can only be unpinned or deleted now that they are readonly.
-    const changes = await legacyGroupConvo.setPriorityFromWrapper(fromWrapper.priority, false);
-
-    if (changes) {
-      // this commit will grab the latest encryption key pair and add it to the user group wrapper if needed
-      await legacyGroupConvo.commit();
-    }
-  }
-}
-
 async function handleSingleGroupUpdate({
   groupInWrapper,
   userEdKeypair,
@@ -621,7 +538,6 @@ async function handleSingleGroupUpdate({
       active_at: joinedAt,
       displayNameInProfile: groupInWrapper.name || undefined,
       priority: groupInWrapper.priority,
-      lastJoinedTimestamp: joinedAt,
       expireTimer,
       expirationMode: expireTimer ? 'deleteAfterSend' : 'off',
       didApproveMe: groupInWrapper.invitePending,
@@ -702,9 +618,7 @@ async function handleUserGroupsUpdate(result: IncomingUserResult) {
     switch (typeToHandle) {
       case 'Community':
         await handleCommunitiesUpdate();
-        break;
-      case 'LegacyGroup':
-        await handleLegacyGroupUpdate();
+
         break;
       case 'Group':
         await handleGroupUpdate(result.latestEnvelopeTimestamp);
@@ -727,20 +641,23 @@ async function applyConvoVolatileUpdateFromWrapper(
   }
 
   try {
-    if (foundConvo.isPrivate() && !foundConvo.isMe() && foundConvo.getExpireTimer() > 0) {
-      const messagesExpiring = await Data.getUnreadDisappearingByConversation(
-        convoId,
-        lastReadMessageTimestamp
-      );
+    if (foundConvo.isPrivate() && !foundConvo.isMe()) {
+      const fromWrapper = LibsessionUtilUserWasm.getUserContacts().get(convoId);
+      if (fromWrapper && fromWrapper.expireTimerSeconds > 0) {
+        const messagesExpiring = await Data.getUnreadDisappearingByConversation(
+          convoId,
+          lastReadMessageTimestamp
+        );
 
-      const messagesExpiringAfterRead = messagesExpiring.filter(
-        m => m.getExpirationType() === 'deleteAfterRead' && m.getExpireTimerSeconds() > 0
-      );
+        const messagesExpiringAfterRead = messagesExpiring.filter(
+          m => m.getExpirationType() === 'deleteAfterRead' && m.getExpireTimerSeconds() > 0
+        );
 
-      const messageIdsToFetchExpiriesFor = compact(messagesExpiringAfterRead.map(m => m.id));
+        const messageIdsToFetchExpiriesFor = compact(messagesExpiringAfterRead.map(m => m.id));
 
-      if (messageIdsToFetchExpiriesFor.length) {
-        await FetchMsgExpirySwarm.queueNewJobIfNeeded(messageIdsToFetchExpiriesFor);
+        if (messageIdsToFetchExpiriesFor.length) {
+          await FetchMsgExpirySwarm.queueNewJobIfNeeded(messageIdsToFetchExpiriesFor);
+        }
       }
     }
 
@@ -863,9 +780,7 @@ async function handleConvoInfoVolatileUpdate() {
   }
 }
 
-async function processUserMergingResults(
-  results: Map<ConfigWrapperUser | UserConfigWasmType, IncomingUserResult>
-) {
+async function processUserMergingResults(results: Map<UserConfigWasmType, IncomingUserResult>) {
   if (!results || !results.size) {
     return;
   }

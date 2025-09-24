@@ -1,31 +1,24 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-case-declarations */
 import {
-  BaseConfigWrapperNode,
   BlindingWrapperNode,
-  ContactsConfigWrapperNode,
-  ConvoInfoVolatileWrapperNode,
   GroupPubkeyType,
   MetaGroupWrapperNode,
   MultiEncryptWrapperNode,
-  UserConfigWrapperNode,
-  UserGroupsWrapperNode,
   UtilitiesWrapperNode,
 } from 'libsession_util_nodejs';
-import { isEmpty, isNull, isObject } from 'lodash';
+import { isNull, isObject } from 'lodash';
 
 import {
   BlindingConfig,
   ConfigWrapperGroup,
   ConfigWrapperObjectTypesMeta,
-  ConfigWrapperUser,
   MetaGroupConfig,
   MultiEncryptConfig,
   isBlindingWrapperType,
   isMetaGroupWrapperType,
   isMultiEncryptWrapperType,
   isStaticSessionWrapper,
-  isUserConfigWrapperType,
   isUtilitiesWrapperType,
   type UtilitiesConfig,
 } from '../../browser/libsession_worker_functions';
@@ -42,25 +35,7 @@ function assertUnreachable(_x: never, message: string): never {
   throw new Error("Didn't expect to get here");
 }
 
-// we can only have one of those so don't worry about storing them in a map for now
-let contactsConfigWrapper: ContactsConfigWrapperNode | undefined;
-let userGroupsConfigWrapper: UserGroupsWrapperNode | undefined;
-let convoInfoVolatileConfigWrapper: ConvoInfoVolatileWrapperNode | undefined;
-
 const metaGroupWrappers: Map<GroupPubkeyType, MetaGroupWrapperNode> = new Map();
-
-function getUserWrapper(type: ConfigWrapperUser): BaseConfigWrapperNode | undefined {
-  switch (type) {
-    case 'ContactsConfig':
-      return contactsConfigWrapper;
-    case 'UserGroupsConfig':
-      return userGroupsConfigWrapper;
-    case 'ConvoInfoVolatileConfig':
-      return convoInfoVolatileConfigWrapper;
-    default:
-      assertUnreachable(type, `getUserWrapper: Missing case error "${type}"`);
-  }
-}
 
 function getGroupPubkeyFromWrapperType(type: ConfigWrapperGroup): GroupPubkeyType {
   assertGroupWrapperType(type);
@@ -76,31 +51,6 @@ function getGroupWrapper(type: ConfigWrapperGroup): MetaGroupWrapperNode | undef
     return metaGroupWrappers.get(pk);
   }
   assertUnreachable(type, `getGroupWrapper: Missing case error "${type}"`);
-}
-
-function getCorrespondingUserWrapper(wrapperType: ConfigWrapperUser): BaseConfigWrapperNode {
-  if (isUserConfigWrapperType(wrapperType)) {
-    switch (wrapperType) {
-      case 'ContactsConfig':
-      case 'UserGroupsConfig':
-      case 'ConvoInfoVolatileConfig':
-        const wrapper = getUserWrapper(wrapperType);
-        if (!wrapper) {
-          throw new Error(`UserWrapper: ${wrapperType} is not init yet`);
-        }
-        return wrapper;
-      default:
-        assertUnreachable(
-          wrapperType,
-          `getCorrespondingUserWrapper: Missing case error "${wrapperType}"`
-        );
-    }
-  }
-
-  assertUnreachable(
-    wrapperType,
-    `getCorrespondingUserWrapper missing global handling for "${wrapperType}"`
-  );
 }
 
 function getCorrespondingGroupWrapper(wrapperType: MetaGroupConfig): MetaGroupWrapperNode {
@@ -145,83 +95,11 @@ function isUInt8Array(value: unknown): value is Uint8Array {
   return isObject(value) && value.constructor === Uint8Array;
 }
 
-function assertUserWrapperType(wrapperType: ConfigWrapperObjectTypesMeta): ConfigWrapperUser {
-  if (!isUserConfigWrapperType(wrapperType)) {
-    throw new Error(`wrapperType "${wrapperType} is not of type User"`);
-  }
-  return wrapperType;
-}
-
 function assertGroupWrapperType(wrapperType: ConfigWrapperObjectTypesMeta): ConfigWrapperGroup {
   if (!isMetaGroupWrapperType(wrapperType)) {
     throw new Error(`wrapperType "${wrapperType} is not of type Group"`);
   }
   return wrapperType;
-}
-
-/**
- * This function can be used to initialize a wrapper which takes the private ed25519 key of the user and a dump as argument.
- */
-function initUserWrapper(options: Array<unknown>, wrapperType: ConfigWrapperUser) {
-  const userType = assertUserWrapperType(wrapperType);
-
-  const wrapper = getUserWrapper(wrapperType);
-  if (wrapper) {
-    throw new Error(`${wrapperType} already init`);
-  }
-  if (options.length !== 2) {
-    throw new Error(`${wrapperType} init needs two arguments`);
-  }
-  const [edSecretKey, dump] = options;
-
-  if (isEmpty(edSecretKey) || !isUInt8Array(edSecretKey)) {
-    throw new Error(`${wrapperType} init needs a valid edSecretKey`);
-  }
-
-  if (!isNull(dump) && !isUInt8Array(dump)) {
-    throw new Error(`${wrapperType} init needs a valid dump`);
-  }
-  switch (userType) {
-    case 'ContactsConfig':
-      contactsConfigWrapper = new ContactsConfigWrapperNode(edSecretKey, dump);
-      break;
-    case 'UserGroupsConfig':
-      userGroupsConfigWrapper = new UserGroupsWrapperNode(edSecretKey, dump);
-      break;
-    case 'ConvoInfoVolatileConfig':
-      convoInfoVolatileConfigWrapper = new ConvoInfoVolatileWrapperNode(edSecretKey, dump);
-      break;
-    default:
-      assertUnreachable(userType, `initUserWrapper: Missing case error "${userType}"`);
-  }
-}
-
-/**
- *  * This function is used to free wrappers from memory only
- *
- * NOTE only use this function for wrappers that have not been saved to the database.
- *
- * EXAMPLE When restoring an account and fetching the display name of a user. We want to fetch a UserProfile config message and make a temporary wrapper for it in order to look up the display name.
- */
-function freeUserWrapper(wrapperType: ConfigWrapperObjectTypesMeta) {
-  const userWrapperType = assertUserWrapperType(wrapperType);
-
-  switch (userWrapperType) {
-    case 'ContactsConfig':
-      contactsConfigWrapper = undefined;
-      break;
-    case 'UserGroupsConfig':
-      userGroupsConfigWrapper = undefined;
-      break;
-    case 'ConvoInfoVolatileConfig':
-      convoInfoVolatileConfigWrapper = undefined;
-      break;
-    default:
-      assertUnreachable(
-        userWrapperType,
-        `freeUserWrapper: Missing case error "${userWrapperType}"`
-      );
-  }
 }
 
 /*
@@ -280,9 +158,7 @@ function initGroupWrapper(options: Array<unknown>, wrapperType: ConfigWrapperGro
 }
 
 function freeAllWrappers() {
-  contactsConfigWrapper = undefined;
-  userGroupsConfigWrapper = undefined;
-  convoInfoVolatileConfigWrapper = undefined;
+  
 
   metaGroupWrappers.clear();
 }

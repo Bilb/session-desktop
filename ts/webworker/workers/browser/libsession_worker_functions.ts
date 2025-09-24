@@ -1,19 +1,12 @@
 import type {
-  BaseConfigActions,
   BlindingActionsType,
-  ContactsConfigActionsType,
-  ConvoInfoVolatileConfigActionsType,
   GroupPubkeyType,
   MetaGroupActionsType,
   MultiEncryptActionsType,
-  UserGroupsConfigActionsType,
   UtilitiesActionsType,
 } from 'libsession_util_nodejs';
 
 // we can only have one of those wrapper for our current user (but we can have a few configs for it to be merged into one)
-export type ContactsConfig = 'ContactsConfig';
-export type UserGroupsConfig = 'UserGroupsConfig';
-export type ConvoInfoVolatileConfig = 'ConvoInfoVolatileConfig';
 
 export const MetaGroupConfigValue = 'MetaGroupConfig-';
 export const MultiEncryptConfigValue = 'MultiEncrypt';
@@ -26,12 +19,9 @@ export type MultiEncryptConfig = typeof MultiEncryptConfigValue;
 export type BlindingConfig = typeof BlindedConfigValue;
 export type UtilitiesConfig = typeof UtilitiesValue;
 
-export type ConfigWrapperUser = ContactsConfig | UserGroupsConfig | ConvoInfoVolatileConfig;
-
 export type ConfigWrapperGroup = MetaGroupConfig;
 
 export type ConfigWrapperObjectTypesMeta =
-  | ConfigWrapperUser
   | ConfigWrapperGroup
   | MultiEncryptConfig
   | BlindingConfig
@@ -39,17 +29,8 @@ export type ConfigWrapperObjectTypesMeta =
 
 export type ConfigWrapperGroupDetailed = 'GroupInfo' | 'GroupMember' | 'GroupKeys';
 
-export type ConfigWrapperObjectTypesDetailed = ConfigWrapperUser | ConfigWrapperGroupDetailed;
+export type ConfigWrapperObjectTypesDetailed = ConfigWrapperGroupDetailed;
 
-type ContactsConfigFunctions =
-  | [ContactsConfig, ...BaseConfigActions]
-  | [ContactsConfig, ...ContactsConfigActionsType];
-type UserGroupsConfigFunctions =
-  | [UserGroupsConfig, ...BaseConfigActions]
-  | [UserGroupsConfig, ...UserGroupsConfigActionsType];
-type ConvoInfoVolatileConfigFunctions =
-  | [ConvoInfoVolatileConfig, ...BaseConfigActions]
-  | [ConvoInfoVolatileConfig, ...ConvoInfoVolatileConfigActionsType];
 type BlindingFunctions = ['Blinding', ...BlindingActionsType];
 type UtilitiesFunctions = ['Utilities', ...UtilitiesActionsType];
 
@@ -59,21 +40,10 @@ type MetaGroupFunctions = [MetaGroupConfig, ...MetaGroupActionsType];
 type MultiEncryptFunctions = [MultiEncryptConfig, ...MultiEncryptActionsType];
 
 export type LibSessionWorkerFunctions =
-  | ContactsConfigFunctions
-  | UserGroupsConfigFunctions
-  | ConvoInfoVolatileConfigFunctions
   | MetaGroupFunctions
   | BlindingFunctions
   | MultiEncryptFunctions
   | UtilitiesFunctions;
-
-export function isUserConfigWrapperType(config: string): config is ConfigWrapperUser {
-  return (
-    config === 'ContactsConfig' ||
-    config === 'ConvoInfoVolatileConfig' ||
-    config === 'UserGroupsConfig'
-  );
-}
 
 export function isMetaGroupWrapperType(config: string): config is MetaGroupConfig {
   return config.startsWith(MetaGroupConfigValue);

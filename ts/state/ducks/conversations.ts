@@ -32,6 +32,7 @@ import { SettingsKey } from '../../data/settings-key';
 import { sectionActions } from './section';
 import { ed25519Str } from '../../session/utils/String';
 import { UserUtils } from '../../session/utils';
+import { LibsessionUtilUserWasm } from '../../libsession/user/userWrappers';
 
 export type MessageModelPropsWithoutConvoProps = {
   propsForMessage: PropsForMessageWithoutConvoProps;
@@ -1102,7 +1103,8 @@ async function unmarkAsForcedUnread(convoId: string) {
   const convo = ConvoHub.use().get(convoId);
   if (convo && convo.isMarkedUnread()) {
     // we just opened it and it was forced "Unread", so we reset the unread state here
-    await convo.markAsUnread(false, true);
+    await convo.markAsUnread(false, true)
+
   }
 }
 

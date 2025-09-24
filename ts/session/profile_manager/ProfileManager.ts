@@ -2,11 +2,11 @@ import { to_hex } from 'libsodium-wrappers-sumo';
 import { isEmpty, isNil } from 'lodash';
 import { ConvoHub } from '../conversations';
 import { SyncUtils, UserUtils } from '../utils';
-import { fromHexToArray, toHex, trimWhitespace } from '../utils/String';
+import { toHex, trimWhitespace } from '../utils/String';
 import { AvatarDownload } from '../utils/job_runners/jobs/AvatarDownloadJob';
-import { CONVERSATION_PRIORITIES, ConversationTypeEnum } from '../../models/types';
+import { ConversationTypeEnum } from '../../models/types';
 import { RetrieveDisplayNameError } from '../utils/errors';
-import { getLibSessionInstance, libsessionReady } from '../../libsession/libsession';
+import { libsessionReady } from '../../libsession/libsession';
 import { LibsessionUtilUserWasm } from '../../libsession/user/userWrappers';
 
 export type Profile = {
@@ -137,28 +137,12 @@ async function updateOurProfileDisplayName(newName: string) {
     ConversationTypeEnum.PRIVATE
   );
 
-  const dbProfileUrl = conversation.get('avatarPointer');
-  const dbProfileKey = conversation.get('profileKey')
-    ? fromHexToArray(conversation.get('profileKey')!)
-    : null;
-  const dbPriority = conversation.get('priority') || CONVERSATION_PRIORITIES.default;
-
   // we don't want to throw if somehow our display name in the DB is too long here, so we use the truncated version.
   LibsessionUtilUserWasm.getUserProfile().setNameTruncated(trimWhitespace(newName));
   const truncatedName = LibsessionUtilUserWasm.getUserProfile().getName()?.toString();
   if (isNil(truncatedName)) {
     throw new RetrieveDisplayNameError();
   }
-  LibsessionUtilUserWasm.getUserProfile().setNtsPriority(dbPriority);
-  const libsession = getLibSessionInstance();
-  const profilePic = new libsession.ProfilePic();
-
-  if (dbProfileKey && dbProfileUrl && !isEmpty(dbProfileKey)) {
-    profilePic.key = to_hex(dbProfileKey);
-    profilePic.url = dbProfileUrl;
-  }
-
-  LibsessionUtilUserWasm.getUserProfile().setProfilePic(profilePic);
 
   conversation.setSessionDisplayNameNoCommit(truncatedName);
 
