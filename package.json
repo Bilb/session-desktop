@@ -203,7 +203,7 @@
     "sinon": "9.0.2",
     "ts-loader": "^9.4.2",
     "typescript": "^5.1.6",
-    "webpack": "^5.76.3",
+    "webpack": "^5.104.1",
     "webpack-cli": "^5.1.4"
   },
   "engines": {
