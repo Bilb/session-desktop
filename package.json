@@ -85,7 +85,7 @@
     "config": "1.28.1",
     "country-code-lookup": "^0.0.19",
     "curve25519-js": "https://github.com/oxen-io/curve25519-js",
-    "dompurify": "^2.0.7",
+    "dompurify": "^3.3.2",
     "electron-localshortcut": "^3.2.1",
     "electron-updater": "^4.2.2",
     "emoji-mart": "^5.5.2",
